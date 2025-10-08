@@ -1,11 +1,16 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.1.2 Chrome/138.0.7204.243 Electron/37.4.0 Safari/537.36" version="28.1.2">
   <diagram name="Page-1" id="KS7lROok8KajbOLRX01Z">
-    <mxGraphModel dx="1975" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2128" dy="2170" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
-        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-2" target="nkXLVu0YLtGaO6H4Kk3D-3">
-          <mxGeometry relative="1" as="geometry" />
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.75;entryDx=0;entryDy=0;exitX=0.75;exitY=0;exitDx=0;exitDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-2" target="nkXLVu0YLtGaO6H4Kk3D-3">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="457" y="70" />
+              <mxPoint x="690" y="70" />
+            </Array>
+          </mxGeometry>
         </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-11" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-2" target="nkXLVu0YLtGaO6H4Kk3D-8">
           <mxGeometry relative="1" as="geometry" />
@@ -23,10 +28,10 @@
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-3" value="LoRa" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="440" y="230" width="120" height="60" as="geometry" />
+          <mxGeometry x="690" y="-30" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-4" value="LoRaWAN" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="540" y="90" width="120" height="60" as="geometry" />
+          <mxGeometry x="800" y="-250" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-8" target="nkXLVu0YLtGaO6H4Kk3D-9">
           <mxGeometry relative="1" as="geometry" />
@@ -135,8 +140,11 @@
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-46" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-44" target="nkXLVu0YLtGaO6H4Kk3D-43">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-79" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-44" target="nkXLVu0YLtGaO6H4Kk3D-78">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-44" value="Smart Farming" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
-          <mxGeometry x="294" y="80" width="120" height="60" as="geometry" />
+          <mxGeometry x="210" y="50" width="120" height="60" as="geometry" />
         </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-47" target="nkXLVu0YLtGaO6H4Kk3D-49">
           <mxGeometry relative="1" as="geometry" />
@@ -199,6 +207,75 @@
         </mxCell>
         <mxCell id="nkXLVu0YLtGaO6H4Kk3D-70" value="CSV, JSON" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
           <mxGeometry x="-190" y="200" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-73" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-72" target="nkXLVu0YLtGaO6H4Kk3D-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-72" value="Soil Content Sensors" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="360" y="-150" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-75" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-74" target="nkXLVu0YLtGaO6H4Kk3D-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-74" value="Tracking" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="150" y="-220" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-77" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-76" target="nkXLVu0YLtGaO6H4Kk3D-44">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-76" value="Storage" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-80" y="-10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-78" value="Weather forecasting" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="414" y="-10" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-81" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.75;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-80" target="nkXLVu0YLtGaO6H4Kk3D-8">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-80" value="Security" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="669" y="240" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-83" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-82" target="nkXLVu0YLtGaO6H4Kk3D-72">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-82" value="Nitrogen Sensors" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="410" y="-270" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-85" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-84" target="nkXLVu0YLtGaO6H4Kk3D-82">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-84" value="Determines how much fertiliser should be used" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="534" y="-370" width="150" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-88" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-86" target="nkXLVu0YLtGaO6H4Kk3D-72">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-86" value="Moisture Sensors" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="549" y="-160" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-89" target="nkXLVu0YLtGaO6H4Kk3D-76">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-89" value="Temperature/Humidity Sensors" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-240" y="-110" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-92" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.25;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-91" target="nkXLVu0YLtGaO6H4Kk3D-44">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="110" y="-200" />
+              <mxPoint x="110" />
+              <mxPoint x="240" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-91" value="Livestock health" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-30" y="-230" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-93" value="Spike in temperature -&amp;gt; illness/infection" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="-70" y="-370" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="nkXLVu0YLtGaO6H4Kk3D-94" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.409;entryY=-0.04;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="nkXLVu0YLtGaO6H4Kk3D-93" target="nkXLVu0YLtGaO6H4Kk3D-91">
+          <mxGeometry relative="1" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
