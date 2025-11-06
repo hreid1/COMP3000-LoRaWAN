@@ -1,5 +1,9 @@
 # Plan
 
+## Contents
+
+
+
 ## Functional/Non-functional Requirements
 
 
@@ -28,6 +32,10 @@
 
 ## Design
 
-### Dashboard
+![application prototype](./images/UI-design/application-prot.png)
+![mobile prototype](./images/UI-design/mobile-prot.png)
+
+
+
 
 
