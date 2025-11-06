@@ -9,6 +9,7 @@
 ### Front-end
 - React/JavaScript
   - Dashboard and UI components
+  - Chart.js
 
 ### Back-end
 - Django
@@ -24,3 +25,9 @@
 
 ### Deployment
 - Docker/Kubernetes 
+
+## Design
+
+### Dashboard
+
+
