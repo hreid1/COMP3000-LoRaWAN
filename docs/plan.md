@@ -2,25 +2,45 @@
 
 ## Contents
 
-
+| Name of Page | Description |
+| ----------- | ----------- |
+| Header | Title |
+| Paragraph | Text |
 
 ## Functional/Non-functional Requirements
 
+### Functional
 
+| Requirement | Description | Completed |
+| :----------- | ----------- | :---------: |
+| Working UI? | The UI needs to be functional | ☑️ |
+| Paragraph | Text | |
+
+### Non-Functional
+
+| Requirement | Description | Completed |
+| :----------- | ----------- | :---------: |
+| Working UI? | The UI needs to be functional | ☑️ |
+| Paragraph | Text | |
 
 ## Languages/Frameworks
 
 ### Front-end
-- React/JavaScript
+- React/JavaScript -> Vite for installation
   - Dashboard and UI components
   - Chart.js
+  - Need to use `react-router` for multi page applications
 
 ### Back-end
 - Django
-  - MongoDB for DB
   - User authentication 
+    - username and password/passkey (possibly) 
+    - OAuth2 for google/microsoft login
   - DB management
-  - API endpoints -> Swagger possibly for documentation
+    - MongoDB
+  - API endpoints 
+    - Swagger
+    - FastAPI
 
 ### Machine learning
 - Python
