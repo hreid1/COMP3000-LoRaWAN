@@ -55,6 +55,29 @@
 ![application prototype](./images/UI-design/application-prot.png)
 ![mobile prototype](./images/UI-design/mobile-prot.png)
 
+## Dataset
+
+- Timestamp
+  - When the request occured
+- Source IP
+  - IP address of the client
+- Destination IP
+  - IP address of the server
+- Source Port/Destination Port
+  - Ports used for communication
+- Protocol
+  - HTTP, HTTPS, TCP, UDP
+- Request Method
+  - GET, POST
+- URL/Path
+  - Requested resource
+- Status Code
+  - Server Response -> 200, 404
+- Bytes Sent/Received
+  - Size of data transfer
+- User Agent
+  - Browser or client info
+
 
 
 
