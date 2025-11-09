@@ -53,68 +53,124 @@ table {
 
 /* End of CSS reset */
 
+:root {
+    --main-padding: 12px;
+    --main-margin: 12px;
+    --main-border-radius: 20px;
+
+    
+    --main-colour: #0D1B2A;      
+    --secondary-colour: #1B263B;    
+    --third-colour: #415A77;     
+    --fourth-colour: #778DA9;   
+    --background-colour: #E0E1DD;  
+}
+
+body {
+    background: var(--main-colour);
+    color: var(--background-colour);
+}
+
+button {
+    background: var(--third-colour);
+    color: var(--background-colour);
+    border-radius: 20px;
+    border: 2px solid var(--fourth-colour);
+}
+
+button:hover {
+    background: var(--fourth-colour);
+    color: var(--main-colour);
+}
+
 .dashContainer {
     display: grid;
     height: 100vh;
     grid-template-columns: 200px 1fr;
     grid-template-rows: 60px 1fr;
+    background: var(--main-colour);
 }
 
 /* Top Navigation Menu*/
 
 #topNavMenuContainer {
+    background: var(--secondary-colour);
+    color: var(--background-colour);
     grid-column: 1 / 3;
     grid-row: 1 / 2;
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    border: 2px solid red;
-    border-radius: 5px;
+    border-bottom: 2px solid var(--third-colour);
+    position: sticky;
+    top: 0;
+    z-index: 100;
 }
 
 #topNavMenuContainer p {
-    padding: 10px;
+    color: var(--background-colour);
+    padding: var(--main-padding);
+    font-weight: bold;
 }
 
 #topNavMenuContainer button {
-    margin: 5px;
-    padding: 10px;
+    background: var(--third-colour);
+    color: var(--background-colour);
+    margin: var(--main-margin);
+    padding: var(--main-padding);
+    border: 2px solid var(--fourth-colour);
+}
+
+#topNavMenuContainer button:hover {
+    background: var(--fourth-colour);
+    color: var(--main-colour);
 }
 
 /* Side Navigation Menu */
 
 #sideNavMenuContainer {
+    background: var(--secondary-colour);
+    color: var(--background-colour);
     grid-column: 1 / 2;
     grid-row: 2 / 3;
     display: flex;
     flex-direction: column;
-    border: 2px solid red;
-    border-radius: 5px;
+    border-right: 2px solid var(--third-colour);
 }
 
 #sideNavMenuContainer button {
-    margin: 10px;
-    padding: 10px;
+    background: var(--third-colour);
+    color: var(--background-colour);
+    margin: var(--main-margin);
+    padding: var(--main-padding);
+    border: 2px solid var(--fourth-colour);
+}
+
+#sideNavMenuContainer button:hover {
+    background: var(--fourth-colour);
+    color: var(--main-colour);
 }
 
 /* Main Dashboard Content */
 
 #dashContentContainer {
+    background: var(--fourth-colour);
+    color: var(--background-colour);
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: repeat(3, 1fr);
-    padding: 10px;
-    border: 2px solid red;
-    border-radius: 5px;
+    padding: var(--main-padding);
 }
 
 .dashboardItem {
-    padding: 5px;
-    margin: 10px;
-    border: 2px solid red;
-    border-radius: 5px;
+    background: var(--secondary-colour);
+    color: var(--background-colour);
+    padding: var(--main-padding);
+    margin: var(--main-margin);
+    border: 2px solid var(--third-colour);
+    border-radius: var(--main-border-radius);
 }
 
 #statistics {
@@ -130,14 +186,6 @@ table {
 #liveNetworkTraffic {
     grid-column: 3 / 3;
     grid-row: 1 / 1;
-}
-
-#liveNetworkTraffic div {
-    padding: 10px;
-}
-
-#liveNetworkTraffic p {
-    font-size: small;
 }
 
 #threats2 {
