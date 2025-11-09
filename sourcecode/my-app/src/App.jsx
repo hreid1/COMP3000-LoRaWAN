@@ -45,15 +45,64 @@ const SideNavMenu = () => {
 const MainDashContent = () => {
   return (
     <div className="navMenu" id="dashContentContainer">
-      <div className="dashboardItem" id="statistics">Statistics</div>
-      <div className="dashboardItem" id="threatsDetected">Threats Detected</div>
-      <div className="dashboardItem" id="liveNetworkTraffic">Live Network traffic</div>
-      <div className="dashboardItem" id="threats2">Threats/issues resolved</div>
-      <div className="dashboardItem" id="announcements">Announcements</div>
-      <div className="dashboardItem" id="aiInfo">AI Model Information</div>
-      <div className="dashboardItem" id="map">Map</div>
-      <div className="dashboardItem" id="deviceList">Device List</div>
+      <Statistics />
+      <ThreatsDetected />
+      <LiveNetworkTraffic />
+      <Threats2 />
+      <Announcements />
+      <AIinfo />
+      <Map />
+      <DeviceList />
     </div>
+  )
+}
+
+const DeviceList = () => {
+  return (
+    <div className="dashboardItem" id="deviceList">Device List</div>
+  )
+}
+
+const Map = () => {
+  return (
+    <div className="dashboardItem" id="map">Map</div>
+  )
+}
+
+const AIinfo = () => {
+  return (
+    <div className="dashboardItem" id="aiInfo">AI Model Information</div>
+  )
+}
+
+const Statistics = () => {
+  return (
+    <div className="dashboardItem" id="statistics">Statistics</div>
+  )
+}
+
+const ThreatsDetected = () => {
+  return (
+    <div className="dashboardItem" id="threatsDetected">Threats Detected</div>
+  )
+}
+
+const LiveNetworkTraffic = () => {
+  return (
+    <div className="dashboardItem" id="liveNetworkTraffic">Live Network traffic</div>
+  )
+}
+
+// Subject to change
+const Threats2 = () => {
+  return(
+    <div className="dashboardItem" id="threats2">Threats/issues resolved</div>
+  )
+}
+
+const Announcements = () => {
+  return(
+    <div className="dashboardItem" id="announcements">Announcements</div>
   )
 }
 
