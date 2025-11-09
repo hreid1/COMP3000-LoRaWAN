@@ -77,7 +77,7 @@ table {
 }
 
 #topNavMenuContainer button {
-    margin: 10px;
+    margin: 5px;
     padding: 10px;
 }
 
@@ -94,7 +94,7 @@ table {
 
 #sideNavMenuContainer button {
     margin: 10px;
-    padding: 2px;
+    padding: 10px;
 }
 
 /* Main Dashboard Content */
@@ -130,6 +130,14 @@ table {
 #liveNetworkTraffic {
     grid-column: 3 / 3;
     grid-row: 1 / 1;
+}
+
+#liveNetworkTraffic div {
+    padding: 10px;
+}
+
+#liveNetworkTraffic p {
+    font-size: small;
 }
 
 #threats2 {

@@ -42,12 +42,12 @@ const SideNavMenu = () => {
   )
 }
 
-const MainDashContent = () => {
+const MainDashContent = (props) => {
   return (
     <div className="navMenu" id="dashContentContainer">
       <Statistics />
       <ThreatsDetected />
-      <LiveNetworkTraffic />
+      <LiveNetworkTraffic dataset={props.dataset}/>
       <Threats2 />
       <Announcements />
       <AIinfo />
@@ -59,59 +59,101 @@ const MainDashContent = () => {
 
 const DeviceList = () => {
   return (
-    <div className="dashboardItem" id="deviceList">Device List</div>
+    <div className="dashboardItem" id="deviceList">
+      <h1>Device List</h1>
+    </div>
   )
 }
 
 const Map = () => {
   return (
-    <div className="dashboardItem" id="map">Map</div>
+    <div className="dashboardItem" id="map">
+      <h1>Map</h1>
+    </div>
   )
 }
 
 const AIinfo = () => {
   return (
-    <div className="dashboardItem" id="aiInfo">AI Model Information</div>
+    <div className="dashboardItem" id="aiInfo">
+      <h1>AI-Information</h1>
+    </div>
   )
 }
 
 const Statistics = () => {
   return (
-    <div className="dashboardItem" id="statistics">Statistics</div>
+    <div className="dashboardItem" id="statistics">
+      <h1>Statistics</h1>
+    </div>
   )
 }
 
 const ThreatsDetected = () => {
   return (
-    <div className="dashboardItem" id="threatsDetected">Threats Detected</div>
+    <div className="dashboardItem" id="threatsDetected">
+      <h1>Threats1</h1>
+    </div>
   )
 }
 
-const LiveNetworkTraffic = () => {
+const LiveNetworkTraffic = ({dataset}) => {
   return (
-    <div className="dashboardItem" id="liveNetworkTraffic">Live Network traffic</div>
+    <div className="dashboardItem" id="liveNetworkTraffic">
+      <h1>Live Network Traffic</h1>
+      <div>
+        {dataset.map(item => (
+          <p key={item.id}>
+            {item.timestamp} - {item.src_ip} 
+          </p>
+        ))}
+      </div>
+    </div>
   )
 }
 
 // Subject to change
 const Threats2 = () => {
   return(
-    <div className="dashboardItem" id="threats2">Threats/issues resolved</div>
+    <div className="dashboardItem" id="threats2">
+      <h1>Threats2</h1>
+    </div>
   )
 }
 
 const Announcements = () => {
   return(
-    <div className="dashboardItem" id="announcements">Announcements</div>
+    <div className="dashboardItem" id="announcements">
+      <h1>Announcements</h1>
+    </div>
   )
 }
 
 const App = () => {
+
+  const networkTraffic = [
+    {
+      id: 1,
+      timestamp: "2025-11-08T10:00:00Z", 
+      src_ip: "192.168.1.2",
+      dest_ip: "93.184.216.34",
+      src_port: "54321",
+      dst_port: "80",
+      protocol: "TCP",
+      method: "GET",
+      url: "http://example.com/index.html",
+      status: "200",
+      bytes_sent: "512",
+      bytes_received: "2048",
+      user_agent: "Mozilla/5.0",
+    },
+  ]
+
   return (
     <div className="dashContainer">
       <TopNavMenu />
       <SideNavMenu />
-      <MainDashContent />
+      <MainDashContent dataset={networkTraffic} />
     </div>
   )
 }
