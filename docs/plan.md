@@ -57,6 +57,10 @@
 
 ## Dataset
 
+- Is the file format just going to be csv or can it be from .pcap files as well
+
+### Features
+
 - Timestamp
   - When the request occured
 - Source IP
@@ -78,6 +82,14 @@
 - User Agent
   - Browser or client info
 
+## Machine Learning
+
+- Isolation forest
+
+## Database
+
+- Django 
+  - MongoDB
 
 
 
