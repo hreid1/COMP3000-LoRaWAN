@@ -57,6 +57,8 @@ table {
     --main-padding: 12px;
     --main-margin: 12px;
     --main-border-radius: 20px;
+    --button-padding: 6px;
+    --button-margin: 6px;
 
     
     --main-colour: #0D1B2A;      
@@ -102,28 +104,32 @@ button:hover {
     align-items: center;
     justify-content: flex-end;
     border-bottom: 2px solid var(--third-colour);
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
-#topNavMenuContainer p {
-    color: var(--background-colour);
-    padding: var(--main-padding);
-    font-weight: bold;
-}
-
-#topNavMenuContainer button {
+.topNavMenuButton {
     background: var(--third-colour);
     color: var(--background-colour);
-    margin: var(--main-margin);
-    padding: var(--main-padding);
+    margin: var(--button-margin);
+    padding: var(--button-padding);
     border: 2px solid var(--fourth-colour);
 }
 
-#topNavMenuContainer button:hover {
+.topNavMenuButton button:hover {
     background: var(--fourth-colour);
     color: var(--main-colour);
+}
+
+#topNavMenuContainer h1 {
+    color: var(--background-colour);
+    padding: var(--main-padding);
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+}
+
+.topNavMenuIcon {
+    width: 24px;
+    height: 24px;
 }
 
 /* Side Navigation Menu */
@@ -138,17 +144,26 @@ button:hover {
     border-right: 2px solid var(--third-colour);
 }
 
-#sideNavMenuContainer button {
+.sideNavMenuButton {
     background: var(--third-colour);
     color: var(--background-colour);
-    margin: var(--main-margin);
-    padding: var(--main-padding);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: var(--button-margin);
+    padding: var(--button-padding);
     border: 2px solid var(--fourth-colour);
+    border-radius: 20px;
 }
 
-#sideNavMenuContainer button:hover {
-    background: var(--fourth-colour);
-    color: var(--main-colour);
+.sideNavMenuIcon {
+    width: 48px;
+    height: 48px;
+}
+
+.sideNavMenuButton span {
+    font-weight: bold;
 }
 
 /* Main Dashboard Content */
@@ -159,8 +174,8 @@ button:hover {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 2fr 1fr 2fr;
     padding: var(--main-padding);
 }
 
@@ -175,7 +190,7 @@ button:hover {
 
 #statistics {
     grid-column: 1 / 1;
-    grid-row: 1 / span 2;
+    grid-row: 1 / span 3;
 }
 
 #threatsDetected {

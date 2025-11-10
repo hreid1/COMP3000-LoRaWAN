@@ -18,14 +18,30 @@ Main content
 
 */
 
+import profileImg from './assets/profile.svg'
+import settingsImg from './assets/settings.svg'
+import notificationImg from './assets/notification.svg'
+import helpImg from './assets/help.svg'
+import dashboardImg from './assets/dashboard.svg'
+import mapsImg from './assets/maps.svg'
+import deviceImg from './assets/devices.svg'
+import logImg from './assets/logs.svg'
+
 const TopNavMenu = () => {
   return (
     <div className="navMenu" id="topNavMenuContainer">
-      <p>Title</p>
-      <button>Help</button>
-      <button>Notification Bell</button>
-      <button>Settings</button>
-      <button>Profile</button>
+      <h1>LoRaWAN Anomaly Detection Application</h1>
+      <button className="topNavMenuButton">
+        <img src={helpImg} alt='Help' className="topNavMenuIcon"></img>
+      </button>
+      <button className="topNavMenuButton">
+        <img src={notificationImg} alt="Notification Bell" className="topNavMenuIcon"></img>     </button>
+      <button className="topNavMenuButton">
+        <img src={settingsImg} alt="Settings" className="topNavMenuIcon"></img>
+      </button>
+      <button className="topNavMenuButton">
+        <img src={profileImg} alt="Profile" className="topNavMenuIcon"></img>
+      </button>
     </div>
   )
 }
@@ -33,11 +49,27 @@ const TopNavMenu = () => {
 const SideNavMenu = () => {
   return (
     <div className="navMenu" id="sideNavMenuContainer">
-      <button>Home</button>
-      <button>Maps</button>
-      <button>Devices</button>
-      <button>Logs</button>
-      <button>AI settings</button>
+      <button className="sideNavMenuButton">
+        <img src={dashboardImg} alt="Dashboard" className="sideNavMenuIcon"></img>
+        <span>Home</span>
+      </button>
+      
+      <button className="sideNavMenuButton">
+        <img src={mapsImg} alt="Map" className="sideNavMenuIcon"/>
+        <span>Maps</span>
+      </button>
+      <button className="sideNavMenuButton">
+        <img src={deviceImg} alt="Device" className="sideNavMenuIcon"/>
+        <span>Devices</span>
+      </button>
+      <button className="sideNavMenuButton">
+        <img src={logImg} alt="Logs" className="sideNavMenuIcon"/>
+        <span>Logs</span>  
+      </button>
+      <button className="sideNavMenuButton">
+        <img src={settingsImg} alt="AI Settings" className='sideNavMenuIcon' />
+        <span>AI Settings</span>  
+      </button>
     </div>
   )
 }
@@ -48,7 +80,7 @@ const MainDashContent = (props) => {
       <Statistics />
       <ThreatsDetected />
       <LiveNetworkTraffic dataset={props.dataset}/>
-      <Threats2 />
+      
       <Announcements />
       <AIinfo />
       <Map />
