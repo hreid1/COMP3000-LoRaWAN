@@ -1,2 +1,0 @@
-timestamp, src_ip, dst_ip, src_port, dst_port, protocol,method, url, status, bytes_sent, bytes_received, user_agent
-2025-11-08T10:00:00Z, 192.168.1.2, 93.184.216.34, 54321, 80, TCP,GET, http://example.com/index.html, 200, 512, 2048, "Mozilla/5.0"
