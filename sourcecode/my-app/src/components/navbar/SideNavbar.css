@@ -5,6 +5,7 @@
     flex-direction: column;
     align-items: flex-start;
     padding: 15px;
+    background: #3A5A40;
 }
 
 .sideNavbarItems {
@@ -16,6 +17,18 @@
 }
 
 .sideNavbarItem {
-    display: inline-block;
+    display: block;
     margin: 10px 20px;
+    cursor: pointer;
+    padding: 6px;
+    padding-left: 8px;
+    margin: 6px;
+    border-radius: 50px;
+    background: #344E41;
+    box-shadow: 2px 4px 4px #A3B18A;
 } 
+
+.sideNavbarItem:hover {
+    color: #588157;
+    background: #DAD7CD;
+}

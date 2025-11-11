@@ -5,6 +5,7 @@ import mapsImg from '../../assets/maps.svg'
 import deviceImg from '../../assets/devices.svg'
 import logImg from '../../assets/logs.svg'
 import settingsImg from '../../assets/settings.svg'
+import networkImg from '../../assets/network.svg'
 
 const SideNavbar = () => {
   return (

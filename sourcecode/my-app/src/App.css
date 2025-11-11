@@ -68,3 +68,9 @@ table {
     --background-colour: #E0E1DD;  
 }
 
+body {
+    background: #344E41;
+    color: #DAD7CD;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
+    line-height: 1.5;
+}
