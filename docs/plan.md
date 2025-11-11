@@ -33,14 +33,8 @@
 
 ### Back-end
 - Django
-  - User authentication 
-    - username and password/passkey (possibly) 
-    - OAuth2 for google/microsoft login
-  - DB management
-    - MongoDB
-  - API endpoints 
-    - Swagger
-    - FastAPI
+  - SQLite3 as DB -> Django default
+  - 
 
 ### Machine learning
 - Python
@@ -49,6 +43,40 @@
 
 ### Deployment
 - Docker/Kubernetes 
+
+### Project Structure
+
+#### React
+
+```
+src
+|
++-- app               # application layer containing:
+|   |                 # this folder might differ based on the meta framework used
+|   +-- routes        # application routes / can also be pages
+|   +-- app.tsx       # main application component
+|   +-- provider.tsx  # application provider that wraps the entire application with different global providers - this might also differ based on meta framework used
+|   +-- router.tsx    # application router configuration
++-- assets            # assets folder can contain all the static files such as images, fonts, etc.
+|
++-- components        # shared components used across the entire application
+|
++-- config            # global configurations, exported env variables etc.
+|
++-- features          # feature based modules
+|
++-- hooks             # shared hooks used across the entire application
+|
++-- lib               # reusable libraries preconfigured for the application
+|
++-- stores            # global state stores
+|
++-- testing           # test utilities and mocks
+|
++-- types             # shared types used across the application
+|
++-- utils             # shared utility functions
+```
 
 ## Design
 
@@ -84,12 +112,14 @@
 
 ## Machine Learning
 
-- Isolation forest
+- Good models at anomaly detection
+  - Unsupervised models
+    - Isolation Forest
+    - One class support vector machine (SVM)
 
 ## Database
 
-- Django 
-  - MongoDB
+- Django as the backend and SQLite3 as the database (Django default)
 
 
 

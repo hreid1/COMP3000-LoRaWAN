@@ -1,0 +1,65 @@
+#dashContainer {
+    display: grid;
+    height: 100vh;
+    width: 100vw;
+    grid-template-columns: 220px 1fr;
+    grid-template-rows: auto 1fr;
+}
+
+#topNavbar {
+    grid-column: 1 / 3;
+    grid-row: 1 / 1;
+}
+
+#sideNavbar {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+#dashContentContainer {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: 2fr 1fr 2fr;
+}
+
+#statistics {
+    grid-column: 1 / 1;
+    grid-row: 1 / 3;
+}
+
+#threatsDetected {
+    grid-column: 2 / 2;
+    grid-row: 1 / 1;
+}
+
+#liveNetworkTraffic {
+    grid-column: 3 / 3;
+    grid-row: 1 / 1;
+}
+
+#threats2 {
+    grid-column: 1 / 1;
+    grid-row: 3 / 3;
+}
+
+#announcements {
+    grid-column: 2 / 2;
+    grid-row: 2 / 2;
+}
+
+#aiInfo {
+    grid-column: 3 / 3;
+    grid-row: 2 / 2;
+}
+
+#map {
+    grid-column: 2 / 2;
+    grid-row: 3 / 3;
+}
+
+#deviceList {
+    grid-column: 3 / 3;
+    grid-row: 3 / 3;
+}

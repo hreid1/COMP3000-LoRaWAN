@@ -1,0 +1,21 @@
+.sideNavbar {
+    width: auto;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 15px;
+}
+
+.sideNavbarItems {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 5px;
+    margin: 0;
+}
+
+.sideNavbarItem {
+    display: inline-block;
+    margin: 10px 20px;
+} 
