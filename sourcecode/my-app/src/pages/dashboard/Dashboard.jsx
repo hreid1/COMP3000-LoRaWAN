@@ -6,7 +6,13 @@ import TopNavbar from '../../components/navbar/TopNavbar'
 const DeviceList = () => {
   return (
     <div className="dashboardItem" id="deviceList">
-      <h1>Device List</h1>
+      <span>Device List</span>
+      <div>
+        <ul>
+          <li>Devices Online: </li>
+          <li>Devices Offline: </li>
+        </ul>
+      </div>
     </div>
   )
 }
@@ -14,7 +20,10 @@ const DeviceList = () => {
 const Map = () => {
   return (
     <div className="dashboardItem" id="map">
-      <h1>Map</h1>
+      <span>Map</span>
+      <ul>
+        <li>This is where chart.js goes</li>
+      </ul>
     </div>
   )
 }
@@ -22,7 +31,11 @@ const Map = () => {
 const AIinfo = () => {
   return (
     <div className="dashboardItem" id="aiInfo">
-      <h1>AI-Information</h1>
+      <span>AI-Information</span>
+      <ul>
+        <li>Model being used</li>
+        <li>Packets searched through</li>
+      </ul>
     </div>
   )
 }
@@ -30,7 +43,11 @@ const AIinfo = () => {
 const Statistics = () => {
   return (
     <div className="dashboardItem" id="statistics">
-      <h1>Statistics</h1>
+      <span>Statistics</span>
+      <ul>
+        <li>Packets searched through, past hour, day, week, month</li>
+        <li>Threats detected past hour, day, week, month</li>
+      </ul>
     </div>
   )
 }
@@ -38,7 +55,10 @@ const Statistics = () => {
 const ThreatsDetected = () => {
   return (
     <div className="dashboardItem" id="threatsDetected">
-      <h1>Threats1</h1>
+      <span>Threats Detcted</span>
+      <ul>
+        <li>Details about anomalies: e.g. which device affected, location of device, types of threats</li>
+      </ul>
     </div>
   )
 }
@@ -46,7 +66,10 @@ const ThreatsDetected = () => {
 const LiveNetworkTraffic = ({dataset}) => {
   return (
     <div className="dashboardItem" id="liveNetworkTraffic">
-      <h1>Live Network Traffic</h1>
+      <span>Live Network Traffic</span>
+      <ul>
+        <li>Table going through live traffic</li>
+      </ul>
     </div>
   )
 }
@@ -54,7 +77,11 @@ const LiveNetworkTraffic = ({dataset}) => {
 const Announcements = () => {
   return(
     <div className="dashboardItem" id="announcements">
-      <h1>Announcements</h1>
+      <span>Announcements</span>
+      <ul>
+        <li>Maybe convert to summary e.g. total number of threats from today</li>
+        <li></li>
+      </ul>
     </div>
   )
 }

@@ -13,13 +13,16 @@
 
 .topNavbarItem {
     display: inline-block;
-    margin: 10px 20px;
+    margin: 10px;
+    padding: 10px;
     font-size: 18px;
     cursor: pointer;
+    color: var(--fifth-colour);
 }
 
 .topNavbarItem:hover {
-    color: #588157;
+    color: var(--third-colour);
+    text-decoration: underline;
 }
 
 .toggleIcon {

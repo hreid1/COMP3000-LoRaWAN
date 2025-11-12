@@ -2,3 +2,11 @@
 .drawio.dtmp
 .$*
 .DS_Store
+
+# Virtual Environment variables
+venv/
+env/
+ENV/
+sourcecode/backend/venv
+sourcecode/my-app/venv
+.env

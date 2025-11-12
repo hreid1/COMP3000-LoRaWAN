@@ -6,6 +6,7 @@ import deviceImg from '../../assets/devices.svg'
 import logImg from '../../assets/logs.svg'
 import settingsImg from '../../assets/settings.svg'
 import networkImg from '../../assets/network.svg'
+import { Link } from 'react-router-dom'
 
 const SideNavbar = () => {
   return (
@@ -13,7 +14,9 @@ const SideNavbar = () => {
       <ul className='sideNavbarItems'>
         <li className="sideNavbarItem">Home</li>
         <li className="sideNavbarItem">Maps</li>
-        <li className="sideNavbarItem">Devices</li>
+        <Link to="/devices">
+          <li className="sideNavbarItem">Devices</li>
+        </Link>
         <li className="sideNavbarItem">Logs</li>
         <li className="sideNavbarItem">Settings</li>
       </ul>

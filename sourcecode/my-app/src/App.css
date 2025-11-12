@@ -54,23 +54,16 @@ table {
 /* End of CSS reset */
 
 :root {
-    --main-padding: 12px;
-    --main-margin: 12px;
-    --main-border-radius: 20px;
-    --button-padding: 6px;
-    --button-margin: 6px;
-
-    
-    --main-colour: #0D1B2A;      
-    --secondary-colour: #1B263B;    
-    --third-colour: #415A77;     
-    --fourth-colour: #778DA9;   
-    --background-colour: #E0E1DD;  
+    --main-colour: #344E41;
+    --secondary-colour: #3A5A40;
+    --third-colour: #588157;
+    --fourth-colour: #A3B18A;
+    --fifth-colour: #DAD7CD;
 }
 
 body {
-    background: #344E41;
-    color: #DAD7CD;
+    background: var(--main-colour);
+    color: var(--fifth-colour);
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     line-height: 1.5;
 }

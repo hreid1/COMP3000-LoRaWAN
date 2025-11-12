@@ -19,6 +19,8 @@ Main content
 */
 
 import Dashboard from './pages/dashboard/Dashboard'
+import profile from './pages/profile/Profile'
+
 
 const App = () => {
 
