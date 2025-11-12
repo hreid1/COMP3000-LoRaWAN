@@ -1,29 +1,34 @@
 # Plan
 
-## Contents
+## Project Aims
 
-| Name of Page | Description |
-| ----------- | ----------- |
-| Header | Title |
-| Paragraph | Text |
+- I aim to deliver a web-based application that analyses LoRaWAN network traffic to detect anomalies using machine learning models
 
-## Functional/Non-functional Requirements
+### Product Backlog
 
-### Functional
+- As a user, 
 
-| Requirement | Description | Completed |
-| :----------- | ----------- | :---------: |
-| Working UI? | The UI needs to be functional | ☑️ |
-| Paragraph | Text | |
+### Functional/Non-functional requirements
 
-### Non-Functional
+- Functional
+  - The application must feature a machine learning model which can accurately diagnose anomalous packets 
+  - The application must be able to receive and process network traffic data
+  - The application must notify the user if any anomalous packets are found
+  - 
+- Non-functional
+  - The application should be secure at all points (e.g. at rest, during transit, in-use)
+  - The peformance of the application should be top tier (e.g. doesn't take less than 5s to load a webpage)
+  - The application can adapt and change to a wide range of use cases
+  - The application is able to be ran on mobile 
 
-| Requirement | Description | Completed |
-| :----------- | ----------- | :---------: |
-| Working UI? | The UI needs to be functional | ☑️ |
-| Paragraph | Text | |
+### Rationale of the project
 
-## Languages/Frameworks
+- Reasons for doing the project
+  - (THE PROBLEM) something about LoRaWAN
+- Why my project is better than alternatives 
+  - Current solutions to this problem
+
+## Languages/Frameworks 
 
 ### Front-end
 - React/JavaScript -> Vite for installation
@@ -40,6 +45,9 @@
 - Python
   - `pandas` + `numpy` for manipulating dataset
   - `scikit-learn` for machine learning model implementation
+- Examples of ML models
+  - LSTM
+  - Isolation forest
 
 ### Deployment
 - Docker/Kubernetes 
@@ -87,39 +95,19 @@ src
 
 - Is the file format just going to be csv or can it be from .pcap files as well
 
-### Features
+- Sample Datasets
+  - https://www.kaggle.com/datasets/garystafford/environmental-sensor-data-132kc
 
-- Timestamp
-  - When the request occured
-- Source IP
-  - IP address of the client
-- Destination IP
-  - IP address of the server
-- Source Port/Destination Port
-  - Ports used for communication
-- Protocol
-  - HTTP, HTTPS, TCP, UDP
-- Request Method
-  - GET, POST
-- URL/Path
-  - Requested resource
-- Status Code
-  - Server Response -> 200, 404
-- Bytes Sent/Received
-  - Size of data transfer
-- User Agent
-  - Browser or client info
+## Papers/Reports
 
-## Machine Learning
+- https://ieeexplore.ieee.org/abstract/document/10649553
+  - LoRaWAN IoT device usage for monitoring and control solutions in smart farming through anomaly detection
+  - Used Isolation Forest for anomaly detection
+  - Linear regression + Random forest for predictive modelling 
 
-- Good models at anomaly detection
-  - Unsupervised models
-    - Isolation Forest
-    - One class support vector machine (SVM)
+- https://link.springer.com/article/10.1007/s10499-025-02104-7
+  - Smart sensing and anomaly detection for microalgae culture based on LoRaWAN sensors and LSTM autoencoder
 
-## Database
-
-- Django as the backend and SQLite3 as the database (Django default)
 
 
 

@@ -30,5 +30,6 @@
 - Is my application an IDS/IPS
   - Perhaps an NIDS
     - Network Intrusion Detection System which monitors traffic for threats and alerts administrations
+  - Runs offline -> opportunity to upload CSV file
 - How does LoRaWAN network traffic differ from normal network traffic
   - How does an anomaly affect
