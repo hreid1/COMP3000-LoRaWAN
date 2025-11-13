@@ -27,6 +27,9 @@
   - (THE PROBLEM) something about LoRaWAN
 - Why my project is better than alternatives 
   - Current solutions to this problem
+- Reasons for picking languages and frameworks used (e.g. React, Django)
+- Reasons for picking ML model (e.g. Why I picked isolation forest)
+  - Mention F1, recall, precision scores, V-Measure, VI-Measure
 
 ## Languages/Frameworks 
 
