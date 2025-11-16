@@ -48,9 +48,11 @@
 - Python
   - `pandas` + `numpy` for manipulating dataset
   - `scikit-learn` for machine learning model implementation
+  - Might need to add a `requirements.txt` for python virtual environments
 - Examples of ML models
   - LSTM
   - Isolation forest
+
 
 ### Deployment
 - Docker/Kubernetes 
@@ -106,10 +108,17 @@ src
 - https://ieeexplore.ieee.org/abstract/document/10649553
   - LoRaWAN IoT device usage for monitoring and control solutions in smart farming through anomaly detection
   - Used Isolation Forest for anomaly detection
-  - Linear regression + Random forest for predictive modelling 
+  - Linear regression + Random forest for to predict future trends in environmental data
+    - Peformance of Isolation Forest
+      - 
 
 - https://link.springer.com/article/10.1007/s10499-025-02104-7
   - Smart sensing and anomaly detection for microalgae culture based on LoRaWAN sensors and LSTM autoencoder
+    - Performance of LSTM encoder
+      - `1.000` precision
+      - `0.944` recall
+      - `0.971` F1-score
+      - `1.000` AUC-ROC
 
 
 
