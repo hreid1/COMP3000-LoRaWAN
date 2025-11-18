@@ -98,10 +98,40 @@ src
 
 ## Dataset
 
-- Is the file format just going to be csv or can it be from .pcap files as well
+- 2 Datasets
+  - One with a jammer attack
+  - One without
 
-- Sample Datasets
-  - https://www.kaggle.com/datasets/garystafford/environmental-sensor-data-132kc
+- Features
+  - Channel Frequency (CF)
+    - 3 Channels in the dataset
+  - Spread Factor (SF)
+    - 7-12
+  - Transmission Power (TX)
+    - (2-14) normal, 20 is jammer
+  - Bandwidth (BW)
+    - fixed
+  - Coding Rate (CR)
+    - fixed
+  - Signal to noise ratio (SNR)
+    - High for jammer
+  - Receive signal strength indicator (RSSI)
+    - Jammer has high values
+  - PktSeqNum
+    - sequence number starting from 0
+  - payloadsize
+    - Same for all packets
+  - NoRecievedpacketPernode
+    - The counter of the successfully received packets
+  - NodePDR/window 
+    - acceptable nodepdr/window is >= threshold
+    - For example, threshold = 0.6
+    - Jammer will make nodepdr/window lower
+    - Window = hopping window of jammer
+  - Inter-arrival time (IAT)
+    - The time difference between the last packet that the server recieves and the current packet of the same node 
+    - The jammer will make this high
+  - jammed_packets are the packets with NodeID == 121
 
 ## Papers/Reports
 
