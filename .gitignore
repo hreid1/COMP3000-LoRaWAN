@@ -5,7 +5,7 @@
 
 # pycache
 sourcode/mysite/__pycache__/
-**/__pycache__
+__pycache__
 
 # Virtual Environment variables
 venv/
