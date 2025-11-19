@@ -2,7 +2,7 @@
 
 ## Project Aims
 
-- I aim to deliver a web-based application that analyses LoRaWAN network traffic to detect anomalies using machine learning models
+- I aim to deliver a web-based monitoring platform that is capable of analysing LoRaWAN network traffic to detect anomalies while machine learning models
 
 ### Product Backlog
 
@@ -31,6 +31,36 @@
 - Reasons for picking ML model (e.g. Why I picked isolation forest)
   - Mention F1, recall, precision scores, V-Measure, VI-Measure
 
+### What the project will include
+
+- Pages
+  - Dashboard
+    - Total devices monitored
+    - Active vs in-active devices
+    - Anomalies detected (e.g. this week)
+    - Network traffic feed
+    - Network traffic score (e.g. high score -> green -> less anomalies, regular packet intervals etc)
+    - Recent alerts feed
+  - Device management
+    - Device list with search filter
+    - Device details page (metrics, history)
+    - Status indicators (e.g. green for online, maintenance/updated needed for yellow, offline for red)
+    - Signal strength (RSSI) visualisation
+  - Machine Learning
+  - Anomaly visualisation
+    - Anomaly feed/list with timestamps
+    - Security levels (e.g. Critical, high, medium, low)
+    - Anomaly type -> dataset only has jammer attack
+    - Filter by date, severity, device
+    - Anomaly detail view with explanation
+  - Historical charts
+    - RSSI over time
+    - Packet count over time
+    - Battery level trend
+    - Anomaly trend
+- Database
+- API Endpoints
+
 ## Languages/Frameworks 
 
 ### Front-end
@@ -52,7 +82,6 @@
 - Examples of ML models
   - LSTM
   - Isolation forest
-
 
 ### Deployment
 - Docker/Kubernetes 
@@ -100,7 +129,9 @@ src
 
 - 2 Datasets
   - One with a jammer attack
+    - 98573 Lines
   - One without
+    - 99382 Lines
 
 - Features
   - Channel Frequency (CF)

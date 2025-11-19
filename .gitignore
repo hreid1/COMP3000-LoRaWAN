@@ -3,6 +3,9 @@
 .$*
 .DS_Store
 
+# pycache
+sourcode/mysite/__pycache__/
+
 # Virtual Environment variables
 venv/
 env/
