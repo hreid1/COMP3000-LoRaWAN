@@ -12,13 +12,16 @@ const SideNavbar = () => {
   return (
     <div className='sideNavbar' id='sideNavbar'>
       <ul className='sideNavbarItems'>
-        <li className="sideNavbarItem">Home</li>
+        <li className="sideNavbarItem">Dashboard</li>
         <li className="sideNavbarItem">Maps</li>
         <Link to="/devices">
           <li className="sideNavbarItem">Devices</li>
         </Link>
         <li className="sideNavbarItem">Logs</li>
-        <li className="sideNavbarItem">Settings</li>
+        <li className="sideNavbarItem">AI Model</li>
+        <Link to="/settings">
+          <li className="sideNavbarItem" id='Settings'>Settings</li>
+        </Link>
       </ul>
     </div>
   );

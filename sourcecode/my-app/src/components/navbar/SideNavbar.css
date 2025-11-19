@@ -1,38 +1,31 @@
 .sideNavbar {
-    width: auto;
     display: flex;
     flex-direction: column;
-    align-items: center; 
-    padding: 15px;
-    background: var(--secondary-colour);
-}
-
-.sideNavbarItems {
-    display: flex;
-    flex-direction: column;
-    align-items: center; 
-    width: 100%;
-    padding: 5px;
-    margin: 0;
+    align-items: center;
+    padding: 1rem;
+    padding-top: 6rem;
 }
 
 .sideNavbarItem {
-    display: block;
-    width: 160px;      
-    margin: 10px 0;
-    align-items: center;
+    margin: 0.75rem;
+    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
     cursor: pointer;
-    padding: 6px;
-    border-radius: 5px;
-    background: var(--main-colour);
-    box-shadow: 1px 4px 4px var(--fourth-colour);
-    text-align: center; 
-    line-height: 36px;  
-    color: var(--fifth-colour);
-    
-} 
+    width: 150px;
+    box-sizing: border-box;
+    box-shadow: 5px 5px 5px 5px rgb(173, 172, 172);
+    color: #000000;
+    text-decoration: none;
+}
 
 .sideNavbarItem:hover {
-    color: var(--third-colour);
-    background: var(--fifth-colour);
+    font-weight: bold;
+    text-decoration: underline;
+    color: blue;
+    box-shadow: 5px 5px 5px 5px blue;
+}
+
+#Settings {
+    margin-top: 4rem;
 }

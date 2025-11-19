@@ -11,21 +11,24 @@ import { Link } from 'react-router-dom'
 const TopNavbar = () => {
   return(
     <div className="topNavbar" id='topNavbar'>
-      <img src={networkImg} alt="Logo" className='logo' />
-      <ul className='topNavbarItems'>
-        <li className="topNavbarItem">Help</li>
-        <li className="topNavbarItem">Notifications</li>
-        <Link to="/settings">
-          <li className="topNavbarItem">Settings</li>
-        </Link>
-        <Link to="/profile">
-          <li className="topNavbarItem">Profile</li>
-        </Link>
-      </ul>
+      <h1>Hi Henry</h1>
       <div className="searchBox">
         <input type="text" placeholder='Search'/>
           <img src={searchImg} alt="" className='toggleIcon'/>
       </div>
+      <ul className='topNavbarItems'>
+        <li className="topNavbarItem">
+          <img src={helpImg} alt="helpPicture" className='logo' />
+        </li>
+        <li className="topNavbarItem">
+          <img src={notificationImg} alt="notifPicture" className='logo' />
+        </li>
+          <Link to="/profile">
+          <li className="topNavbarItem">
+            <img src={profileImg} alt="profilePicture" className='logo' />
+          </li>
+        </Link>
+      </ul>
     </div>
   )
 }

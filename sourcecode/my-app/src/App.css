@@ -54,16 +54,13 @@ table {
 /* End of CSS reset */
 
 :root {
-    --main-colour: #344E41;
-    --secondary-colour: #3A5A40;
-    --third-colour: #588157;
-    --fourth-colour: #A3B18A;
-    --fifth-colour: #DAD7CD;
+
+	--background-colour: #F1F2EB;
+	--secondary-background-colour: #4A4A48;
 }
 
 body {
-    background: var(--main-colour);
-    color: var(--fifth-colour);
-    font-family: 'Inter', Arial, Helvetica, sans-serif;
-    line-height: 1.5;
+	background-color: #fff;
+	color: #000000;
 }
+

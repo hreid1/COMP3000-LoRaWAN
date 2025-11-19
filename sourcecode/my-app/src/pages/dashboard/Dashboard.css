@@ -1,85 +1,145 @@
 #dashContainer {
     display: grid;
     height: 100vh;
-    width: 100vw;
-    grid-template-columns: 220px 1fr;
+    width: 100%;
+    grid-template-columns: 220px 2fr;
     grid-template-rows: auto 1fr;
 }
 
-#topNavbar {
-    grid-column: 1 / 3; /* Span both columns */
-    grid-row: 1 / 2;    
-    border-bottom: 0.5px solid var(--fifth-colour);
+.topNavbar {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
 }
 
-#sideNavbar {
-    grid-column: 1 / 2; 
-    grid-row: 2 / 3;    
-    border-right: 0.5px solid var(--fifth-colour);
+.sideNavbar {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
 }
 
-#dashContentContainer {
-    grid-column: 2 / 3; 
-    grid-row: 2 / 3;    
+.dashContentContainer {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    grid-template-rows: 2fr 1fr 2fr;
-    background: var(--third-colour);
-    width: 100%;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: 1fr 2fr 1fr;
+
+    background-color: #E5ECF4;
+    padding: 0.5rem;
+    border: 0.5px solid black;
+    border-radius: 0.5rem 0 0 0;
 }
 
-.dashboardItem {
-    padding: 12px;
-    margin: 6px;
-    border-radius: 25px;
-    background: var(--secondary-colour);
-    box-shadow: 2px 4px 4px var(--fourth-colour);
+.dashCard {
+    position: relative;
+    background: #fff;
+    border-radius: 0.5rem;
+    margin: 1rem;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+    max-height: 400px;
+    overflow: auto;
 }
 
-.dashboardItem span {
+.marker {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0.5rem;
+    height: 100%;
+    background: blue;
+    border-radius: 8px 0 0 8px;
+}
+
+.dots {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.cardHeader {
+    font-size: 1.2rem;
     font-weight: bold;
+    padding: 0.5rem 1rem 0 0.5rem;
+    border-bottom: 2px solid #eee;
+    display: flex;
+    justify-content: space-between;
+
 }
 
-.dashboardItem li {
-    font-size: 12px;
+.cardContent {
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; 
+    max-width: 100%;
+    overflow: auto;
+    word-break: break-word;
 }
 
-#statistics {
-    grid-column: 1 / 1;
-    grid-row: 1 / span 3;
+
+#deviceList {
+    grid-column: 1 / 4;
+    grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
 }
 
-#threatsDetected {
-    grid-column: 2 / 2;
-    grid-row: 1 / 1;
-}
-
-#liveNetworkTraffic {
-    grid-column: 3 / 3;
-    grid-row: 1 / 1;
-}
-
-#threats2 {
-    grid-column: 1 / 1;
-    grid-row: 3 / 3;
+#anomalyList {
+    grid-column: 4 / 7;
+    grid-row: 1 / 2;
 }
 
 #announcements {
-    grid-column: 2 / 2;
-    grid-row: 2 / 2;
+    grid-column: 7 / 10;
+    grid-row: 1 / 2;
 }
 
-#aiInfo {
-    grid-column: 3 / 3;
-    grid-row: 2 / 2;
+#networkTraffic {
+    grid-column: 1 / 10;
+    grid-row: 2 / 3;
 }
 
-#map {
-    grid-column: 2 / 2;
-    grid-row: 3 / 3;
+#networkTraffic input {
+    padding: 0.5rem;
 }
 
-#deviceList {
-    grid-column: 3 / 3;
-    grid-row: 3 / 3;
+.networkTable {
+    width: 80%;
+    border-radius: 8px;
 }
+
+#networkTraffic .cardContent {
+    display: flex;
+    flex-direction: column;
+    width: 35rem;
+    margin: 2% auto;
+    border-radius: 15px;
+    padding: 3%
+}
+
+.item {
+    width: 200px;
+    margin: 0 auto;
+    padding: 2px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+#trafficScore {
+    grid-column: 5 / 7;
+    grid-row: 3 / 4;
+}
+
+#graph {
+    grid-column: 1 / 5;
+    grid-row: 3 / 4;
+}
+
+#anomalyGraph {
+    grid-column: 7 / 10;
+    grid-row: 3 / 4;
+}
+
