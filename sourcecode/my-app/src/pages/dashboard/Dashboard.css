@@ -35,7 +35,7 @@
     background: #fff;
     border-radius: 0.5rem;
     margin: 1rem;
-    padding: 2rem;
+    padding: 0 2rem 0 2rem;
     display: flex;
     flex-direction: column;
     min-height: 180px;
