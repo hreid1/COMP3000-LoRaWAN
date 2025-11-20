@@ -80,15 +80,9 @@ const NetworkTraffic = () => {
     reader.onload = async({ target }) => {
       const csv = Papa.parse(target.result, {
         header: true,
+        skipEmptyLines: true,
       });
-      const parsedData = csv?.data;
-      const rows = Object.keys(parsedData[0]);
-      const columns = Object.values(parsedData[0]);
-      const res = rows.reduce((acc, e, i) => {
-        return [...acc, [[e], columns[i]]];
-      }, []);
-      console.log(res);
-      setData(res);
+      setData(csv.data)
     };
     reader.readAsText(file);
   }
@@ -108,14 +102,30 @@ const NetworkTraffic = () => {
             Parse
           </button>
         </div>
-        <div style = {{ marginTop: "3rem "}}>
+        <div style = {{ marginTop: "1rem"}}>
           {error
             ? error
-            : data.map((e, i) => (
-              <div key={i} className="item">
-                {e[0]}:{e[1]}
-              </div>
-          ))}
+            : data.length > 0 && (
+              <table className="networkTable">
+                <thead>
+                  <tr>
+                    {Object.keys(data[0]).map((key) => (
+                      <th key={key}>{key}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.slice(0, 10).map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {Object.keys(row).map((key) => (
+                        <td key={key + rowIndex}>{row[key]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )
+          }
         </div>
       </div>
     </div>

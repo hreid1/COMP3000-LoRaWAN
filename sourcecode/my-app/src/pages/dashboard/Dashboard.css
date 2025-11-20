@@ -35,7 +35,7 @@
     background: #fff;
     border-radius: 0.5rem;
     margin: 1rem;
-    padding-left: 1.5rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
     min-height: 180px;
@@ -70,7 +70,7 @@
 }
 
 .cardContent {
-    padding: 0.5rem;
+    padding: 1.5rem;
     display: flex;
     flex-direction: column;
     flex-grow: 1; 
@@ -108,16 +108,42 @@
 
 .networkTable {
     width: 80%;
+    border-collapse: collapse;
+    margin: 1rem;
+    padding: 1rem;
+    background: #fff;
+    box-shadow: 0 2px 8px black;
     border-radius: 8px;
+    overflow-x: auto;
+    table-layout: fixed;
 }
 
-#networkTraffic .cardContent {
-    display: flex;
-    flex-direction: column;
-    width: 35rem;
-    margin: 2% auto;
-    border-radius: 15px;
-    padding: 3%
+.networkTable th, .networkTable td {
+    width: 125px;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    word-break: break-word;
+}
+
+.networkTable td {
+    min-width: 440px;
+    font-size: 0.75rem;
+}
+
+.networkTable th {
+    background: blue;
+    font-weight: bolder;
+    color: black;
+    font-size: 0.9rem;
+}
+
+.networkTable tr:last-child td {
+    border-bottom: none;
+}
+
+.networkTable tr:hover {
+    background: #F1F2EB;
 }
 
 .item {
