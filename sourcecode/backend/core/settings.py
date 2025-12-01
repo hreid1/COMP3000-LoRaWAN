@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/dev/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-9vns95@qx1k3a8f@$d+gyym$2025vh5!1s-3r1#it1%*u_60v4"
+SECRET_KEY = "django-insecure-r@vcavafeg&!3dmr#!qwoo^jcy37-f2q0ptsdqf$*ewfd^k!6z"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -39,25 +39,22 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
 
     "rest_framework",
-    "corsheaders",
-    "lorawan",
-]
-
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-
 ]
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 10,
+}
 
 ROOT_URLCONF = "core.urls"
 
@@ -125,3 +122,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/howto/static-files/
 
 STATIC_URL = "static/"
+
