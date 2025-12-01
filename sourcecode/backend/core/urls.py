@@ -1,5 +1,5 @@
 """
-URL configuration for mysite project.
+URL configuration for core project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/dev/topics/http/urls/
@@ -19,6 +19,6 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path("lorawan/", include("lorawan.urls")),
     path("admin/", admin.site.urls),
+    path("api/", include('core.api.urls')),
 ]

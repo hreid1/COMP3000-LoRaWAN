@@ -17,26 +17,36 @@ Main content
   - Device List
 
 */
-
 import { useState, useEffect } from 'react'
 import Dashboard from './pages/dashboard/Dashboard'
 import profile from './pages/profile/Profile'
 
-
 const App = () => {
-  const [message, setMessage] = useState('')
+  const [data, setData] = useState([])
 
   useEffect(() => {
-    fetch('http://localhost:8000/api/hello/')
-      .then(response => response.json())
-      .then(data => setMessage(data.message))
-      .catch(error => console.error('Error:', error))
-  }, []);
+    async function fetchData() {
+      console.log(import.meta.env.VITE_API_URL)
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}Lorawan`);
+        if (!response.ok){
+          throw new Error('Network response was not ok');
+        }
+        const result = await response.json();
+        console.log(result)
+        setData(result);
+      } catch (error) {
+        console.log("Error fetching data");
+      }
+    }
+
+    fetchData();
+  }, [])
+
 
   return (
     <div>
       <Dashboard />
-      {message}
     </div>
   )
 }
