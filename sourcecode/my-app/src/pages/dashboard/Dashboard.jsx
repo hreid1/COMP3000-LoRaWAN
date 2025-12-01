@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { useState, useEffect } from 'react'
 import Papa from 'papaparse'
 import './Dashboard.css'
@@ -53,10 +54,11 @@ const Announcements = () => {
 }
 
 const NetworkTraffic = () => {
-
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [file, setFile] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [data2, setData2] = useState(false)
   const allowedExtensions = ["csv"];
 
   const handleFileChange = (e) => {
@@ -87,6 +89,18 @@ const NetworkTraffic = () => {
     reader.readAsText(file);
   }
 
+  const model = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post("http://127.0.0.1:8000/api/run/");
+      setData2(response.data);
+    } catch(error){
+      console.error("Error loading model")
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return(
     <div id="networkTraffic" className="dashCard">
       <div className="marker"></div>
@@ -100,6 +114,9 @@ const NetworkTraffic = () => {
         <div>
           <button onClick={handleParse}>
             Parse
+          </button>
+          <button onClick={model} disabled={loading}>
+            {loading ? "Running Analysis" : "Run Isolation Forest"}
           </button>
         </div>
         <div style = {{ marginTop: "1rem"}}>
@@ -127,6 +144,12 @@ const NetworkTraffic = () => {
             )
           }
         </div>
+        {data2 && (
+          <div id='results'>
+            <h3>Results:</h3>
+            <p>Accuracy: {data2.accuracy}</p>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -148,7 +171,8 @@ const TrafficScore = () => {
 }
 
 const Graph = () => {
-  return(
+
+  return (
     <div id="graph" className="dashCard">
       <div className="marker"></div>
       <div className="cardHeader">
@@ -156,10 +180,9 @@ const Graph = () => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
-        <span>Graph goes here</span>
       </div>
     </div>
-  )
+  );
 }
 
 const AnomalyGraph = () => {
@@ -203,13 +226,13 @@ const MainDashContent = (props) => {
 
 
 const Dashboard = () => {
-    return(
-        <div id='dashContainer'>
-            <TopNavbar />
-            <SideNavbar />
-            <MainDashContent />
-        </div>
-    )
+  return(
+    <div id='dashContainer'>
+        <TopNavbar />
+        <SideNavbar />
+        <MainDashContent />
+    </div>
+  )
 }
 
 export default Dashboard
