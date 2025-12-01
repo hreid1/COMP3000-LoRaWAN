@@ -2,16 +2,21 @@ import pandas as pd
 from sklearn.ensemble import IsolationForest
 from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
+from pathlib import Path
 
 def runModel():
-
     # Load datasets
-    normal = pd.read_csv("../../datasets/normal_dataset.csv")
-    jammer = pd.read_csv("../../datasets/jammer_dataset.csv")
+    base_dir = Path(__file__).resolve().parent
+    data_dir = base_dir / "datasets"
 
-    # Drop rows
-    normal = normal.dropna()
-    jammer = jammer.dropna()
+    normal_path = data_dir / "no-jammer.csv"
+    jammer_path = data_dir / "jammer.csv"
+
+    if not normal_path.exists() or not jammer_path.exists():
+        raise FileNotFoundError(f"Dataset not found. expecpted: {normal_path} and {jammer_path}")
+
+    normal = pd.read_csv(normal_path).dropna()
+    jammer = pd.read_csv(jammer_path).dropna()
 
     # Columns to extract
     anomaly_inputs = ['SF', 'CF', 'TX', 'BW', 'CR', 'SNR', 'RSSI', 'PktSeqNum', 'payloadSize', 'numReceivedPerNode[nodeNumber-1]', 'PDRPerNode']
@@ -39,6 +44,7 @@ def runModel():
 
     # Calculates accuracy score
     acc = accuracy_score(y_true, prediction)
+
     return {
-        "accuracy"
+        "accuracy": acc, 
     }
