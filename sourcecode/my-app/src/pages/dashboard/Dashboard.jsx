@@ -91,15 +91,29 @@ const NetworkTraffic = () => {
 
   const model = async () => {
     setLoading(true);
-    try {
-      const response = await axios.post("http://127.0.0.1:8000/api/run/");
-      setData2(response.data);
-    } catch(error){
-      console.error("Error loading model")
-    } finally {
-      setLoading(false)
+    setError("");
+    if (!file) {
+      setError("Please select a CSV file first.");
+      setLoading(false);
+      return;
     }
-  }
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/api/run/", // Update to your actual endpoint
+        formData,
+        { headers: { "Content-Type": "multipart/form-data" } }
+      );
+      setData2(response.data);
+    } catch (error) {
+      setError("Error loading model");
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return(
     <div id="networkTraffic" className="dashCard">
@@ -147,7 +161,7 @@ const NetworkTraffic = () => {
         {data2 && (
           <div id='results'>
             <h3>Results:</h3>
-            <p>Accuracy: {data2.accuracy}</p>
+              {data2.accuracy}
           </div>
         )}
       </div>

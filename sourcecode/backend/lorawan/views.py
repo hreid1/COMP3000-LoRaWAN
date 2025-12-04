@@ -3,6 +3,8 @@ from rest_framework import permissions, viewsets
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .isolationforest import runModel
+from rest_framework.parsers import MultiPartParser
+import pandas as pd
 
 from lorawan.serializers import GroupSerializer, UserSerializer
 
@@ -25,9 +27,16 @@ class GroupViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
 class RunModelView(APIView):
+    parser_classes = [MultiPartParser]
+
     def post(self, request):
         try:
-            results = runModel()
+            uploaded_file = request.FILES.get("file")
+            if uploaded_file:
+                df = pd.read_csv(uploaded_file)
+                results = runModel(df)
+            else:
+                results = runModel()
             return Response(results, status=200)
         except Exception as e:
             return Response({"error": str(e)}, status=500)

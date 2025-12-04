@@ -12,7 +12,9 @@ const SideNavbar = () => {
   return (
     <div className='sideNavbar' id='sideNavbar'>
       <ul className='sideNavbarItems'>
-        <li className="sideNavbarItem">Dashboard</li>
+        <Link to ="/dashboard">
+          <li className="sideNavbarItem">Dashboard</li>
+        </Link>
         <li className="sideNavbarItem">Maps</li>
         <Link to="/devices">
           <li className="sideNavbarItem">Devices</li>

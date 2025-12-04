@@ -17,12 +17,14 @@ import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Profile from './pages/profile/Profile';
 import Settings from './pages/settings/Settings';
 import Devices from './pages/devices/Devices';
+import Dashboard from './pages/dashboard/Dashboard'
 
 const router = createBrowserRouter([
     { path:"/", element:<App/>},
     { path:"/profile", element:<Profile/>},
     { path:"/settings", element:<Settings/>},
-    { path:"/devices", element:<Devices/>}
+    { path:"/devices", element:<Devices/>},
+    { path:"/dashboard", element:<Dashboard/>}
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
