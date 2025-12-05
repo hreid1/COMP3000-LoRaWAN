@@ -19,7 +19,9 @@ const SideNavbar = () => {
         <Link to="/devices">
           <li className="sideNavbarItem">Devices</li>
         </Link>
-        <li className="sideNavbarItem">Logs</li>
+        <Link to ="/logs">
+          <li className="sideNavbarItem">Logs</li>
+        </Link>
         <li className="sideNavbarItem">AI Model</li>
         <Link to="/settings">
           <li className="sideNavbarItem" id='Settings'>Settings</li>

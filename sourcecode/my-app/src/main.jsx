@@ -18,13 +18,15 @@ import Profile from './pages/profile/Profile';
 import Settings from './pages/settings/Settings';
 import Devices from './pages/devices/Devices';
 import Dashboard from './pages/dashboard/Dashboard'
+import Logs from './pages/logs/Logs'
 
 const router = createBrowserRouter([
     { path:"/", element:<App/>},
     { path:"/profile", element:<Profile/>},
     { path:"/settings", element:<Settings/>},
     { path:"/devices", element:<Devices/>},
-    { path:"/dashboard", element:<Dashboard/>}
+    { path:"/dashboard", element:<Dashboard/>},
+    { path:"/logs", element:<Logs/>}
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(

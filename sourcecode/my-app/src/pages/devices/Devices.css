@@ -1,0 +1,47 @@
+#deviceContainer {
+    display: grid;
+    height: 100vh;
+    width: 100%;
+    grid-template-columns: 220px 2fr;
+    grid-template-rows: auto 1fr;
+}
+
+.topNavbar {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+}
+
+.sideNavbar {
+    grid-column: 1 / 2;
+    grid-row: 1 / 3;
+}
+
+.deviceContentContainer {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-rows: 1fr 2fr 1fr;
+
+    background-color: #E5ECF4;
+    padding: 0.5rem;
+    border: 0.5px solid black;
+    border-radius: 0.5rem 0 0 0;
+}
+
+.dashCard {
+    position: relative;
+    background: #fff;
+    border-radius: 0.5rem;
+    margin: 1rem;
+    padding: 0 2rem 0 2rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 180px;
+    max-height: 400px;
+    overflow: auto;
+
+    grid-column: 1 / 4;
+    grid-row: 1 / 2;
+}
