@@ -18,7 +18,7 @@ import Profile from './pages/profile/Profile';
 import Settings from './pages/settings/Settings';
 import Devices from './pages/devices/Devices';
 import Dashboard from './pages/dashboard/Dashboard'
-import Logs from './pages/logs/Logs'
+import Logs from './pages/logS/Logs'
 
 const router = createBrowserRouter([
     { path:"/", element:<App/>},

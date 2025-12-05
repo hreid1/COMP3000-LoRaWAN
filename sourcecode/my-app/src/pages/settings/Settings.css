@@ -19,34 +19,9 @@
 .settingsContentContainer {
     grid-column: 2 / 3;
     grid-row: 2 / 3;
-
-
     background-color: #E5ECF4;
     padding: 0.5rem;
     border: 0.5px solid black;
     border-radius: 0.5rem 0 0 0;
 }
 
-.settingsCard {
-    padding: 2rem;
-    margin: 2rem;
-    background: white;
-    border-radius: 0.5rem;
-
-    font-size: 1rem;
-}
-
-#settingsHeader {
-    border-bottom: 2px solid #eee;
-    padding-bottom: 0.5rem;
-}
-
-#settingsContent {
-    display: flex;
-    flex-direction: column;
-    padding: 0.5rem 0 0 0;
-}
-
-.setOption {
-    padding: 0.5rem 0 0 0;
-}

@@ -2,6 +2,7 @@ import React from 'react'
 import SideNavbar from '../../components/navbar/SideNavbar'
 import TopNavbar from '../../components/navbar/TopNavbar'
 import './Settings.css'
+import Card from '../../components/Card';
 
 // This is the settings page 
     // Will feature:
@@ -11,16 +12,11 @@ import './Settings.css'
 
 const SettingsCard = () => {
     return(
-        <div className='settingsCard'>
-            <div id="settingsHeader">
-                <span>Settings</span>
-            </div>
-            <div id="settingsContent">
-                <span className="setOption">Username: </span>
-                <span className="setOption">Password: </span>
-                <span className="setOption">Email: </span>
-            </div>
-        </div>
+        <Card header={<span>Settings</span>}>
+            <span className="setOption">Username: </span>
+            <span className="setOption">Password: </span>
+            <span className="setOption">Email: </span>
+        </Card>
     )
 }
 
