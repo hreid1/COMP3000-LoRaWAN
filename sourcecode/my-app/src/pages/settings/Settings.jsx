@@ -10,13 +10,24 @@ import './Settings.css'
         // Legal stuff: Removing account + linked details
 
 const SettingsCard = () => {
-
+    return(
+        <div className='settingsCard'>
+            <div id="settingsHeader">
+                <span>Settings</span>
+            </div>
+            <div id="settingsContent">
+                <span className="setOption">Username: </span>
+                <span className="setOption">Password: </span>
+                <span className="setOption">Email: </span>
+            </div>
+        </div>
+    )
 }
 
 const SettingsContent = () => {
     return(
         <div className='settingsContentContainer'>
-            <span>This is the settings page</span>
+            <SettingsCard />
         </div>
     )
 }

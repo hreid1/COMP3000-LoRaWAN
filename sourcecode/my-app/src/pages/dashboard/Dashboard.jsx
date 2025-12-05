@@ -115,7 +115,7 @@ const NetworkTraffic = () => {
     }
   };
 
-  return(
+  return (
     <div id="networkTraffic" className="dashCard">
       <div className="marker"></div>
       <div className="cardHeader">
@@ -124,49 +124,50 @@ const NetworkTraffic = () => {
       </div>
 
       <div className="cardContent">
-        <input onChange={handleFileChange} id="csvInput" name='file' type='file' />
-        <div>
-          <button onClick={handleParse}>
-            Parse
-          </button>
+        <div className="btnContainer">
+          <input
+            onChange={handleFileChange}
+            id="csvInput"
+            name="file"
+            type="file" />
+          <button onClick={handleParse}>Parse</button>
           <button onClick={model} disabled={loading}>
             {loading ? "Running Analysis" : "Run Isolation Forest"}
           </button>
         </div>
-        <div style = {{ marginTop: "1rem"}}>
+        <div style={{ marginTop: "1rem" }}>
           {error
             ? error
             : data.length > 0 && (
-              <table className="networkTable">
-                <thead>
-                  <tr>
-                    {Object.keys(data[0]).map((key) => (
-                      <th key={key}>{key}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.slice(0, 10).map((row, rowIndex) => (
-                    <tr key={rowIndex}>
-                      {Object.keys(row).map((key) => (
-                        <td key={key + rowIndex}>{row[key]}</td>
+                <table className="networkTable">
+                  <thead>
+                    <tr>
+                      {Object.keys(data[0]).map((key) => (
+                        <th key={key}>{key}</th>
                       ))}
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            )
-          }
+                  </thead>
+                  <tbody>
+                    {data.slice(0, 10).map((row, rowIndex) => (
+                      <tr key={rowIndex}>
+                        {Object.keys(row).map((key) => (
+                          <td key={key + rowIndex}>{row[key]}</td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
         </div>
         {data2 && (
-          <div id='results'>
+          <div id="results">
             <h3>Results:</h3>
-              {data2.accuracy}
+            {data2.accuracy}
           </div>
         )}
       </div>
     </div>
-  )
+  );
 }
 
 const TrafficScore = () => {

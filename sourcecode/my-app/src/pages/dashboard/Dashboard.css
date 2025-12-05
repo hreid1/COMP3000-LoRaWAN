@@ -102,9 +102,7 @@
     grid-row: 2 / 3;
 }
 
-#networkTraffic input {
-    padding: 0.5rem;
-}
+
 
 .networkTable {
     width: 80%;
@@ -146,13 +144,27 @@
     background: #F1F2EB;
 }
 
-
 .item {
     width: 200px;
     margin: 0 auto;
     padding: 2px;
     border-radius: 10px;
     text-align: left;
+}
+
+.btnContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.btnContainer input{
+    margin: 0.5rem;
+}
+
+.btnContainer button{
+    margin: 0.5rem;
+    width: 100px;
+    height: 40px;
 }
 
 #trafficScore {
