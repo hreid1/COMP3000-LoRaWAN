@@ -5,7 +5,7 @@ import Papa from 'papaparse'
 import './Dashboard.css'
 import SideNavbar from '../../components/navbar/SideNavbar'
 import TopNavbar from '../../components/navbar/TopNavbar'
-import Dots from '../../assets/Dots.svg'
+import Dots from '../../assets/dots.svg'
 
 const DeviceList = () => {
   return(
@@ -65,10 +65,9 @@ const NetworkTraffic = () => {
     setError("");
     if (e.target.files.length) {
       const inputFile = e.target.files[0];
-      const fileExtension = inputFile?.type.split("/")[1];
-      if (
-        !allowedExtensions.includes(fileExtension)
-      ){
+      const fileName = inputFile.name;
+      const fileExtension = fileName.slice(((fileName.lastIndexOf(".") - 1) >>> 0) + 2).toLowerCase();
+      if (!allowedExtensions.includes(fileExtension)) {
         setError("Please input a csv file");
         return;
       }

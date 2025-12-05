@@ -6,25 +6,13 @@ from .isolationforest import runModel
 from rest_framework.parsers import MultiPartParser
 import pandas as pd
 
-from lorawan.serializers import GroupSerializer, UserSerializer
+class DeviceListView(APIView):
+    def get(self, request):
+        return Response({"devices": []})
 
-class UserViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-
-    queryset = User.objects.all().order_by("-date_joined")
-    serializer_class = UserSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-class GroupViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows groups to be viewed or edited.
-    """
-
-    queryset = Group.objects.all().order_by("name")
-    serializer_class = GroupSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class LogListView(APIView):
+    def get(self, request):
+        return Response({"logs": []})
 
 class RunModelView(APIView):
     parser_classes = [MultiPartParser]
