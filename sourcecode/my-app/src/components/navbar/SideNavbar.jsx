@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom'
 
 const SideNavbar = () => {
   return (
-    <div className='sideNavbar' id='sideNavbar'>
+    <nav className="sideNavbar">
       <ul className='sideNavbarItems'>
         <Link to ="/dashboard">
           <li className="sideNavbarItem">Dashboard</li>
@@ -27,7 +27,7 @@ const SideNavbar = () => {
           <li className="sideNavbarItem" id='Settings'>Settings</li>
         </Link>
       </ul>
-    </div>
+    </nav>
   );
 };
 

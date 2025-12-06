@@ -10,11 +10,10 @@ import { Link } from 'react-router-dom'
 import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
 
 const TopNavbar = () => {
-  const items = [1, 2, 3, 4, 5, 6]
 
   return(
-    <div className="topNavbar" id='topNavbar'>
-      <h1>Hi Henry</h1>
+    <nav className="topNavbar">
+      <h1 tabIndex={0}>Hi Henry</h1>
       <div className="searchBox">
         <input type="text" placeholder='Search'/>
           <img src={searchImg} alt="" className='toggleIcon'/>
@@ -32,21 +31,17 @@ const TopNavbar = () => {
           </li>
         </Link>
         <Dropdown
-          buttonText="Dropdown button"
+          buttonText="User"
           content={
             <>
-              {items.map((item) => (
-                <DropdownItem key={item}>
-                  {`Item ${item}`}
-                </DropdownItem>
-              ))}
+              <DropdownItem>Profile</DropdownItem>
+              <DropdownItem>Settings</DropdownItem>
+              <DropdownItem>Logout</DropdownItem>
             </>
           }
-        >
-          butt
-        </Dropdown>
+          />
       </ul>
-    </div>
+    </nav>
   )
 }
 
