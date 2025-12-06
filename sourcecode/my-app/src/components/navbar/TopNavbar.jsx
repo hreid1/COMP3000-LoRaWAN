@@ -7,8 +7,11 @@ import helpImg from '../../assets/help.svg'
 import searchImg from '../../assets/search.svg'
 import networkImg from '../../assets/network.svg'
 import { Link } from 'react-router-dom'
+import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
 
 const TopNavbar = () => {
+  const items = [1, 2, 3, 4, 5, 6]
+
   return(
     <div className="topNavbar" id='topNavbar'>
       <h1>Hi Henry</h1>
@@ -28,6 +31,20 @@ const TopNavbar = () => {
             <img src={profileImg} alt="profilePicture" className='logo' />
           </li>
         </Link>
+        <Dropdown
+          buttonText="Dropdown button"
+          content={
+            <>
+              {items.map((item) => (
+                <DropdownItem key={item}>
+                  {`Item ${item}`}
+                </DropdownItem>
+              ))}
+            </>
+          }
+        >
+          butt
+        </Dropdown>
       </ul>
     </div>
   )

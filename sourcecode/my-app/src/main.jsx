@@ -12,13 +12,12 @@ import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
 import './App.css';
-import profile from './pages/profile/Profile'
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Profile from './pages/profile/Profile';
-import Settings from './pages/settings/Settings';
-import Devices from './pages/devices/Devices';
-import Dashboard from './pages/dashboard/Dashboard'
-import Logs from './pages/logS/Logs'
+import Settings from './pages/Settings/Settings';
+import Devices from './pages/Devices/Devices';
+import Dashboard from './pages/dashboard/Dashboard';
+import Logs from './pages/Logs/Logs'
 
 const router = createBrowserRouter([
     { path:"/", element:<App/>},
