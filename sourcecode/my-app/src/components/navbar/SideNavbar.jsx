@@ -12,18 +12,18 @@ const SideNavbar = () => {
   return (
     <nav className="sideNavbar">
       <ul className='sideNavbarItems'>
-        <Link to ="/dashboard">
+        <Link to ="/dashboard" className='Link'>
           <li className="sideNavbarItem">Dashboard</li>
         </Link>
         <li className="sideNavbarItem">Maps</li>
-        <Link to="/devices">
+        <Link to="/devices" className='Link'>
           <li className="sideNavbarItem">Devices</li>
         </Link>
-        <Link to ="/logs">
+        <Link to ="/logs" className="Link">
           <li className="sideNavbarItem">Logs</li>
         </Link>
         <li className="sideNavbarItem">AI Model</li>
-        <Link to="/settings">
+        <Link to="/settings" className="Link">
           <li className="sideNavbarItem" id='Settings'>Settings</li>
         </Link>
       </ul>
