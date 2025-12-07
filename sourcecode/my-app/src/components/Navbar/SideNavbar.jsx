@@ -1,11 +1,5 @@
 import React from 'react'
 import './SideNavbar.css'
-import dashboardImg from '../../assets/dashboard.svg'
-import mapsImg from '../../assets/maps.svg'
-import deviceImg from '../../assets/devices.svg'
-import logImg from '../../assets/logs.svg'
-import settingsImg from '../../assets/settings.svg'
-import networkImg from '../../assets/network.svg'
 import { Link } from 'react-router-dom'
 
 const SideNavbar = () => {
@@ -15,14 +9,14 @@ const SideNavbar = () => {
         <Link to ="/dashboard" className='Link'>
           <li className="sideNavbarItem">Dashboard</li>
         </Link>
-        <li className="sideNavbarItem">Maps</li>
+        <li className="sideNavbarItem" style={{color: "red"}}>Maps</li>
         <Link to="/devices" className='Link'>
           <li className="sideNavbarItem">Devices</li>
         </Link>
         <Link to ="/logs" className="Link">
           <li className="sideNavbarItem">Logs</li>
         </Link>
-        <li className="sideNavbarItem">AI Model</li>
+        <li className="sideNavbarItem" style={{color: "red"}}>AI Model</li>
         <Link to="/settings" className="Link">
           <li className="sideNavbarItem" id='Settings'>Settings</li>
         </Link>
