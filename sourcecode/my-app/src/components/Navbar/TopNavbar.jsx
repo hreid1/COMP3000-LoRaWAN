@@ -10,10 +10,9 @@ import { Link } from 'react-router-dom'
 import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
 
 const TopNavbar = () => {
-
   return(
     <nav className="topNavbar">
-      <h1 tabIndex={0}>Hi Henry</h1>
+      <h1 tabIndex={0}>Hi Henry</h1> 
       <div className="searchBox">
         <input type="text" placeholder='Search'/>
           <img src={searchImg} alt="" className='toggleIcon'/>

@@ -39,6 +39,7 @@ def runModel(custom_df=None):
             custom_df['is_anomaly'] = (custom_df['NodeID'] == 121).astype(int)
             prediction = (preds == -1).astype(int)
             y_true = custom_df['is_anomaly']
+            num_anomalies = (preds == -1).sum()
             acc = accuracy_score(y_true, prediction)
         else:
             acc = None
@@ -48,6 +49,7 @@ def runModel(custom_df=None):
             "anomaly_scores": scores.tolist(),
             "n_rows": len(custom_df),
             "accuracy": acc,
+            "num_anomalies": num_anomalies,
         }
 
     # Otherwise run the default

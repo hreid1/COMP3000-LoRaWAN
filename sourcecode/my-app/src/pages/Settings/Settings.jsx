@@ -1,6 +1,6 @@
 import React from 'react'
-import SideNavbar from '../../components/navbar/SideNavbar'
-import TopNavbar from '../../components/navbar/TopNavbar'
+import SideNavbar from '../../components/Navbar/SideNavbar'
+import TopNavbar from '../../components/Navbar/TopNavbar'
 import './Settings.css'
 import Card from '../../components/Card';
 

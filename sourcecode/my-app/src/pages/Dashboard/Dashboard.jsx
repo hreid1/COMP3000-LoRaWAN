@@ -3,12 +3,13 @@ import axios from 'axios'
 import { useState, useEffect } from 'react'
 import Papa from 'papaparse'
 import './Dashboard.css'
-import SideNavbar from '../../components/navbar/SideNavbar'
-import TopNavbar from '../../components/navbar/TopNavbar'
+import SideNavbar from '../../components/Navbar/SideNavbar'
+import TopNavbar from '../../components/Navbar/TopNavbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
+import { data } from 'react-router-dom'
 
-const DeviceList = () => {
+const DeviceList = ({data}) => {
   return(
     <div id="deviceList" className="dashCard">
       <div className='marker'></div>
@@ -24,7 +25,7 @@ const DeviceList = () => {
   )
 }
 
-const AnomalyList = () => {
+const AnomalyList = ({data}) => {
   return(
     <div id="anomalyList" className="dashCard">
       <div className="marker"></div>
@@ -39,7 +40,7 @@ const AnomalyList = () => {
   )
 }
 
-const Announcements = () => {
+const Announcements = ({data}) => {
   return(
     <div id="announcements" className="dashCard">
       <div className="marker"></div>
@@ -54,17 +55,8 @@ const Announcements = () => {
   )
 }
 
-const NetworkTraffic = () => {
-  const {
-    data,
-    error,
-    loading,
-    data2,
-    handleFileChange,
-    handleParse,
-    model,
-  } = useNetworkTraffic();
-
+const NetworkTraffic = ({data, error, loading, data2, handleFileChange, handleParse, model}) => {
+  
   return (
     <div id="networkTraffic" className="dashCard">
       <div className="marker"></div>
@@ -109,18 +101,31 @@ const NetworkTraffic = () => {
                 </table>
               )}
         </div>
-        {data2 && (
-          <div id="results">
-            <h3>Results:</h3>
-            {data2.accuracy}
-          </div>
-        )}
       </div>
     </div>
   );
 }
 
-const TrafficScore = () => {
+const TrafficScore = ({ data }) => {
+
+  // If number of anomalies > 100 -> Bad -> Show red colour
+  // 100 > If number of anomalies > 55 -> Moderate -> Show orange colour
+  // 55 > Num of anomalies -> Good -> Show green colour
+  // jammer.csv -> 33537 anomalies
+  // no-jammer.csv
+
+  const handleTrafficScore = (num) => {
+    if (num > 40000) {
+      return {label: "Bad", color: "red"};
+    } else if (num > 55) {
+      return {label: "Moderate", color: "orange"};
+    } else {
+      return {label: "Good", color: "green"};
+    }
+  }
+
+  const score = handleTrafficScore(data.num_anomalies)
+
   return(
     <div id="trafficScore" className="dashCard">
       <div className="marker"></div>
@@ -129,13 +134,16 @@ const TrafficScore = () => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
-        <span>Good</span>
+        <span>Number of Anomalies: {data.num_anomalies}</span>
+        <span style={{ color: score.color, fontWeight: "bold", padding: "10px" }}>
+          {score.label}
+        </span>
       </div>
     </div>
   )
 }
 
-const Graph = () => {
+const Graph = ({data}) => {
 
   return (
     <div id="graph" className="dashCard">
@@ -150,7 +158,7 @@ const Graph = () => {
   );
 }
 
-const AnomalyGraph = () => {
+const AnomalyGraph = ({data}) => {
   return(
     <div id="anomalyGraph" className="dashCard">
       <div className="marker"></div>
@@ -165,7 +173,7 @@ const AnomalyGraph = () => {
   )
 }
 
-const OtherGraph = () => {
+const OtherGraph = ({data}) => {
   return(
     <div id="otherGraph" className="dashCard">
       <div>
@@ -176,15 +184,27 @@ const OtherGraph = () => {
 }
 
 const MainDashContent = (props) => {
+  const networkTraffic = useNetworkTraffic();
+  //console.log(networkTraffic.data)
+
+  // networkTraffic.data contains information from csv file
+
   return (
     <div className='dashContentContainer'>
-      <DeviceList />
-      <AnomalyList />
-      <Announcements />
-      <NetworkTraffic />
-      <TrafficScore />
-      <Graph />
-      <AnomalyGraph />
+      <DeviceList data={networkTraffic.data}/>
+      <AnomalyList data={networkTraffic.data}/>
+      <Announcements data={networkTraffic.data}/>
+      <NetworkTraffic data={networkTraffic.data} 
+        error={networkTraffic.error} 
+        loading={networkTraffic.loading} 
+        data2={networkTraffic.data2}
+        handleFileChange={networkTraffic.handleFileChange}
+        handleParse={networkTraffic.handleParse}
+        model={networkTraffic.model}
+      />
+      <TrafficScore data={networkTraffic.data2}/>
+      <Graph data={networkTraffic.data}/>
+      <AnomalyGraph data={networkTraffic.data}/>
     </div>
   )
 }

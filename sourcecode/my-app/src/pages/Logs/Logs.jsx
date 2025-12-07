@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
-import SideNavbar from '../../components/navbar/SideNavbar'
-import TopNavbar from '../../components/navbar/TopNavbar'
+import SideNavbar from '../../components/Navbar/SideNavbar'
+import TopNavbar from '../../components/Navbar/TopNavbar'
 import './Logs.css'
 import Card from '../../components/Card';
 
