@@ -18,8 +18,8 @@ Main content
 
 */
 import { useState, useEffect } from 'react'
-import Dashboard from './pages/dashboard/Dashboard'
-import profile from './pages/profile/Profile'
+import Dashboard from './pages/Dashboard/Dashboard'
+import profile from './pages/Profile/Profile'
 
 const App = () => {
   return (

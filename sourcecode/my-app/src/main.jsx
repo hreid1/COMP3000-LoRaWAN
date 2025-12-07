@@ -13,10 +13,10 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './App.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
-import Profile from './pages/profile/Profile';
+import Profile from './pages/Profile/Profile';
 import Settings from './pages/Settings/Settings';
 import Devices from './pages/Devices/Devices';
-import Dashboard from './pages/dashboard/Dashboard';
+import Dashboard from './pages/Dashboard/Dashboard';
 import Logs from './pages/Logs/Logs'
 
 const router = createBrowserRouter([
