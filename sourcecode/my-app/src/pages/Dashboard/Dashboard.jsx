@@ -153,28 +153,63 @@ const TrafficScore = ({ data }) => {
   )
 }
 
-const Graph = () => {
+const Graph = ({ data }) => {
+  // From networktraffic.data: Count the number of different NodeID's to get a number of Nodes at play
+  // Also want to count the number of records per node
+  // And then display top 
 
-  console.log(Data)
+  const nodeCounts = data.reduce((acc, item) => {
+    if (item.NodeID) {
+      acc[item.NodeID] = (acc[item.NodeID] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  const sortedNodes = Object.entries(nodeCounts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4); 
+
+  const labels = sortedNodes.map(([nodeID]) => nodeID);
+  const counts = sortedNodes.map(([_, count]) => count);
 
   const [chartData, setChartData] = useState({
-    labels: Data.map((data) => data.year), 
+    labels,
     datasets: [
       {
-        label: "Users Gained ",
-        data: Data.map((data) => data.userGain),
+        label: "Records per NodeID (Top 4)",
+        data: counts,
         backgroundColor: [
           "rgba(75,192,192,1)",
           "#ecf0f1",
           "#50AF95",
-          "#f3ba2f",
-          "#2a71d0"
+          "#f3ba2f"
         ],
         borderColor: "black",
         borderWidth: 2
       }
     ]
   });
+
+  // When the chart updates
+  useEffect(() => {
+    setChartData({
+      labels,
+      datasets: [
+        {
+          label: "Records per NodeID (Top 4)",
+          data: counts,
+          backgroundColor: [
+            "rgba(75,192,192,1)",
+            "#ecf0f1",
+            "#50AF95",
+            "#f3ba2f"
+          ],
+          borderColor: "black",
+          borderWidth: 2
+        }
+      ]
+    });
+  }, [data]);
 
   return (
     <div id="graph" className="dashCard">
@@ -195,6 +230,7 @@ const MainDashContent = (props) => {
   //console.log(networkTraffic.data)
 
   // networkTraffic.data contains information from csv file
+  console.log(networkTraffic.data)
 
   return (
     <div className='dashContentContainer'>
@@ -210,7 +246,7 @@ const MainDashContent = (props) => {
         model={networkTraffic.model}
       />
       <TrafficScore data={networkTraffic.data2}/>
-      <Graph/>
+      <Graph data={networkTraffic.data}/>
     </div>
   )
 }
