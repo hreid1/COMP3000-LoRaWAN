@@ -7,7 +7,12 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import TopNavbar from '../../components/Navbar/TopNavbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
-import 'chart.js/auto';
+import Chart from 'chart.js/auto'
+import { CategoryScale } from 'chart.js/auto'
+import { Data } from '../../utils/Data'
+import { BarChart } from '../../components/Charts/Graph'
+
+Chart.register(CategoryScale);
 
 const DeviceList = ({data}) => {
   return(
@@ -148,7 +153,28 @@ const TrafficScore = ({ data }) => {
   )
 }
 
-const Graph = ({data}) => {
+const Graph = () => {
+
+  console.log(Data)
+
+  const [chartData, setChartData] = useState({
+    labels: Data.map((data) => data.year), 
+    datasets: [
+      {
+        label: "Users Gained ",
+        data: Data.map((data) => data.userGain),
+        backgroundColor: [
+          "rgba(75,192,192,1)",
+          "#ecf0f1",
+          "#50AF95",
+          "#f3ba2f",
+          "#2a71d0"
+        ],
+        borderColor: "black",
+        borderWidth: 2
+      }
+    ]
+  });
 
   return (
     <div id="graph" className="dashCard">
@@ -158,6 +184,7 @@ const Graph = ({data}) => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
+        <BarChart chartData={chartData} />
       </div>
     </div>
   );
@@ -183,7 +210,7 @@ const MainDashContent = (props) => {
         model={networkTraffic.model}
       />
       <TrafficScore data={networkTraffic.data2}/>
-      <Graph data={networkTraffic.data}/>
+      <Graph/>
     </div>
   )
 }
