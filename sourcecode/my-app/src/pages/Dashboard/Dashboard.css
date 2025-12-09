@@ -1,9 +1,9 @@
 #dashContainer {
     display: grid;
-    height: 100vh;
     width: 100%;
     grid-template-columns: 220px 2fr;
     grid-template-rows: auto 1fr;
+    overflow-x: hidden;
 }
 
 .topNavbar {
@@ -21,26 +21,29 @@
     grid-row: 2 / 3;
 
     display: grid;
+    gap: 8px;   
     grid-template-columns: repeat(9, 1fr);
     grid-template-rows: 1fr 2fr 1fr;
 
     background-color: #E5ECF4;
-    padding: 0.5rem;
+    padding: 1rem; 
     border: 0.5px solid black;
     border-radius: 0.5rem 0 0 0;
+    overflow: auto;
 }
 
 .dashCard {
     position: relative;
     background: #fff;
     border-radius: 0.5rem;
-    margin: 1rem;
-    padding: 0 2rem 0 2rem;
+    margin: 8px;
+    padding: 1rem;
     display: flex;
     flex-direction: column;
     min-height: 180px;
     max-height: 400px;
     overflow: auto;
+    box-sizing: border-box;
 }
 
 .marker {
@@ -101,8 +104,6 @@
     grid-column: 1 / 10;
     grid-row: 2 / 3;
 }
-
-
 
 .networkTable {
     width: 80%;
@@ -168,17 +169,11 @@
 }
 
 #trafficScore {
-    grid-column: 5 / 7;
+    grid-column: 8 / 10;
     grid-row: 3 / 4;
 }
 
 #graph {
-    grid-column: 1 / 5;
+    grid-column: 1 / 8;
     grid-row: 3 / 4;
 }
-
-#anomalyGraph {
-    grid-column: 7 / 10;
-    grid-row: 3 / 4;
-}
-

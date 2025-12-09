@@ -9,6 +9,7 @@ export default function useNetworkTraffic() {
     const [loading, setLoading] = useState(false);
     const [data2, setData2] = useState(false);
     const allowedExtensions = ["csv"];
+    const [fileUploaded, setFileUploaded] = useState(false);
 
     const handleFileChange = (e) => {
         setError("");
@@ -55,6 +56,7 @@ export default function useNetworkTraffic() {
                 { headers: { "Content-Type": "multipart/form-data" }}
             );
             setData2(response.data);
+            setFileUploaded(true); // Set fileUploaded to true after successful upload
         } catch (error) {
             setError("Error loading model");
             console.error(error);
@@ -69,6 +71,7 @@ export default function useNetworkTraffic() {
         file,
         loading,
         data2,
+        fileUploaded,
         handleFileChange,
         handleParse,
         model,

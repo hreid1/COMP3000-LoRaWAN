@@ -7,7 +7,7 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import TopNavbar from '../../components/Navbar/TopNavbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
-import { data } from 'react-router-dom'
+import 'chart.js/auto';
 
 const DeviceList = ({data}) => {
   return(
@@ -107,7 +107,6 @@ const NetworkTraffic = ({data, error, loading, data2, handleFileChange, handlePa
 }
 
 const TrafficScore = ({ data }) => {
-
   // If number of anomalies > 100 -> Bad -> Show red colour
   // 100 > If number of anomalies > 55 -> Moderate -> Show orange colour
   // 55 > Num of anomalies -> Good -> Show green colour
@@ -124,7 +123,9 @@ const TrafficScore = ({ data }) => {
     }
   }
 
-  const score = handleTrafficScore(data.num_anomalies)
+  // The card content of traffic score will only show when the user has successfully uploaded a file and ran the model
+  const hasResults = data && typeof data.num_anomalies !== 'undefined';
+  const score = hasResults ? handleTrafficScore(data.num_anomalies) : { label: '', color: '' };
 
   return(
     <div id="trafficScore" className="dashCard">
@@ -134,10 +135,14 @@ const TrafficScore = ({ data }) => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
-        <span>Number of Anomalies: {data.num_anomalies}</span>
-        <span style={{ color: score.color, fontWeight: "bold", padding: "10px" }}>
-          {score.label}
-        </span>
+        {hasResults && (
+          <div>
+            <span>Number of Anomalies: {data.num_anomalies}</span>
+            <span style={{ color: score.color, fontWeight: "bold", padding: "10px" }}>
+              {score.label}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   )
@@ -156,31 +161,6 @@ const Graph = ({data}) => {
       </div>
     </div>
   );
-}
-
-const AnomalyGraph = ({data}) => {
-  return(
-    <div id="anomalyGraph" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Anomaly Graph</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        <span>Another graph goes here</span>
-      </div>
-    </div>
-  )
-}
-
-const OtherGraph = ({data}) => {
-  return(
-    <div id="otherGraph" className="dashCard">
-      <div>
-        <span>Final graph</span>
-      </div>
-    </div>
-  )
 }
 
 const MainDashContent = (props) => {
@@ -204,7 +184,6 @@ const MainDashContent = (props) => {
       />
       <TrafficScore data={networkTraffic.data2}/>
       <Graph data={networkTraffic.data}/>
-      <AnomalyGraph data={networkTraffic.data}/>
     </div>
   )
 }
