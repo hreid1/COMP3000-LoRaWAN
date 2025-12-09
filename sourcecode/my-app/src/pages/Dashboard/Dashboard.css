@@ -20,9 +20,9 @@
 .dashContentContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 220px 1fr 1fr ; /* Fixed height for top and bottom rows */
+    grid-template-rows: 220px 1fr 1fr ; 
     gap: 16px;
-    align-items: stretch; /* Make all items stretch to fill row height */
+    align-items: stretch; 
     background-color: #E5ECF4;
     padding: 1rem; 
     border-left: 0.5px solid black;
@@ -41,7 +41,7 @@
     flex-direction: column;
     min-width: 0;
     min-height: 0;
-    height: 100%;      /* Make card fill grid area */
+    height: 100%;      
     box-sizing: border-box;
     align-self: stretch;
 }
@@ -184,7 +184,7 @@
 }
 
 #graph .cardContent {
-    height: 300px; /* or adjust as needed */
+    height: 300px;
     min-height: 0;
     overflow-y: auto;
 }
