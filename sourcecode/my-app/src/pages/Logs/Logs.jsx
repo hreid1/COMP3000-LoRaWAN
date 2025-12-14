@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import SideNavbar from '../../components/Navbar/SideNavbar'
+import Navbar from '../../components/Navbar/Navbar'
 import './Logs.css'
 import Card from '../../components/Card';
 
@@ -20,7 +21,7 @@ const LogContent = () => (
 
 const Logs = () => (
   <div id="logContainer">
-    <TopNavbar />
+    <Navbar />
     <SideNavbar />
     <LogContent />
   </div>

@@ -1,6 +1,8 @@
 import React from 'react'
 import './SideNavbar.css'
 import Dots from '../../assets/dots.svg'
+import { Link } from "react-router"
+
 
 const SideNavbar = () => {
   return (
@@ -8,11 +10,17 @@ const SideNavbar = () => {
       <img src={Dots} alt="" className='logo'/>
       <div className='menuContent'>
         <ul>
-          <li>Home</li>
-          <li>Devices</li>
-          <li>Logs</li>
-          <li>Maps</li>
-          <li>AI-Model</li>
+          <Link to="/dashboard">
+            <li>Home</li>
+          </Link>
+          <Link to="/devices">
+            <li>Devices</li>
+          </Link>
+          <Link to="/logs">
+            <li>Logs</li>
+          </Link>
+          <li style={{ color: "red"}}>Maps</li>
+          <li style={{ color: "red"}}>AI-Model</li>
         </ul>
       </div>
     </div>

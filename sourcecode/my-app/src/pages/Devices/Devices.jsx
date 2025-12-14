@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import React from 'react'
 import axios from 'axios'
+import Navbar from '../../components/Navbar/Navbar'
 import SideNavbar from '../../components/Navbar/SideNavbar'
 import './Devices.css'
 import Card from '../../components/Card';
@@ -19,7 +20,7 @@ const DeviceContent = () => (
 
 const Devices = () => (
   <div id="deviceContainer">
-    <TopNavbar />
+    <Navbar />
     <SideNavbar />
     <DeviceContent />
   </div>

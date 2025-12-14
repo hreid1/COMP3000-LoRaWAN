@@ -13,7 +13,6 @@
   height: 40px;
   cursor: pointer;
   align-self: flex-end;   
-  padding-top: 3rem;  
 }
 
 .menuContent {
@@ -51,4 +50,9 @@
   background: #f0f9ff;
   color: #2563eb;
   outline: none;
+}
+
+.menuContent a {
+  text-decoration: none;
+  color: black;
 }
