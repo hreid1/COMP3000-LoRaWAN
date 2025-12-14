@@ -279,13 +279,13 @@ const MainDashContent = (props) => {
 
 
 const Dashboard = () => {
-  return(
-    <div id='dashContainer'>
-        <TopNavbar />
-        <SideNavbar />
-        <MainDashContent />
+  return (
+    <div id="dashContainer">
+      <TopNavbar />
+      <SideNavbar />
+      <MainDashContent />
     </div>
-  )
+  );
 }
 
 export default Dashboard
