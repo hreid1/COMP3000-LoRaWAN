@@ -1,26 +1,28 @@
 #dashContainer {
   display: grid;
   grid-template-columns: 220px 1fr;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto 1fr; 
   width: 100vw;
+  overflow-x: hidden;
 }
 
 .navbar {
-    grid-column: 1 / 3;
-    grid-row: 1 / 2;
-    z-index:1000;
-    position: sticky;
-    top: 0;
+  grid-column: 1 / 3;
+  grid-row: 1 / 2;
+  z-index: 10;
+  position: sticky;
+  top: 0;
 }
 
 .sideNavbar {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+  z-index: 1;
 }
 
 .dashContentContainer {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
+  grid-column: 2 / 3;   
+  grid-row: 2 / 3;      
 }
 
 .dashContentContainer {
