@@ -33,6 +33,21 @@ def runModel(custom_df=None):
             return {"error": f"Uploaded file missing required columns: {e}"}
         preds = IF.predict(custom_scaled)
         scores = IF.decision_function(custom_scaled)
+        topNode = None
+        topNodeAnomaly = 0
+
+        if "NodeID" in custom_df.columns:
+            anomaly = (preds == -1)
+
+            anomaliesPerNode = (
+                custom_df.loc[anomaly]
+                .groupby("NodeID")
+                .size()
+            )
+
+            if not anomaliesPerNode.empty:
+                topNode = anomaliesPerNode.idxmax()
+                topNodeAnomalies = int(anomaliesPerNode.max())
 
         if "NodeID" in custom_df.columns:
             custom_df = custom_df.copy()
@@ -50,6 +65,8 @@ def runModel(custom_df=None):
             "n_rows": len(custom_df),
             "accuracy": acc,
             "num_anomalies": num_anomalies,
+            "top_anomaly_node": topNode,
+            "top_anomaly_node_anomalies": topNodeAnomalies,
         }
 
     # Otherwise run the default

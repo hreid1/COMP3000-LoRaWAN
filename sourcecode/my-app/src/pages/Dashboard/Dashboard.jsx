@@ -1,6 +1,6 @@
 import React from 'react'
 import axios from 'axios'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Papa from 'papaparse'
 import './Dashboard.css'
 import SideNavbar from '../../components/Navbar/SideNavbar'
@@ -14,7 +14,15 @@ import { BarChart } from '../../components/Charts/Graph'
 
 Chart.register(CategoryScale);
 
-const DeviceList = ({data}) => {
+const DeviceList = ({ data }) => {
+  const numOfNodes = useMemo(() => {
+    return new Set(data.map(row => row.NodeID).filter(Boolean)).size;
+  }, [data]);
+
+  //console.log("Unique Nodes: ", numOfNodes);
+
+  const isEmpty = data.length != 0;
+
   return(
     <div id="deviceList" className="dashCard">
       <div className='marker'></div>
@@ -23,14 +31,19 @@ const DeviceList = ({data}) => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
-        <span>Devices online: </span>
-        <span>Devices offline: </span>
+        { isEmpty && (
+          <span>Number of Nodes: {numOfNodes}</span>
+        )}
       </div>
     </div>
   )
 }
 
-const AnomalyList = ({data}) => {
+const AnomalyList = ({ data }) => {
+
+  const isEmpty = data && typeof data.num_anomalies !== "undefined";
+  //console.log(isEmpty)
+
   return(
     <div id="anomalyList" className="dashCard">
       <div className="marker"></div>
@@ -39,13 +52,22 @@ const AnomalyList = ({data}) => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
-        <span>Jammer Attack: 1</span>
+        { isEmpty && (
+          <span>Number of anomalies: {data.num_anomalies}</span>
+        )}
       </div>
     </div>
   )
 }
 
-const Announcements = ({data}) => {
+const Announcements = ({ data }) => {
+
+  // Checks if the data2 array is empty: if it is it wont render the content
+  const isEmpty = data && typeof data.num_anomalies !== "undefined";
+
+  //console.log(data.top_anomaly_node)
+  //console.log(data.top_anomaly_node_anomalies)
+
   return(
     <div id="announcements" className="dashCard">
       <div className="marker"></div>
@@ -54,13 +76,18 @@ const Announcements = ({data}) => {
         <img src={Dots} alt="Dots" className="dots" />
       </div>
       <div className="cardContent">
-        <span>Error found at nodeID</span>
+        { isEmpty && (
+          <div>
+            <span>Node: {data.top_anomaly_node} </span> 
+            <span>Anomalies: {data.top_anomaly_node_anomalies}</span>
+          </div>
+        )}
       </div>
     </div>
   )
 }
 
-const NetworkTraffic = ({data, error, loading, data2, handleFileChange, handleParse, model}) => {
+const NetworkTraffic = ({ data, error, loading, data2, handleFileChange, handleParse, model }) => {
   
   return (
     <div id="networkTraffic" className="dashCard">
@@ -227,16 +254,15 @@ const Graph = ({ data }) => {
 
 const MainDashContent = (props) => {
   const networkTraffic = useNetworkTraffic();
-  //console.log(networkTraffic.data)
 
   // networkTraffic.data contains information from csv file
-  console.log(networkTraffic.data)
+  //console.log(networkTraffic.data)
 
   return (
     <div className='dashContentContainer'>
       <DeviceList data={networkTraffic.data}/>
-      <AnomalyList data={networkTraffic.data}/>
-      <Announcements data={networkTraffic.data}/>
+      <AnomalyList data={networkTraffic.data2}/>
+      <Announcements data={networkTraffic.data2}/>
       <NetworkTraffic data={networkTraffic.data} 
         error={networkTraffic.error} 
         loading={networkTraffic.loading} 
