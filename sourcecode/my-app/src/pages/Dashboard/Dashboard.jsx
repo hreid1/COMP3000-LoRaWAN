@@ -148,7 +148,7 @@ const TrafficScore = ({ data }) => {
   const handleTrafficScore = (num) => {
     if (num > 40000) {
       return {label: "Bad", color: "red"};
-    } else if (num > 55) {
+    } else if (num > 100) {
       return {label: "Moderate", color: "orange"};
     } else {
       return {label: "Good", color: "green"};
@@ -169,7 +169,6 @@ const TrafficScore = ({ data }) => {
       <div className="cardContent">
         {hasResults && (
           <div>
-            <span>Number of Anomalies: {data.num_anomalies}</span>
             <span style={{ color: score.color, fontWeight: "bold", padding: "10px" }}>
               {score.label}
             </span>

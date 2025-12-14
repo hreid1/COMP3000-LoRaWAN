@@ -13,6 +13,10 @@ export default function useNetworkTraffic() {
 
     const handleFileChange = (e) => {
         setError("");
+        setData([]);           
+        setData2(false);       
+        setFileUploaded(false);
+        setLoading(false);
         if (e.target.files.length) {
             const inputFile = e.target.files[0];
             const fileName = inputFile.name;
@@ -33,7 +37,10 @@ export default function useNetworkTraffic() {
                 header: true,
                 skipEmptyLines: true,
             });
-            setData(csv.data)
+            setData(csv.data);
+            // Optionally clear the file input so the same file can be selected again
+            const input = document.getElementById('csvInput');
+            if (input) input.value = '';
         };
         reader.readAsText(file);
     };
@@ -56,7 +63,7 @@ export default function useNetworkTraffic() {
                 { headers: { "Content-Type": "multipart/form-data" }}
             );
             setData2(response.data);
-            setFileUploaded(true); // Set fileUploaded to true after successful upload
+            setFileUploaded(true);
         } catch (error) {
             setError("Error loading model");
             console.error(error);
