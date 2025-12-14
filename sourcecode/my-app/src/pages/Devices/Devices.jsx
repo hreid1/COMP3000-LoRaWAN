@@ -2,7 +2,6 @@ import { useState } from 'react'
 import React from 'react'
 import axios from 'axios'
 import SideNavbar from '../../components/Navbar/SideNavbar'
-import TopNavbar from '../../components/Navbar/TopNavbar'
 import './Devices.css'
 import Card from '../../components/Card';
 

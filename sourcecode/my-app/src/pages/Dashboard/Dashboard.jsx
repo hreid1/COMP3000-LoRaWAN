@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react'
 import Papa from 'papaparse'
 import './Dashboard.css'
 import SideNavbar from '../../components/Navbar/SideNavbar'
-import TopNavbar from '../../components/Navbar/TopNavbar'
+import Navbar from '../../components/Navbar/Navbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
 import Chart from 'chart.js/auto'
@@ -281,7 +281,7 @@ const MainDashContent = (props) => {
 const Dashboard = () => {
   return (
     <div id="dashContainer">
-      <TopNavbar />
+      <Navbar />
       <SideNavbar />
       <MainDashContent />
     </div>

@@ -1,0 +1,38 @@
+import React from 'react'
+import './Navbar.css'
+import notificationImg from '../../assets/notification.svg'
+import helpImg from '../../assets/help.svg'
+import searchImg from '../../assets/search.svg'
+import networkImg from '../../assets/network.svg'
+import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
+
+const Navbar = () => {
+  return (
+    <div className="navbar">
+        <img src={networkImg} alt="" className='logo' />
+        <span>Hi Henry</span>
+        <div className="searchbox">
+            <input type="text" placeholder='Search' />
+            <img src={searchImg} alt="" className='logo' />
+        </div>
+        <div className='navbarRight'>
+            <ul>
+                <li>Help</li>
+                <li>Notifications</li>
+            </ul>
+            <Dropdown
+            buttonText="Profile Picture"
+            content={
+                <>
+                <DropdownItem>Profile</DropdownItem>
+                <DropdownItem>Settings</DropdownItem>
+                <DropdownItem>Logout</DropdownItem>
+                </>
+            }
+            />
+        </div>
+    </div>
+  )
+}
+
+export default Navbar

@@ -64,27 +64,3 @@ body {
 	color: #000000;
 }
 
-.card {
-	background: #fff;
-	border-radius: 0.5rem;
-	margin: 1rem;
-	padding: 2rem;
-	min-height: 180px;
-	max-height: 400px;
-	overflow: auto;
-	box-shadow: 0 2px 8px rgba(0,0,0,0,0.05);
-}
-
-.card-header {
-	font-size: 1.2rem;
-	font-weight: bold;
-	padding-bottom: 0.5rem;
-	border-bottom: 2px solid #eee
-}
-
-.card-content {
-	padding-top: 1rem;
-	display: flex;
-	flex-direction: column;
-}
-
