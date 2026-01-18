@@ -26,8 +26,11 @@ from django.db import models
 
 
 # Create your models here.
-class Packet(models.Model):
-    time = models.DateTimeField("")
 
 class Node(models.Model):
-    nodeID = models.ForeignKey()
+   owner = models.CharField(max_length=200)
+
+class Packet(models.Model):
+    time = models.DateTimeField()
+    nodeID = models.ForeignKey(Node, on_delete=models.CASCADE)
+
