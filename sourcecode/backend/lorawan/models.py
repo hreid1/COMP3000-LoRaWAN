@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Packet
     # Time: UTC
@@ -26,11 +27,49 @@ from django.db import models
 
 
 # Create your models here.
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    role = models.CharField(max_length=50)
+    origanisation = models.CharField(max_length=200)
 
 class Node(models.Model):
-   owner = models.CharField(max_length=200)
+   owner = models.ForeignKey(User , on_delete=models.CASCADE)
+   node_id = models.IntegerField()
+   is_active = models.BooleanField()
+
+   created_at = models.DateTimeField()
+
+   def __str__(self):
+       return f"Node {self.node_id}"
 
 class Packet(models.Model):
     time = models.DateTimeField()
+
+    # FK
     nodeID = models.ForeignKey(Node, on_delete=models.CASCADE)
+
+    mac = models.CharField(max_length=6)
+    spreading_factor = models.IntegerField()
+    channel_frequency = models.FloatField()
+    transmission_power = models.IntegerField()
+    bandwidth = models.IntegerField()
+    coding_rate = models.IntegerField()
+    snr = models.FloatField()
+    rssi = models.FloatField()
+    sequence_number = models.IntegerField()
+    payload = models.CharField(max_length=20)
+    payload_size = models.IntegerField()
+    num_recieved_per_node = models.IntegerField()
+    pdr_per_node = models.IntegerField()
+    num_recieved_per_node_per_window = models.IntegerField()
+    last_seq_num_at_window_start = models.IntegerField()
+    pdr_per_node_per_window = models.IntegerField()
+    inter_arrival_time_s = models.FloatField()
+    inter_arrival_time_m = models.FloatField()
+
+
+    created_at = models.DateTimeField()
+
+    def __str__(self):
+        return self.time
 

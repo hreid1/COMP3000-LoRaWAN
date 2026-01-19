@@ -31,7 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    "lorawan.apps."
+    "lorawan.apps.LorawanConfig",
 
     "django.contrib.admin",
     "django.contrib.auth",
@@ -42,7 +42,6 @@ INSTALLED_APPS = [
 
     "rest_framework",
     'corsheaders',
-    'lorawan'
 ]
 
 MIDDLEWARE = [
