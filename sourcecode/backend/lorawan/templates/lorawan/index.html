@@ -1,0 +1,11 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'lorawan/styles.css' %}">
+{% if node_list %}
+    <ul>
+        {% for node in node_list %}
+            <li><a href="{% url 'lorawan:detail' node.id %}">{{ node.id }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No Nodes availale</p>
+{% endif %}
