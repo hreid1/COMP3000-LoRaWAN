@@ -25,7 +25,6 @@ from django.contrib.auth.models import User
     # interArrivalTimeMin: Floating point
 # Node / device
 
-
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -34,10 +33,10 @@ class UserProfile(models.Model):
 
 class Node(models.Model):
    owner = models.ForeignKey(User , on_delete=models.CASCADE)
-   node_id = models.IntegerField()
+   node_id = models.IntegerField(unique=True)
    is_active = models.BooleanField()
 
-   created_at = models.DateTimeField()
+   created_at = models.DateTimeField(auto_now_add=True)
 
    def __str__(self):
        return f"Node {self.node_id}"
@@ -67,9 +66,16 @@ class Packet(models.Model):
     inter_arrival_time_s = models.FloatField()
     inter_arrival_time_m = models.FloatField()
 
-
-    created_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.time
 
+class AnomalyDetection(models.Model):
+    packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
+    is_anomaly = models.BooleanField()
+    anomaly_score = models.FloatField()
+    accuracy = models.FloatField()
+    model = models.CharField(max_length=50)
+
+    detected_at = models.DateField()
