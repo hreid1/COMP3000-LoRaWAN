@@ -7,11 +7,12 @@ from .models import UserProfile, Node, Packet, AnomalyDetection
 # Packet
 # Anomaly Detection
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    nodes = serializers.PrimaryKeyRelatedField(many=True, queryset=Node.objects.all())
+
     class Meta:
         model = User
-        fields = ["url", "username", "email", "groups"]
-
+        fields = ["id", "username", "nodes"]
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -19,9 +20,17 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         fields = ["url", "name"]
 
 class NodeSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source="owner.username")
+
     class Meta:
         model = Node
-        fields = "__all__"
+        fields = [
+            "id",
+            "owner", 
+            "is_active", 
+            "created_at", 
+            "node_id",
+        ]
 
 class PacketSerializer(serializers.ModelSerializer):
     class Meta:

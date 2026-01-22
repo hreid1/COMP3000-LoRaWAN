@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from pygments.lexers import get_lexer_by_name, get_all_lexers
+from pygments.styles import get_all_styles
+from pygments.formatters.html import HtmlFormatter
+from pygments import highlight
 
 # Packet
     # Time: UTC
@@ -32,15 +36,15 @@ class UserProfile(models.Model):
     origanisation = models.CharField(max_length=200)
 
 class Node(models.Model):
-   owner = models.ForeignKey(User , on_delete=models.CASCADE)
-   node_id = models.IntegerField(unique=True)
-   is_active = models.BooleanField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField()
+    owner = models.ForeignKey(
+        "auth.User", related_name="nodes", on_delete=models.CASCADE)
+    node_id = models.IntegerField(unique=True)
 
-   created_at = models.DateTimeField(auto_now_add=True)
-
-   def __str__(self):
-       return f"Node {self.node_id}"
-
+    def __str__(self):
+        return f"Node {Node.node_id}"
+       
 class Packet(models.Model):
     time = models.DateTimeField()
 

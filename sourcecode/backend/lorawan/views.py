@@ -1,5 +1,11 @@
 import pandas as pd
 
+from lorawan.models import Node
+from lorawan.serializers import NodeSerializer
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 from django.contrib.auth.models import Group, User
 from rest_framework import permissions, viewsets
 from rest_framework.views import APIView
@@ -18,13 +24,40 @@ from django.views.decorators.csrf import csrf_exempt
 from rest_framework.parsers import JSONParser
 from lorawan.models import Node
 from lorawan.serializers import NodeSerializer
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from lorawan.models import Node
+from lorawan.serializers import NodeSerializer, UserSerializer
+from rest_framework import generics
+from django.contrib.auth.models import User
+from rest_framework import permissions
+from lorawan.permissions import IsOwnerOrReadOnly
+from rest_framework.response import Response
+from rest_framework.reverse import reverse
+from rest_framework import viewsets
+from rest_framework.decorators import action
 
-class IndexView(generic.ListView):
-    template_name = "lorawan/index.html"
-    context_object_name = "node_list"
+@api_view(["GET"])
+def api_root(request, format=None):
+    return Response(
+        {
+            "users": reverse("lorawan:user-list", request=request, format=format),
+            "nodes": reverse("lorawan:node-list", request=request, format=format)
+        }
+    )
 
-    def get_queryset(self):
-        return Node.objects.order_by("id")[:5]
+class NodeViewSet(viewsets.ModelViewSet):
+    queryset = Node.objects.all()
+    serializer_class = NodeSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
+class UserViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
 
 class DetailView(generic.DetailView):
     model = Node
@@ -53,40 +86,3 @@ class RunModelView(APIView):
         except Exception as e:
             return Response({"error": str(e)}, status=500)
         
-@csrf_exempt 
-def node_list(request):
-    if request.method == "GET":
-        nodes = Node.objects.all()
-        serializer = NodeSerializer(nodes, many=True)
-        return JsonResponse(serializer.data, safe=False)
-        
-    elif request.method == "POST":
-        data = JSONParser().parse(request)
-        serializer = NodeSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data, status=201)
-        return JsonResponse(serializer.errors, status=400)
-
-@csrf_exempt
-def node_detail(request, pk):
-    try:
-        node = Node.objects.get(pk=pk)
-    except Node.DoesNotExist:
-        return HttpResponse(status=404)
-    
-    if request.method == "GET":
-        serializer = NodeSerializer(node)
-        return JsonResponse(serializer.data)
-    
-    elif request.method == "PUT":
-        data = JSONParser().parse(request)
-        serializer = NodeSerializer(node, data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return JsonResponse(serializer.data)
-        return JsonResponse(serializer.errors, status=400)
-    
-    elif request.method == "DELETE":
-        node.delete()
-        return HttpResponse(status=204)
