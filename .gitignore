@@ -14,3 +14,7 @@ ENV/
 sourcecode/backend/venv
 sourcecode/my-app/venv
 .env
+
+# Security reports
+*.sbom
+*.report
