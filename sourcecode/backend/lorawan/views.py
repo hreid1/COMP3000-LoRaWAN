@@ -1,49 +1,27 @@
 import pandas as pd
-
-from lorawan.models import Node
-from lorawan.serializers import NodeSerializer
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.contrib.auth.models import Group, User
-from rest_framework import permissions, viewsets
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from .isolationforest import runModel
-from rest_framework.parsers import MultiPartParser
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render, get_object_or_404
-from django.template import loader
-from .models import Node
-from django.db.models import F
-from django.http import HttpResponseRedirect
+from django.contrib.auth.models import User
 from django.urls import reverse
 from django.views import generic
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.parsers import JSONParser
-from lorawan.models import Node
-from lorawan.serializers import NodeSerializer
-from rest_framework import status
+from rest_framework import permissions, viewsets
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from lorawan.models import Node
-from lorawan.serializers import NodeSerializer, UserSerializer
-from rest_framework import generics
-from django.contrib.auth.models import User
-from rest_framework import permissions
-from lorawan.permissions import IsOwnerOrReadOnly
+from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
-from rest_framework import viewsets
-from rest_framework.decorators import action
+from rest_framework.views import APIView
+from .isolationforest import runModel
+from .models import Node, Packet, MLModel, Anomaly
+from .permissions import IsOwnerOrReadOnly
+from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer
 
 @api_view(["GET"])
 def api_root(request, format=None):
     return Response(
         {
             "users": reverse("lorawan:user-list", request=request, format=format),
-            "nodes": reverse("lorawan:node-list", request=request, format=format)
+            "nodes": reverse("lorawan:node-list", request=request, format=format),
+            "packets": reverse("lorawan:packet-list", request=request, format = format),
+            "mlmodels": reverse("lorawan:mlmodel-list", request=request, format = format),
+            "anomalies": reverse("lorawan:anomaly-list", request=request, format=format),
         }
     )
 
@@ -58,6 +36,18 @@ class NodeViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+class PacketViewSet(viewsets.ModelViewSet):
+    queryset = Packet.objects.all()
+    serializer_class = PacketSerializer
+
+class MLModelViewSet(viewsets.ModelViewSet):
+    queryset = MLModel.objects.all()
+    serializer_class = MLModelSerializer
+
+class AnomalyViewSet(viewsets.ModelViewSet):
+    queryset = Anomaly.objects.all()
+    serializer_class = AnomalySerializer
 
 class DetailView(generic.DetailView):
     model = Node
@@ -85,4 +75,3 @@ class RunModelView(APIView):
             return Response(results, status=200)
         except Exception as e:
             return Response({"error": str(e)}, status=500)
-        

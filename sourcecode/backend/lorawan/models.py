@@ -36,17 +36,21 @@ class UserProfile(models.Model):
     origanisation = models.CharField(max_length=200)
 
 class Node(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField()
+    # FK
     owner = models.ForeignKey(
-        "auth.User", related_name="nodes", on_delete=models.CASCADE)
+        "auth.User", related_name="nodes", on_delete=models.CASCADE
+    )
+
     node_id = models.IntegerField(unique=True)
 
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_active = models.BooleanField()
+
     def __str__(self):
-        return f"Node {Node.node_id}"
-       
+        return f"Node {self.node_id}"
+
 class Packet(models.Model):
-    time = models.DateTimeField()
+    time = models.DateTimeField(auto_now_add=True)
 
     # FK
     nodeID = models.ForeignKey(Node, on_delete=models.CASCADE)
@@ -69,17 +73,28 @@ class Packet(models.Model):
     pdr_per_node_per_window = models.IntegerField()
     inter_arrival_time_s = models.FloatField()
     inter_arrival_time_m = models.FloatField()
-
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.time
+        return f"Packet {self.sequence_number} at {self.time}"
 
-class AnomalyDetection(models.Model):
-    packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
+class MLModel(models.Model):
+    name = models.CharField()
+    version = models.FloatField()
+    algorithm_type = models.CharField()
+
+    def __str__(self):
+        return f"Model: {self.name} {self.version}"
+
+class Anomaly(models.Model):
+    # FK
+    packet_id = models.ForeignKey(Packet, on_delete=models.CASCADE)
+    model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
+
     is_anomaly = models.BooleanField()
-    anomaly_score = models.FloatField()
-    accuracy = models.FloatField()
-    model = models.CharField(max_length=50)
+    detected_at = models.DateTimeField(auto_now_add=True)
 
-    detected_at = models.DateField()
+    def __str__(self):
+        return f"Packet {self.packet_id}"
+
+    

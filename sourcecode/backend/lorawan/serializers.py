@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
-from .models import UserProfile, Node, Packet, AnomalyDetection
+from .models import UserProfile, Node, Packet, MLModel, Anomaly 
 
 # User Profile?
 # Node
@@ -12,12 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "nodes"]
+        fields = ["id", "username", "email", "nodes"]
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
-        fields = ["url", "name"]
+        fields = "__all__"
 
 class NodeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
@@ -32,12 +32,25 @@ class NodeSerializer(serializers.ModelSerializer):
             "node_id",
         ]
 
+class AnomalySerializer(serializers.ModelSerializer):
+    model_name = serializers.ReadOnlyField(source="model.name")
+    packet_sequence = serializers.ReadOnlyField(source='packet_id.sequence_number')
+
+    class Meta:
+        model = Anomaly
+        fields = ["id", "packet_id", "packet_sequence", "model", "model_name", "is_anomaly", "detected_at"]
+
 class PacketSerializer(serializers.ModelSerializer):
+    time = serializers.DateTimeField(
+        input_formats=['%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M:%S', 'iso-8601']
+    )
+    anomaly_detections = AnomalySerializer(source="anomaly_set", many=True, read_only=True)
+
     class Meta:
         model = Packet
         fields = "__all__"
 
-class AnomalyDetectionSerializer(serializers.ModelSerializer):
+class MLModelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AnomalyDetection
+        model = MLModel
         fields = "__all__"
