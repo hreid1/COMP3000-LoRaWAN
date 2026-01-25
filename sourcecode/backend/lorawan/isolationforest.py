@@ -4,6 +4,52 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
 
+# Models to be used: 
+    # Isolation Forest, 
+    # One-Class SVM, 
+    # Autoencoders, 
+    # KNN/LOF
+
+# Goals:
+    # Data from csv needs to be stored in database
+    # The evaluation needs to incorporate more than one model (e.g. Isolation forest said this packet was an anomaly, but LOF said it wasn't)
+    # Currently the model is trained on the data every-time its ran -> MAYBE CHANGE THIS
+    # Add endpoints to retrain, update and track model versions
+    # Predict on single packets, not just batch CSV
+
+# Process: 
+    # User inputs csv file
+    # User picks model
+    # Application runs choices 
+    # Application returns performance_metrics: accuracy
+
+# anomaly_inputs
+    # NodeID
+    # MAC
+    # SF
+    # CF
+    # TX
+    # BW
+    # CR
+    # SNR
+    # RSSI
+    # PktSeqNum
+    # payload
+    # payloadSize
+    # numReceivedPerNode[nodeNumber-1]
+    # PDRPerNode
+    # numReceivedPerNodePerWindow[nodeNumber]
+    # currentSeqNum
+    # lastSeqNumAtWindowStart[nodeNumber]
+    # pdrPerNodePerWindow[nodeNumber]
+    # interArrivalTime_s
+    # interArrivalTimeMin
+
+def preprocessing():
+
+
+    return 0
+
 def runModel(custom_df=None):
     anomaly_inputs = [
         'SF', 'CF', 'TX', 'BW', 'CR', 'SNR', 'RSSI', 'PktSeqNum',
