@@ -7,6 +7,7 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import Navbar from '../../components/Navbar/Navbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
+import FileUpload from '../../components/FileUploader'
 import UploadFile from '../../hooks/test'
 import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
@@ -84,6 +85,16 @@ const Announcements = ({ data }) => {
         )}
       </div>
     </div>
+  )
+}
+
+const NetworkTraffic2 = ({}) => {
+  return(
+    <>
+      <div>
+        <FileUpload />
+      </div>
+    </>
   )
 }
 
@@ -271,6 +282,7 @@ const MainDashContent = (props) => {
         handleParse={networkTraffic.handleParse}
         model={networkTraffic.model}
       />
+      <NetworkTraffic2/>
       <TrafficScore data={networkTraffic.data2}/>
       <Graph data={networkTraffic.data}/>
     </div>
