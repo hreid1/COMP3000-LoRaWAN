@@ -61,6 +61,15 @@ class LogListView(APIView):
     def get(self, request):
         return Response({"logs": []})
 
+class UploadedFileView(APIView):
+    def get(self, request):
+
+        return Response({"Hello World"})
+
+class HelloWorld(APIView):
+    def get(self, request):
+        return Response({"Hello World"})
+
 class RunModelView(APIView):
     parser_classes = [MultiPartParser]
 
