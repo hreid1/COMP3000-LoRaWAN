@@ -7,6 +7,7 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import Navbar from '../../components/Navbar/Navbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
+import UploadFile from '../../hooks/test'
 import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
 import { Data } from '../../utils/Data'
@@ -78,8 +79,7 @@ const Announcements = ({ data }) => {
       <div className="cardContent">
         { isEmpty && (
           <div>
-            <span>Node: {data.top_anomaly_node} </span> 
-            <span>Anomalies: {data.top_anomaly_node_anomalies}</span>
+            <span>Node {data.top_anomaly_node} contains {data.top_anomaly_node_anomalies} anomalies</span> 
           </div>
         )}
       </div>
@@ -146,7 +146,7 @@ const TrafficScore = ({ data }) => {
   // no-jammer.csv
 
   const handleTrafficScore = (num) => {
-    if (num > 40000) {
+    if (num > 30000) {
       return {label: "Bad", color: "red"};
     } else if (num > 100) {
       return {label: "Moderate", color: "orange"};
@@ -253,6 +253,7 @@ const Graph = ({ data }) => {
 
 const MainDashContent = (props) => {
   const networkTraffic = useNetworkTraffic();
+  //
 
   // networkTraffic.data contains information from csv file
   //console.log(networkTraffic.data)

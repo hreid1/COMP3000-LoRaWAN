@@ -13,6 +13,8 @@ from .models import Node, Packet, MLModel, Anomaly
 from .permissions import IsOwnerOrReadOnly
 from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer
 
+# Models
+
 @api_view(["GET"])
 def api_root(request, format=None):
     return Response(
@@ -49,6 +51,30 @@ class AnomalyViewSet(viewsets.ModelViewSet):
     queryset = Anomaly.objects.all()
     serializer_class = AnomalySerializer
 
+# Views
+class FileView(APIView):
+    parser_classes = [MultiPartParser]
+
+    def get(self, request):
+        return Response({"Test"})
+
+    def post(self, request):
+        try:
+            file = request.FILES.get("file")
+            if not file:
+                return Response({"error": "No File Provided"}, status=400)
+            df = pd.read_csv(file)
+            preview = {
+                "total_rows": len(df),
+                "columns": list(df.columns),
+                "preview": df.head(10).to_dict(orient="records")
+            }
+            return Response(preview, status=200)
+        except Exception as e:
+            return Response({"error": str(e)}, status=500)
+        
+
+
 class DetailView(generic.DetailView):
     model = Node
     template_name = "lorawan/detail.html"
@@ -60,15 +86,6 @@ class DeviceListView(APIView):
 class LogListView(APIView):
     def get(self, request):
         return Response({"logs": []})
-
-class UploadedFileView(APIView):
-    def get(self, request):
-
-        return Response({"Hello World"})
-
-class HelloWorld(APIView):
-    def get(self, request):
-        return Response({"Hello World"})
 
 class RunModelView(APIView):
     parser_classes = [MultiPartParser]

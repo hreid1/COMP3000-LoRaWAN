@@ -19,14 +19,7 @@ const UploadFile = () => {
         });
     };
 
-    return(
-        <div>
-            <h3>Upload File</h3>
-            <input type="file" onChange={handleFileUpload} />
-            <button onClick={handleUpload}>Upload</button>
-
-        </div>
-    )
+    return 
 }
 
 export default UploadFile;
