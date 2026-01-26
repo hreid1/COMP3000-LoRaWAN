@@ -69,6 +69,7 @@ class Packet(models.Model):
     num_recieved_per_node = models.IntegerField()
     pdr_per_node = models.IntegerField()
     num_recieved_per_node_per_window = models.IntegerField()
+    current_seq_num = models.IntegerField(default=0)
     last_seq_num_at_window_start = models.IntegerField()
     pdr_per_node_per_window = models.IntegerField()
     inter_arrival_time_s = models.FloatField()

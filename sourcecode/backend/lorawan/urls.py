@@ -17,7 +17,7 @@ app_name = "lorawan"
 urlpatterns = [
     path("", include(router.urls)),
 
-    path("test/", views.FileView.as_view(), name="Test"),
+    path("test/", views.TestView.as_view(), name="test"),
 
     path('run/', views.RunModelView.as_view(), name='run-model'),
     path('devices/', views.DeviceListView.as_view(), name="device-list"),

@@ -52,29 +52,79 @@ class AnomalyViewSet(viewsets.ModelViewSet):
     serializer_class = AnomalySerializer
 
 # Views
-class FileView(APIView):
-    parser_classes = [MultiPartParser]
-
-    def get(self, request):
-        return Response({"Test"})
-
+class TestView(APIView):
     def post(self, request):
-        try:
-            file = request.FILES.get("file")
-            if not file:
-                return Response({"error": "No File Provided"}, status=400)
-            df = pd.read_csv(file)
-            preview = {
-                "total_rows": len(df),
-                "columns": list(df.columns),
-                "preview": df.head(10).to_dict(orient="records")
-            }
-            return Response(preview, status=200)
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
+        uploaded_file = request.FILES.get("myFile")
+        df = pd.read_csv(uploaded_file)
+
+        # Extract each of the columns, add them to DB
+        column_names =[]
+        for i in df.columns:
+            column_names.append(i)
+
+        first_row = df.iloc[0]
+
+        nodeid = first_row.iloc[1]
+        node = Node.objects.get(node_id=1)
+
+        packet = Packet(
+            nodeID=node, 
+            mac=first_row.iloc[2],
+            spreading_factor=first_row.iloc[3],
+            channel_frequency=first_row.iloc[4],
+            transmission_power=first_row.iloc[5],
+            bandwidth=first_row.iloc[6],  
+            coding_rate=first_row.iloc[7],
+            snr=first_row.iloc[8],
+            rssi=first_row.iloc[9],
+            sequence_number=first_row.iloc[10],  
+            payload=first_row.iloc[11],
+            payload_size=first_row.iloc[12],
+            num_recieved_per_node=first_row.iloc[13],
+            pdr_per_node=first_row.iloc[14],
+            current_seq_num=first_row.iloc[15],
+            num_recieved_per_node_per_window=first_row.iloc[16],
+            last_seq_num_at_window_start=first_row.iloc[17],
+            pdr_per_node_per_window=first_row.iloc[18],
+            inter_arrival_time_s=first_row.iloc[19],  
+            inter_arrival_time_m=first_row.iloc[20]   
+        )
+        packet.save()
+
+        return Response({"File": uploaded_file})
+    
+def SamplePacket():
+    
+    user = User.objects.create_user(username='testuser', password='testuser123')
+    node = Node.objects.create(
+        owner=user,
+        node_id=1,
+        is_active=True
+    )
+    # Create a packet
+    packet = Packet.objects.create(
+        nodeID=node,
+        mac='A1B2C3',
+        spreading_factor=7,
+        channel_frequency=868.1,
+        transmission_power=14,
+        bandwidth=125,
+        coding_rate=5,
+        snr=8.5,
+        rssi=-110.5,
+        sequence_number=1,
+        payload='HelloWorld',
+        payload_size=10,
+        num_recieved_per_node=1,
+        pdr_per_node=100,
+        num_recieved_per_node_per_window=1,
+        last_seq_num_at_window_start=0,
+        pdr_per_node_per_window=100,
+        inter_arrival_time_s=2.5,
+        inter_arrival_time_m=0.0416
+    )
+    return Response({"Success"})
         
-
-
 class DetailView(generic.DetailView):
     model = Node
     template_name = "lorawan/detail.html"
