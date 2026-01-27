@@ -1,18 +1,15 @@
 import { useState } from "react"
 import axios from "axios";
 
-const FileUpload = ({ props }) => {
-    const [file, setFile] = useState(null)
-
-    const onFileChange = (event) => {
-        const selectedFile = event.target.files[0];
-        setFile(selectedFile);
-        if (onFileSelected) {
-            onFileSelected(selectedFile);
-        }
-    };
+// Recieved file from dashboard named file
+const FileUpload = ({ file }) => {
 
     const onFileUpload = () => {
+        if (!file) {
+            console.error("no file")
+            return;
+        }
+
         const formData = new FormData();
         formData.append(
             "myFile",
@@ -24,8 +21,7 @@ const FileUpload = ({ props }) => {
     
     return (
         <div>
-            <input type="file" onChange={onFileChange} />
-            <button onClick={onFileUpload}>Upload</button>
+            <button onClick={onFileUpload} disabled={!file}>Upload</button>
         </div>
     )
 }

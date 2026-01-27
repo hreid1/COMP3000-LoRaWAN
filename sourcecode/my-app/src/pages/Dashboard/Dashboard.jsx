@@ -65,7 +65,7 @@ const NetworkTraffic2 = () => {
   return(
     <Card id="networkTraffic2" title="Network Traffic 2">
       <input type="file" onChange={handleFileChange}/>
-       
+      <FileUpload file={file}/>
       <DisplayFile file={file}/>
     </Card>
   )

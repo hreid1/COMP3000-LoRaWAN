@@ -50,6 +50,7 @@ class Node(models.Model):
         return f"Node {self.node_id}"
 
 class Packet(models.Model):
+    # Need to change time to time on dataset
     time = models.DateTimeField(auto_now_add=True)
 
     # FK
@@ -77,7 +78,7 @@ class Packet(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Packet {self.sequence_number} at {self.time}"
+        return f"Packet {self.id} at {self.time}"
 
 class MLModel(models.Model):
     name = models.CharField()
