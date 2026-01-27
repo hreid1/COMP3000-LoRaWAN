@@ -50,17 +50,22 @@ const Announcements = ({ data }) => {
   )
 }
 
-const NetworkTraffic2 = ({  }) => {
-  const [file, setFile] = useState(null)
+const NetworkTraffic2 = () => {
+  const [file, setFile] = useState(null);
 
-  const handleFileSelected = (file) => {
-    setFile(file)
-    //console.log("File selected in dashboard", file);
+  function handleFileChange(event) {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    } else {
+      setFile(null);
+    }
   }
 
   return(
     <Card id="networkTraffic2" title="Network Traffic 2">
-      <FileUpload onFileSelected={handleFileSelected}/>
+      <input type="file" onChange={handleFileChange}/>
+       
       <DisplayFile file={file}/>
     </Card>
   )

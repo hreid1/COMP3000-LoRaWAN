@@ -1,7 +1,7 @@
 import { useState } from "react"
 import axios from "axios";
 
-const FileUpload = ({ onFileSelected }) => {
+const FileUpload = ({ props }) => {
     const [file, setFile] = useState(null)
 
     const onFileChange = (event) => {
