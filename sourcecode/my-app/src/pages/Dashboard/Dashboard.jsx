@@ -7,12 +7,13 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import Navbar from '../../components/Navbar/Navbar'
 import Dots from '../../assets/dots.svg'
 import useNetworkTraffic from '../../hooks/useNetworkTraffic'
-import FileUpload from '../../components/FileUploader'
-import UploadFile from '../../hooks/test'
+import FileUpload from '../../components/FileUpload/FileUpload'
 import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
 import { Data } from '../../utils/Data'
 import { BarChart } from '../../components/Charts/Graph'
+import Card from '../../components/Card/Card'
+import DisplayFile from '../../components/DisplayFile/DisplayFile'
 
 Chart.register(CategoryScale);
 
@@ -20,81 +21,48 @@ const DeviceList = ({ data }) => {
   const numOfNodes = useMemo(() => {
     return new Set(data.map(row => row.NodeID).filter(Boolean)).size;
   }, [data]);
-
-  //console.log("Unique Nodes: ", numOfNodes);
-
   const isEmpty = data.length != 0;
-
+  
   return(
-    <div id="deviceList" className="dashCard">
-      <div className='marker'></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Device List</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        { isEmpty && (
-          <span>Number of Nodes: {numOfNodes}</span>
-        )}
-      </div>
-    </div>
+    <Card id="deviceList" title="Device List">
+      { isEmpty && <span>Number of Nodes: {numOfNodes}</span>}
+    </Card>
   )
 }
 
 const AnomalyList = ({ data }) => {
-
   const isEmpty = data && typeof data.num_anomalies !== "undefined";
-  //console.log(isEmpty)
 
   return(
-    <div id="anomalyList" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Anomaly List</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        { isEmpty && (
-          <span>Number of anomalies: {data.num_anomalies}</span>
-        )}
-      </div>
-    </div>
+    <Card id="anomalyList" title="Anomaly List">
+      { isEmpty && <span>Number of anomalies: {data.num_anomalies}</span>}
+    </Card>
   )
 }
 
 const Announcements = ({ data }) => {
-
-  // Checks if the data2 array is empty: if it is it wont render the content
   const isEmpty = data && typeof data.num_anomalies !== "undefined";
 
-  //console.log(data.top_anomaly_node)
-  //console.log(data.top_anomaly_node_anomalies)
-
   return(
-    <div id="announcements" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Recent Alerts</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        { isEmpty && (
-          <div>
-            <span>Node {data.top_anomaly_node} contains {data.top_anomaly_node_anomalies} anomalies</span> 
-          </div>
-        )}
-      </div>
-    </div>
+    <Card id="announcements" title="Announcements">
+      { isEmpty && <span>Node {data.top_anomaly_node} contains {data.top_anomaly_node_anomalies} anomalies</span>}
+    </Card>
   )
 }
 
-const NetworkTraffic2 = ({}) => {
+const NetworkTraffic2 = ({  }) => {
+  const [file, setFile] = useState(null)
+
+  const handleFileSelected = (file) => {
+    setFile(file)
+    //console.log("File selected in dashboard", file);
+  }
+
   return(
-    <>
-      <div>
-        <FileUpload />
-      </div>
-    </>
+    <Card id="networkTraffic2" title="Network Traffic 2">
+      <FileUpload onFileSelected={handleFileSelected}/>
+      <DisplayFile file={file}/>
+    </Card>
   )
 }
 
@@ -150,7 +118,7 @@ const NetworkTraffic = ({ data, error, loading, data2, handleFileChange, handleP
 }
 
 const TrafficScore = ({ data }) => {
-  // If number of anomalies > 100 -> Bad -> Show red colour
+    // If number of anomalies > 100 -> Bad -> Show red colour
   // 100 > If number of anomalies > 55 -> Moderate -> Show orange colour
   // 55 > Num of anomalies -> Good -> Show green colour
   // jammer.csv -> 33537 anomalies
@@ -158,7 +126,7 @@ const TrafficScore = ({ data }) => {
 
   const handleTrafficScore = (num) => {
     if (num > 30000) {
-      return {label: "Bad", color: "red"};
+      return{label: "Bad", color: "red"};
     } else if (num > 100) {
       return {label: "Moderate", color: "orange"};
     } else {
@@ -168,25 +136,12 @@ const TrafficScore = ({ data }) => {
 
   // The card content of traffic score will only show when the user has successfully uploaded a file and ran the model
   const hasResults = data && typeof data.num_anomalies !== 'undefined';
-  const score = hasResults ? handleTrafficScore(data.num_anomalies) : { label: '', color: '' };
+  const score = hasResults ? handleTrafficScore(data.num_anomalies) : { label: '', color: ''};
 
-  return(
-    <div id="trafficScore" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Traffic Score</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        {hasResults && (
-          <div>
-            <span style={{ color: score.color, fontWeight: "bold", padding: "10px" }}>
-              {score.label}
-            </span>
-          </div>
-        )}
-      </div>
-    </div>
+  return (
+    <Card id="trafficScore" title="Traffic Score">
+      { hasResults && <span style={{ color: score.color, fontWeight:'bold'}}>{score.label}</span>}
+    </Card>
   )
 }
 
