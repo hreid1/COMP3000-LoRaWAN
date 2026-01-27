@@ -14,6 +14,7 @@ import { Data } from '../../utils/Data'
 import { BarChart } from '../../components/Charts/Graph'
 import Card from '../../components/Card/Card'
 import DisplayFile from '../../components/DisplayFile/DisplayFile'
+import RunModel from '../../components/RunModel/RunModel'
 
 Chart.register(CategoryScale);
 
@@ -67,6 +68,7 @@ const NetworkTraffic2 = () => {
       <input type="file" onChange={handleFileChange}/>
       <FileUpload file={file}/>
       <DisplayFile file={file}/>
+      <RunModel file={file}/>
     </Card>
   )
 }

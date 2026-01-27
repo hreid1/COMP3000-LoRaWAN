@@ -151,3 +151,11 @@ class RunModelView(APIView):
             return Response(results, status=200)
         except Exception as e:
             return Response({"error": str(e)}, status=500)
+
+class RunIFView(APIView):
+    def get(self, request):
+        return Response({"Running Isolation Forest"})
+
+class RunLOFView(APIView):
+    def get(self, request):
+        return Response({"Running Local Outlier Factor"})

@@ -20,6 +20,7 @@ urlpatterns = [
     path("test/", views.TestView.as_view(), name="test"),
 
     path('run/', views.RunModelView.as_view(), name='run-model'),
+    path('run/if/', views.RunIFView.as_view(), name='run-if-model'),
     path('devices/', views.DeviceListView.as_view(), name="device-list"),
     path('logs/', views.LogListView.as_view(), name="log-list"),
 ]
