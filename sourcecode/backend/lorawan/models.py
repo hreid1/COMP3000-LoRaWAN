@@ -33,7 +33,7 @@ from pygments import highlight
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=50)
-    origanisation = models.CharField(max_length=200)
+    organisation = models.CharField(max_length=200)
 
 class Node(models.Model):
     # FK
@@ -42,7 +42,6 @@ class Node(models.Model):
     )
 
     node_id = models.IntegerField(unique=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField()
 
@@ -89,10 +88,8 @@ class MLModel(models.Model):
         return f"Model: {self.name} {self.version}"
 
 class Anomaly(models.Model):
-    # FK
     packet_id = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
-
     is_anomaly = models.BooleanField()
     detected_at = models.DateTimeField(auto_now_add=True)
 
