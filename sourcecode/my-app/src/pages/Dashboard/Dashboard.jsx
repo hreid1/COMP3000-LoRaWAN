@@ -14,8 +14,13 @@ import Card from '../../components/Card/Card'
 Chart.register(CategoryScale);
 
 const DeviceList = () => {
+  const [data, setData] = useState(null)
+  const [error, setError] = useState([])
+  axios.get("http://127.0.0.1:8000/lorawan/nodes/")
+  .then (response => {
+    console.log(response)
+  })
 
-  
   return(
     <Card id="deviceList" title="Device List">
 
