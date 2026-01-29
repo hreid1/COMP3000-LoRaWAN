@@ -14,24 +14,48 @@ import Card from '../../components/Card/Card'
 Chart.register(CategoryScale);
 
 const DeviceList = () => {
-  const [data, setData] = useState(null)
-  const [error, setError] = useState([])
-  axios.get("http://127.0.0.1:8000/lorawan/nodes/")
-  .then (response => {
-    console.log(response)
-  })
+  const [data, setData] = useState([])
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/nodes/")
+      .then(response => {
+        console.log("Device object:", response.data.results[0]); 
+        setData(response.data.results || []);
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        setError(err);
+      });
+  }, []);
 
   return(
     <Card id="deviceList" title="Device List">
-
+      {error && <div>Error: {error.message}</div>}
+      {data && data.map(device => (
+        <div key={device.id}>{device.node_id}, {device.owner}, {device.is_active}, {device.created_at}</div>
+      ))}
     </Card>
   )
 }
 
 const AnomalyList = () => {
+  const [data, setData] = useState([])
+  const [error, setError] = useState(null)
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
+      .then(response => {
+        console.log(response.data.results)
+        setData(response.data.results || []);
+      })
+  }, []);
 
   return(
     <Card id="anomalyList" title="Anomaly List">
+      {data && data.map(anomaly => (
+        <div key={anomaly.id}>{anomaly.id}, {anomaly.detected_at}, {anomaly.model}, {anomaly.packet_id}</div>
+      ))}
     </Card>
   )
 }
@@ -40,6 +64,7 @@ const Announcements = () => {
 
   return(
     <Card id="announcements" title="Announcements">
+
     </Card>
   )
 }
