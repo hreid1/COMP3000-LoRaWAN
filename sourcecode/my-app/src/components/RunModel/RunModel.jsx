@@ -9,7 +9,7 @@ const RunModel = ({ file }) => {
     function handleIF(){
         const formData = new FormData
         formData.append("file", file)
-        axios.get("http://localhost:8000/lorawan/run/if/")
+        axios.get("http://localhost:8000/lorawan/run/")
         .then (response => {
             console.log(response);
         })
@@ -19,9 +19,6 @@ const RunModel = ({ file }) => {
         <>
             <button>Pick Model</button>
             <div>
-                <button onClick={handleIF}>Isolation Forest</button>
-                <button>Local Outlier Factor</button>
-                <button>Autoencoder</button>
             </div>
         </>
     )

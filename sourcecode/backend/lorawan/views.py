@@ -12,6 +12,7 @@ from .isolationforest import runModel
 from .models import Node, Packet, MLModel, Anomaly
 from .permissions import IsOwnerOrReadOnly
 from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer
+from .services import preprocessing_service, mlmodel_service
 
 # Models
 
@@ -125,37 +126,15 @@ def SamplePacket():
     )
     return Response({"Success"})
         
-class DetailView(generic.DetailView):
-    model = Node
-    template_name = "lorawan/detail.html"
-    
-class DeviceListView(APIView):
-    def get(self, request):
-        return Response({"devices": []})
-
-class LogListView(APIView):
-    def get(self, request):
-        return Response({"logs": []})
-
 class RunModelView(APIView):
     parser_classes = [MultiPartParser]
 
     def post(self, request):
-        try:
-            uploaded_file = request.FILES.get("file")
-            if uploaded_file:
-                df = pd.read_csv(uploaded_file)
-                results = runModel(df)
-            else:
-                results = runModel()
-            return Response(results, status=200)
+        try: 
+            uploaded_file = request.FILES.get('file')
+            if not uploaded_file:
+                return Response({'error': 'No file found'})
+            results = preprocessing_service.run(uploaded_file)
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
-
-class RunIFView(APIView):
-    def get(self, request):
-        return Response({"Running Isolation Forest"})
-
-class RunLOFView(APIView):
-    def get(self, request):
-        return Response({"Running Local Outlier Factor"})
+            return Response({"Dont work"})
+        return Response(results)

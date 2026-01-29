@@ -16,7 +16,7 @@ const FileUpload = ({ file }) => {
             file,
             file.name
         );
-        axios.post("http://localhost:8000/lorawan/test/", formData)
+        axios.post("http://localhost:8000/lorawan/run/", formData)
     };
     
     return (
