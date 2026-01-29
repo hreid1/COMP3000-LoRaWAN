@@ -14,8 +14,6 @@ from .permissions import IsOwnerOrReadOnly
 from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer
 from .services import preprocessing_service, mlmodel_service
 
-# Models
-
 @api_view(["GET"])
 def api_root(request, format=None):
     return Response(
@@ -94,8 +92,7 @@ class TestView(APIView):
 
         return Response({"File": uploaded_file})
     
-        
-class RunModelView(APIView):
+class RunModel(APIView):
     parser_classes = [MultiPartParser]
 
     def post(self, request):

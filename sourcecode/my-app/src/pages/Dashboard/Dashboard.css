@@ -1,9 +1,19 @@
+button {
+    cursor: pointer;
+}
+
+input {
+    cursor: pointer
+}
+
 #dashContainer {
-  display: grid;
-  grid-template-columns: 220px 2fr;
-  grid-template-rows: auto 1fr; 
-  width: 100vw;
-  overflow-x: hidden;
+    display: grid;
+    grid-template-columns: 220px 2fr;
+    grid-template-rows: auto 1fr;
+    width: 100vw;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-x: hidden;
 }
 
 .navbar {
@@ -24,65 +34,15 @@
 .dashContentContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 220px 1fr 1fr ; 
+    grid-template-rows: 220px 1fr 1fr ;
     gap: 16px;
-    align-items: stretch; 
+    align-items: stretch;
     background-color: #E5ECF4;
-    padding: 1rem; 
+    padding: 1rem;
     border-radius: 0.5rem 0 0 0;
     overflow: auto;
-}
-
-.dashCard {
-    position: relative;
-    background: #fff;
-    border-radius: 0.5rem;
-    margin: 0;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    min-height: 0;
-    height: 100%;      
-    box-sizing: border-box;
-    align-self: stretch;
-}
-
-.marker {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 0.5rem;
+    min-height: 100%;
     height: 100%;
-    background: blue;
-    border-radius: 8px 0 0 8px;
-}
-
-.dots {
-    width: 24px;
-    height: 24px;
-    cursor: pointer;
-}
-
-.cardHeader {
-    font-size: 1.2rem;
-    font-weight: bold;
-    padding: 0.5rem 1rem 0 0.5rem;
-    border-bottom: 2px solid #eee;
-    display: flex;
-    justify-content: space-between;
-
-}
-
-.cardContent {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 0;
-    min-width: 0;
-    overflow: auto;
-    word-break: break-word;
-    padding: 1.5rem;
 }
 
 #deviceList {
@@ -102,76 +62,27 @@
     grid-row: 1 / 2;
 }
 
-#announcements .cardContent div span {
-    display: flex;
-}
-
 #networkTraffic {
     grid-column: 1 / 4;
     grid-row: 2 / 3;
 }
 
-.networkTable {
-    width: 80%;
-    border-collapse: collapse;
-    margin: 1rem;
-    padding: 1rem;
-    background: #fff;
-    box-shadow: 0 2px 8px black;
-    border-radius: 8px;
-    overflow-x: auto;
-    table-layout: fixed;
+#networkTraffic button {
+  white-space: normal;
+  word-break: break-word;
+  padding: 8px 16px;
+  min-width: 0;
+  min-height: 0;
+  width: auto;
+  height: auto;
+  align-self: flex-start; 
+  box-sizing: border-box;
 }
 
-.networkTable th, .networkTable td {
-    width: 125px;
-    padding: 0.75rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-    word-break: break-word;
-}
-
-.networkTable td {
-    min-width: 440px;
-    font-size: 0.75rem;
-}
-
-.networkTable th {
-    background: blue;
-    font-weight: bolder;
-    color: black;
-    font-size: 0.9rem;
-}
-
-.networkTable tr:last-child td {
-    border-bottom: none;
-}
-
-.networkTable tr:hover {
-    background: #F1F2EB;
-}
-
-.item {
-    width: 200px;
-    margin: 0 auto;
-    padding: 2px;
-    border-radius: 10px;
-    text-align: left;
-}
-
-.btnContainer {
+.btn-column {
     display: flex;
-    flex-direction: row;
-}
-
-.btnContainer input{
-    margin: 0.5rem;
-}
-
-.btnContainer button{
-    margin: 0.5rem;
-    width: 100px;
-    height: 40px;
+    flex-direction: column;
+    gap: 8px;
 }
 
 #trafficScore {
@@ -187,15 +98,4 @@
     min-height: 0;
     height: 100%;
     overflow-y: auto;
-}
-
-#graph .cardContent {
-    height: 300px;
-    min-height: 0;
-    overflow-y: auto;
-}
-
-#graph canvas {
-    max-width: 100%;
-    max-height: 100%;
 }

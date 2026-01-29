@@ -12,10 +12,9 @@ router.register(r"packets", views.PacketViewSet, basename="packet")
 router.register(r"mlmodels", views.MLModelViewSet, basename="mlmodel")
 router.register(r"anomaly", views.AnomalyViewSet, basename="anomaly")
 
-
 app_name = "lorawan"
 urlpatterns = [
     path("", include(router.urls)),
 
-    path("run/", views.RunModelView.as_view(), name='run-model')
+    path("run/", views.RunModel.as_view(), name='run-model')
 ]
