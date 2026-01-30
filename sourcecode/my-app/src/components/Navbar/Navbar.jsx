@@ -4,7 +4,7 @@ import notificationImg from '../../assets/notification.svg'
 import helpImg from '../../assets/help.svg'
 import searchImg from '../../assets/search.svg'
 import networkImg from '../../assets/network.svg'
-import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
+import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router"
 
 const Navbar = ({name}) => {
@@ -21,24 +21,7 @@ const Navbar = ({name}) => {
                 <li>Help</li>
                 <li>Notifications</li>
             </ul>
-            <Dropdown
-            buttonText="Profile Picture"
-            content={
-                <>
-                <DropdownItem>
-                    <Link to="/profile">
-                        <span>Profile</span>
-                    </Link>
-                </DropdownItem>
-                <DropdownItem>
-                    <Link to="/settings">
-                        <span>Settings</span>
-                    </Link>
-                </DropdownItem>
-                <DropdownItem>Logout</DropdownItem>
-                </>
-            }
-            />
+            <Dropdown buttonText="hello" content="hello test"/>
         </div>
     </div>
   )

@@ -1,87 +1,63 @@
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
 .dropdown-btn {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.75rem 1.25rem;
-    background-color: #fff;
+    width: fit-content;
+    padding: 1rem;
+    background-color: white;
     border-radius: 0.5rem;
-    box-shadow: 0 2px 8px rgba(149, 157, 165, 0.15);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
     cursor: pointer;
-    border: none;
-    font-size: 1rem;
-    transition: border 0.2s, box-shadow 0.2s;
-}
-
-.button-open {
-    border: 2px solid #93c5fd;
-    box-shadow: 0 0 0 2px #93c5fd33;
 }
 
 .toggle-icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-left: 0.5rem;
-    font-size: 1.1em;
+    margin-left: 1rem;
 }
 
 .dropdown-content {
     position: absolute;
-    top: 110%;
-    left: auto;
-    right: 0;
-    min-width: 180px;
+    min-height: 100%;
     display: flex;
     flex-direction: column;
-    align-items: stretch;
-    padding: 0.5rem 1rem;
-    background: #fff;
+    align-items: center;
+    padding: 1rem;
+    margin-top: 0.5rem;
+    background-color: white;
     border-radius: 0.5rem;
-    box-shadow: 0 8px 24px rgba(149, 157, 165, 0.18);
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
     max-height: 40vh;
-    overflow-y: auto;
-    opacity: 0;
-    pointer-events: none;
-    z-index: 1000;
-    transition: opacity 0.2s, transform 0.2s;
-    transform: translateY(-10px);
-    max-width: min(280px, calc(100vw - 16px));
-    box-sizing: border-box;
-    margin-right: 0;
-}
-
-.content-open {
-    opacity: 1;
-    pointer-events: auto;
-    transform: translateY(0);
-}
-
-.dropdown-item {
-    padding: 0.75rem 1.25rem;
-    margin: 0.1rem 0.5rem;
-    border-radius: 0.4rem;
-    cursor: pointer;
-    font-size: 1rem;
-    color: #111827;
-    background: none;
-    border: none;
-    text-align: left;
-    transition: background 0.15s, color 0.15s;
-}
-
-.dropdown-item:hover,
-.dropdown-item:focus {
-    background-color: #f0f9ff;
-    color: #2563eb;
-    outline: none;
+    overflow-y: scroll;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .dropdown-content::-webkit-scrollbar {
     width: 0;
     height: 0;
+}
+
+.dropdown {
+    position: relative;
+}
+
+.button-open {
+    border: rgb(147, 197,253) 2px solid;
+}
+
+.content-open {
+    opacity: 1;
+}
+
+.dropdown-item {
+    padding: 0.5rem;
+    margin: 0.1rem;
+    width: 100%;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+.dropdown-item:hover {
+    background-color: rgb(240, 249, 255);
 }
