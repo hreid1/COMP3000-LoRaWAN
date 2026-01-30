@@ -13,49 +13,43 @@ import Card from '../../components/Card/Card'
 
 Chart.register(CategoryScale);
 
-const DeviceList = () => {
-  const [data, setData] = useState([])
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/nodes/")
-      .then(response => {
-        console.log("Device object:", response.data.results[0]); 
-        setData(response.data.results || []);
-      })
-      .catch(err => {
-        console.error("Error:", err);
-        setError(err);
-      });
-  }, []);
+const DeviceList = ({data}) => {
 
   return(
     <Card id="deviceList" title="Device List">
-      {error && <div>Error: {error.message}</div>}
-      {data && data.map(device => (
-        <div key={device.id}>{device.node_id}, {device.owner}, {device.is_active}, {device.created_at}</div>
+      {data && data.map(node => (
+        <div key={node.id}>
+          <strong>Node {node.node_id}</strong>
+          <p>Owner: {node.owner}</p>
+          <p>Active {node.is_active}</p>
+          <p>Created: {new Date(node.created_at).toLocaleDateString()}</p>
+        </div>
       ))}
     </Card>
   )
 }
 
-const AnomalyList = () => {
-  const [data, setData] = useState([])
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
-      .then(response => {
-        console.log(response.data.results)
-        setData(response.data.results || []);
-      })
-  }, []);
+const AnomalyList = ({data}) => {
 
   return(
     <Card id="anomalyList" title="Anomaly List">
-      {data && data.map(anomaly => (
-        <div key={anomaly.id}>{anomaly.id}, {anomaly.detected_at}, {anomaly.model}, {anomaly.packet_id}</div>
+      {data && data.map(node => (
+        <div key={node.id}>
+          {node.packets && node.packets.length > 0 && (
+            <div>
+              {node.packets
+                .filter(packet => packet.is_anomalous)
+                .map(packet => (
+                  <div key={packet.id}>
+                    <p>Seq: {packet.sequence_number} SNR: {packet.snr} RSSI: {packet.rssi}</p>
+                  </div>
+                ))
+              }
+            </div>
+          )}
+        </div>
       ))}
+
     </Card>
   )
 }
@@ -154,12 +148,12 @@ const Graph = () => {
   )
 }
 
-const MainDashContent = (props) => {
+const MainDashContent = ({data}) => {
 
   return (
     <div className='dashContentContainer'>
-      <DeviceList />
-      <AnomalyList />
+      <DeviceList data={data.nodes || []}/>
+      <AnomalyList data={data.nodes || []}/>
       <Announcements /> 
       <NetworkTraffic />
       <TrafficScore />
@@ -168,13 +162,26 @@ const MainDashContent = (props) => {
   )
 }
 
-
 const Dashboard = () => {
+  const [data, setData] = useState([])
+
+  // GET request to backend for user 1
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/users/1/")
+    .then(response => {
+      console.log(response.data)
+      setData(response.data || []);
+    })
+  }, []);
+
+  const username = data.username
+  const email = data.email
+
   return (
     <div id="dashContainer">
-      <Navbar />
+      <Navbar name={username}/>
       <SideNavbar />
-      <MainDashContent />
+      <MainDashContent data={data}/>
     </div>
   );
 }

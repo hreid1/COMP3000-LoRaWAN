@@ -51,8 +51,6 @@ class Node(models.Model):
 class Packet(models.Model):
     # Need to change time to time on dataset
     time = models.DateTimeField(auto_now_add=True)
-
-    # FK
     nodeID = models.ForeignKey(Node, on_delete=models.CASCADE)
 
     mac = models.CharField(max_length=6)
@@ -74,6 +72,8 @@ class Packet(models.Model):
     pdr_per_node_per_window = models.IntegerField()
     inter_arrival_time_s = models.FloatField()
     inter_arrival_time_m = models.FloatField()
+
+    is_anomalous = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -88,10 +88,11 @@ class MLModel(models.Model):
         return f"Model: {self.name} {self.version}"
 
 class Anomaly(models.Model):
-    packet_id = models.ForeignKey(Packet, on_delete=models.CASCADE)
+    packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
     is_anomaly = models.BooleanField()
+    confidence = models.FloatField(null=True, blank=True)
     detected_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Packet {self.packet_id}"
+        return f"Packet {self.packet_id} {self.model.name}: {self.is_anomaly}"

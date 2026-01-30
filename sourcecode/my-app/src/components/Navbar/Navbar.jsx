@@ -7,11 +7,11 @@ import networkImg from '../../assets/network.svg'
 import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
 import { Link } from "react-router"
 
-const Navbar = () => {
+const Navbar = ({name}) => {
   return (
     <div className="navbar">
         <img src={networkImg} alt="" className='logo' />
-        <span>Hi Henry</span>
+        <span>Hi, {name}</span>
         <div className="searchbox">
             <input type="text" placeholder='Search' />
             <img src={searchImg} alt="" className='logo' />
