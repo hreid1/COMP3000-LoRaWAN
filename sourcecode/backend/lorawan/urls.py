@@ -11,6 +11,7 @@ router.register(r"users", views.UserViewSet, basename="user")
 router.register(r"packets", views.PacketViewSet, basename="packet")
 router.register(r"mlmodels", views.MLModelViewSet, basename="mlmodel")
 router.register(r"anomaly", views.AnomalyViewSet, basename="anomaly")
+router.register(r"userprofiles", views.UserProfileViewSet, basename="userprofiles")
 
 app_name = "lorawan"
 urlpatterns = [

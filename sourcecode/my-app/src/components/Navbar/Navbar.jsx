@@ -7,9 +7,10 @@ import networkImg from '../../assets/network.svg'
 import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router"
 
-const Navbar = ({name}) => {
+const Navbar = ({name, data}) => {
+
   return (
-    <div className="navbar">
+    <nav className="navbar">
         <img src={networkImg} alt="" className='logo' />
         <span>Hi, {name}</span>
         <div className="searchbox">
@@ -17,13 +18,10 @@ const Navbar = ({name}) => {
             <img src={searchImg} alt="" className='logo' />
         </div>
         <div className='navbarRight'>
-            <ul>
-                <li>Help</li>
-                <li>Notifications</li>
-            </ul>
-            <Dropdown buttonText="hello" content="hello test"/>
+            <Dropdown userData={data} />
         </div>
-    </div>
+        
+    </nav>
   )
 }
 

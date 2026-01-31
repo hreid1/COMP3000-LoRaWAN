@@ -34,6 +34,10 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=50)
     organisation = models.CharField(max_length=200)
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} UserProfile {self.id}"
 
 class Node(models.Model):
     # FK

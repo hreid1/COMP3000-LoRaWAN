@@ -1,45 +1,42 @@
 import React, { useState } from 'react'
+import { Link } from "react-router"
 import './Dropdown.css'
 
-const DropdownButton = ({children, open, toggle}) => {
-    return(
-        <div className={`dropdown-btn ${open ? "button-open": null}`} onClick={toggle}>
-            {children}
-            <span className='toggle-icon'></span>
-        </div>
-    )
-}
-
-const DropdownItem = ({children, onClick}) => {
-    return(
-        <div className='dropdown-item' onClick={onClick}>
-            {children}
-        </div>
-    )
-
-}
-
-const DropdownContent = ({children}) => {
-    return(
-        <div className={`dropdown-content ${open ? "content-open": null}`} >
-            {children}
-        </div>
-    )
-
-}
-
-const Dropdown = ({buttonText, content}) => {
+const Dropdown = ({ userData }) => {
     const [open, setOpen] = useState(false)
-    const toggleDropdown = () => {
-        setOpen((open) => !open);
+
+    const onClick = () => {
+        setOpen(!open)
     }
 
   return (
     <div className="dropdown">
-        <DropdownButton open={open} toggle={toggleDropdown}>{buttonText}</DropdownButton> 
-        <DropdownContent open={open}>{content}</DropdownContent> 
+      <div className="dropdown-header" onClick={onClick}>
+        <img 
+          src={'/default-avatar.png'} 
+          alt="User Avatar"
+          className="profile-image"
+        />
+      </div>
+      {open && (
+        <div className="dropdown-content">
+          <div className="dropdown-item">
+            <Link to="/profile">
+                <li>Profile</li>
+            </Link>
+          </div>
+          <div className="dropdown-item">
+            <Link to="/settings">
+                <li>Settings</li>
+            </Link>
+          </div>
+          <div className="dropdown-item">
+            <li>Logout</li>
+          </div>
+        </div>
+      )}
     </div>
-  )
+  );
 }
 
 export default Dropdown

@@ -46,12 +46,21 @@ class NodeSerializer(serializers.ModelSerializer):
             "packets"
         ]
 
+class UserProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.CharField(source='user.email', read_only=True)
+    
+    class Meta:
+        model = UserProfile
+        fields = ['username', 'email', 'role', 'organisation', 'profile_image']
+
 class UserSerializer(serializers.ModelSerializer):
     nodes = NodeSerializer(many=True, read_only=True)
+    userprofile = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "nodes"]
+        fields = ["id", "username", "email", "nodes", "userprofile"]
 
 class MLModelSerializer(serializers.ModelSerializer):
     class Meta:

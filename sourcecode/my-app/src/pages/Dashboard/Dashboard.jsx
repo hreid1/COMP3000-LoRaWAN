@@ -169,17 +169,18 @@ const Dashboard = () => {
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/lorawan/users/1/")
     .then(response => {
-      console.log(response.data)
+      //console.log(response.data)
       setData(response.data || []);
     })
   }, []);
 
   const username = data.username
   const email = data.email
+  const profileimage = data?.userprofile?.profile_image;
 
   return (
     <div id="dashContainer">
-      <Navbar name={username}/>
+      <Navbar name={username} data={data.userprofile}/>
       <SideNavbar />
       <MainDashContent data={data}/>
     </div>

@@ -1,63 +1,65 @@
-.dropdown-btn {
-    display: flex;
-    align-items: center;
-    width: fit-content;
-    padding: 1rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+.dropdown {
+    position: relative;
     cursor: pointer;
+    width: fit-content;
 }
 
-.toggle-icon {
+.dropdown-header {
+    background-color: white;
+    border: 1px solid #ddd;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    justify-content: center;
-    margin-left: 1rem;
+    min-width: 150px;
+}
+
+.dropdown-header p {
+    margin: 0;
+    color: #333;
+    font-size: 14px;
+}
+
+.profile-image {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #ddd;
+}
+
+.dropdown-icon {
+    color: #999;
+    font-size: 18px;
 }
 
 .dropdown-content {
+    background-color: white;
+    border: 1px solid #ddd;
     position: absolute;
-    min-height: 100%;
+    top: 100%;
+    left: 0;
+    width: 100%;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    margin-top: 0.5rem;
-    background-color: white;
-    border-radius: 0.5rem;
-    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px; 
-    max-height: 40vh;
-    overflow-y: scroll;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.dropdown-content::-webkit-scrollbar {
-    width: 0;
-    height: 0;
-}
-
-.dropdown {
-    position: relative;
-}
-
-.button-open {
-    border: rgb(147, 197,253) 2px solid;
-}
-
-.content-open {
-    opacity: 1;
+    z-index: 1000;
+    margin-top: 0.25rem;
+    border-radius: 0.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .dropdown-item {
-    padding: 0.5rem;
-    margin: 0.1rem;
-    width: 100%;
-    border-radius: 0.5rem;
+    padding: 0.75rem 1rem;
+    color: #333;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    transition: background-color 0.2s;
+    font-size: 14px;
 }
 
 .dropdown-item:hover {
-    background-color: rgb(240, 249, 255);
+    background-color: #f5f5f5;
 }
