@@ -11,13 +11,11 @@ router.register(r"users", views.UserViewSet, basename="user")
 router.register(r"packets", views.PacketViewSet, basename="packet")
 router.register(r"mlmodels", views.MLModelViewSet, basename="mlmodel")
 router.register(r"anomaly", views.AnomalyViewSet, basename="anomaly")
-
+router.register(r"userprofiles", views.UserProfileViewSet, basename="userprofiles")
 
 app_name = "lorawan"
 urlpatterns = [
     path("", include(router.urls)),
 
-    path('run/', views.RunModelView.as_view(), name='run-model'),
-    path('devices/', views.DeviceListView.as_view(), name="device-list"),
-    path('logs/', views.LogListView.as_view(), name="log-list"),
+    path("run/", views.RunModel.as_view(), name='run-model')
 ]

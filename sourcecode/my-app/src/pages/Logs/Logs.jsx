@@ -3,7 +3,7 @@ import { useState } from "react";
 import SideNavbar from '../../components/Navbar/SideNavbar'
 import Navbar from '../../components/Navbar/Navbar'
 import './Logs.css'
-import Card from '../../components/Card';
+import Card from '../../components/Card/Card';
 
 const LogCard = () => (
   <Card header={<span>Logs</span>}>

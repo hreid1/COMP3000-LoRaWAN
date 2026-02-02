@@ -1,48 +1,42 @@
 import React, { useState } from 'react'
+import { Link } from "react-router"
 import './Dropdown.css'
 
-import { FaChevronDown, FaChevronUp } from "react-icons/fa"
+const Dropdown = ({ userData }) => {
+    const [open, setOpen] = useState(false)
 
-const DropdownBtn = ({children, open, toggle}) => {
-    return(
-        <div className={`dropdown-btn ${open ? "button-open" : null} `} onClick={toggle}>
-            {children}
-            <span className='toggle-icon'>
-                {open ? <FaChevronUp /> : <FaChevronDown />}
-            </span>
-        </div>
-    )
-}
-
-const DropdownContent = ({children, open}) => {
-    return(
-        <div className={`dropdown-content ${open ? "content-open" : null}`}>
-            {children}
-        </div>
-    )
-}
-
-export const DropdownItem = ({children, onClick}) => {
-    return(
-        <div className="dropdown-item" onClick={onClick}>
-            {children}
-        </div>
-    )
-}
-
-const Dropdown = ({ buttonText, content }) => {
-    const [open, setOpen] = useState(false);
-
-    const toggleDropdown = () => {
-        setOpen((open) => !open);
+    const onClick = () => {
+        setOpen(!open)
     }
 
-    return (
-      <div className='dropdown'>
-        <DropdownBtn open={open} toggle={toggleDropdown}>{buttonText}</DropdownBtn>
-        <DropdownContent open={open}>{content}</DropdownContent>
+  return (
+    <div className="dropdown">
+      <div className="dropdown-header" onClick={onClick}>
+        <img 
+          src={'/default-avatar.png'} 
+          alt="User Avatar"
+          className="profile-image"
+        />
       </div>
-    );
+      {open && (
+        <div className="dropdown-content">
+          <div className="dropdown-item">
+            <Link to="/profile">
+                <ul>Profile</ul>
+            </Link>
+          </div>
+          <div className="dropdown-item">
+            <Link to="/settings">
+                <ul>Settings</ul>
+            </Link>
+          </div>
+          <div className="dropdown-item">
+            <ul>Logout</ul>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }
 
 export default Dropdown

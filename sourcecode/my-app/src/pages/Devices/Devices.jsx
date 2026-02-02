@@ -4,7 +4,7 @@ import axios from 'axios'
 import Navbar from '../../components/Navbar/Navbar'
 import SideNavbar from '../../components/Navbar/SideNavbar'
 import './Devices.css'
-import Card from '../../components/Card';
+import Card from '../../components/Card/Card';
 
 const DeviceCard = () => (
   <Card header={<span>Device Info</span>}>

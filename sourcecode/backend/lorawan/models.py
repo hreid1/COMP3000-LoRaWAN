@@ -33,7 +33,11 @@ from pygments import highlight
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=50)
-    origanisation = models.CharField(max_length=200)
+    organisation = models.CharField(max_length=200)
+    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username} UserProfile {self.id}"
 
 class Node(models.Model):
     # FK
@@ -42,7 +46,6 @@ class Node(models.Model):
     )
 
     node_id = models.IntegerField(unique=True)
-
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField()
 
@@ -50,9 +53,8 @@ class Node(models.Model):
         return f"Node {self.node_id}"
 
 class Packet(models.Model):
+    # Need to change time to time on dataset
     time = models.DateTimeField(auto_now_add=True)
-
-    # FK
     nodeID = models.ForeignKey(Node, on_delete=models.CASCADE)
 
     mac = models.CharField(max_length=6)
@@ -69,14 +71,17 @@ class Packet(models.Model):
     num_recieved_per_node = models.IntegerField()
     pdr_per_node = models.IntegerField()
     num_recieved_per_node_per_window = models.IntegerField()
+    current_seq_num = models.IntegerField(default=0)
     last_seq_num_at_window_start = models.IntegerField()
     pdr_per_node_per_window = models.IntegerField()
     inter_arrival_time_s = models.FloatField()
     inter_arrival_time_m = models.FloatField()
+
+    is_anomalous = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Packet {self.sequence_number} at {self.time}"
+        return f"Packet {self.id} at {self.time}"
 
 class MLModel(models.Model):
     name = models.CharField()
@@ -87,14 +92,11 @@ class MLModel(models.Model):
         return f"Model: {self.name} {self.version}"
 
 class Anomaly(models.Model):
-    # FK
-    packet_id = models.ForeignKey(Packet, on_delete=models.CASCADE)
+    packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
-
     is_anomaly = models.BooleanField()
+    confidence = models.FloatField(null=True, blank=True)
     detected_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Packet {self.packet_id}"
-
-    
+        return f"Packet {self.packet_id} {self.model.name}: {self.is_anomaly}"

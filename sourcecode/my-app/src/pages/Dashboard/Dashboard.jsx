@@ -5,284 +5,184 @@ import Papa from 'papaparse'
 import './Dashboard.css'
 import SideNavbar from '../../components/Navbar/SideNavbar'
 import Navbar from '../../components/Navbar/Navbar'
-import Dots from '../../assets/dots.svg'
-import useNetworkTraffic from '../../hooks/useNetworkTraffic'
 import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
 import { Data } from '../../utils/Data'
 import { BarChart } from '../../components/Charts/Graph'
+import Card from '../../components/Card/Card'
 
 Chart.register(CategoryScale);
 
-const DeviceList = ({ data }) => {
-  const numOfNodes = useMemo(() => {
-    return new Set(data.map(row => row.NodeID).filter(Boolean)).size;
-  }, [data]);
-
-  //console.log("Unique Nodes: ", numOfNodes);
-
-  const isEmpty = data.length != 0;
+const DeviceList = ({data}) => {
 
   return(
-    <div id="deviceList" className="dashCard">
-      <div className='marker'></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Device List</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        { isEmpty && (
-          <span>Number of Nodes: {numOfNodes}</span>
-        )}
-      </div>
-    </div>
-  )
-}
-
-const AnomalyList = ({ data }) => {
-
-  const isEmpty = data && typeof data.num_anomalies !== "undefined";
-  //console.log(isEmpty)
-
-  return(
-    <div id="anomalyList" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Anomaly List</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        { isEmpty && (
-          <span>Number of anomalies: {data.num_anomalies}</span>
-        )}
-      </div>
-    </div>
-  )
-}
-
-const Announcements = ({ data }) => {
-
-  // Checks if the data2 array is empty: if it is it wont render the content
-  const isEmpty = data && typeof data.num_anomalies !== "undefined";
-
-  //console.log(data.top_anomaly_node)
-  //console.log(data.top_anomaly_node_anomalies)
-
-  return(
-    <div id="announcements" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Recent Alerts</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        { isEmpty && (
-          <div>
-            <span>Node: {data.top_anomaly_node} </span> 
-            <span>Anomalies: {data.top_anomaly_node_anomalies}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  )
-}
-
-const NetworkTraffic = ({ data, error, loading, data2, handleFileChange, handleParse, model }) => {
-  
-  return (
-    <div id="networkTraffic" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Dataset</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        <div className="btnContainer">
-          <input
-            onChange={handleFileChange}
-            id="csvInput"
-            name="file"
-            type="file"
-          />
-          <button onClick={handleParse}>Parse</button>
-          <button onClick={model} disabled={loading}>
-            {loading ? "Running Analysis" : "Run Isolation Forest"}
-          </button>
+    <Card id="deviceList" title="Device List">
+      {data && data.map(node => (
+        <div key={node.id}>
+          <strong>Node {node.node_id}</strong>
+          <p>Owner: {node.owner}</p>
+          <p>Active {node.is_active}</p>
+          <p>Created: {new Date(node.created_at).toLocaleDateString()}</p>
         </div>
-        <div style={{ marginTop: "1rem" }}>
-          {error
-            ? error
-            : data.length > 0 && (
-                <table className="networkTable">
-                  <thead>
-                    <tr>
-                      {Object.keys(data[0]).map((key) => (
-                        <th key={key}>{key}</th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data.slice(0, 10).map((row, rowIndex) => (
-                      <tr key={rowIndex}>
-                        {Object.keys(row).map((key) => (
-                          <td key={key + rowIndex}>{row[key]}</td>
-                        ))}
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-        </div>
-      </div>
-    </div>
-  );
+      ))}
+    </Card>
+  )
 }
 
-const TrafficScore = ({ data }) => {
-  // If number of anomalies > 100 -> Bad -> Show red colour
+const AnomalyList = ({data}) => {
+
+  return(
+    <Card id="anomalyList" title="Anomaly List">
+      {data && data.map(node => (
+        <div key={node.id}>
+          {node.packets && node.packets.length > 0 && (
+            <div>
+              {node.packets
+                .filter(packet => packet.is_anomalous)
+                .map(packet => (
+                  <div key={packet.id}>
+                    <p>Seq: {packet.sequence_number} SNR: {packet.snr} RSSI: {packet.rssi}</p>
+                  </div>
+                ))
+              }
+            </div>
+          )}
+        </div>
+      ))}
+
+    </Card>
+  )
+}
+
+const Announcements = () => {
+
+  return(
+    <Card id="announcements" title="Announcements">
+
+    </Card>
+  )
+}
+
+const NetworkTraffic = () => {
+  const [file, setFile] = useState(null);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState("");
+
+  function handleFileUpload(event){
+    if (!file) {
+      console.error("No File")
+      return;
+    }
+    const formData = new FormData()
+    formData.append("myFile", file, file.name)
+    axios.post("http://localhost:8000/lorawan/run/", formData)
+    .then (response => {
+      console.log(response)
+    })
+  }
+
+  function handleFileChange(event) {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    } else {
+      setFile(null);
+    }
+  }
+
+  function handleFileDisplay() {
+    const reader = new FileReader();
+    reader.onload = async ({ target }) => {
+      const csv = Papa.parse(target.result, { header: true});
+      const parsedData = csv?.data;
+      const rows = Object.keys(parsedData[0]);
+      const columns = Object.values(parsedData[0]);
+      const res = rows.reduce((acc, e, i) => {
+        return [...acc, [[e], columns[i]]];
+      }, []);
+      console.log(res)
+      setData(res)
+    };
+    reader.readAsText(file);
+  }
+
+  return(
+    <Card id="networkTraffic" title="Network Traffic">
+      <div className="btn-column">
+        <input type="file" onChange={handleFileChange}/>
+        <button onClick={handleFileDisplay}>Display File</button>
+        <button onClick={handleFileUpload}>Run File</button>
+      </div>
+      <div>
+        {error 
+          ? error
+          : data.map((e, i) => (
+            <div key={i} className='item'>
+              {e[0]}:{e[1]}
+            </div>
+          ))
+        }
+      </div>
+    </Card>
+  )
+}
+
+const TrafficScore = () => {
+    // If number of anomalies > 100 -> Bad -> Show red colour
   // 100 > If number of anomalies > 55 -> Moderate -> Show orange colour
   // 55 > Num of anomalies -> Good -> Show green colour
   // jammer.csv -> 33537 anomalies
   // no-jammer.csv
+  return (
+    <Card id="trafficScore" title="Traffic Score">
 
-  const handleTrafficScore = (num) => {
-    if (num > 40000) {
-      return {label: "Bad", color: "red"};
-    } else if (num > 100) {
-      return {label: "Moderate", color: "orange"};
-    } else {
-      return {label: "Good", color: "green"};
-    }
-  }
+    </Card>
+  )
 
-  // The card content of traffic score will only show when the user has successfully uploaded a file and ran the model
-  const hasResults = data && typeof data.num_anomalies !== 'undefined';
-  const score = hasResults ? handleTrafficScore(data.num_anomalies) : { label: '', color: '' };
+}
 
+const Graph = () => {
   return(
-    <div id="trafficScore" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Traffic Score</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        {hasResults && (
-          <div>
-            <span style={{ color: score.color, fontWeight: "bold", padding: "10px" }}>
-              {score.label}
-            </span>
-          </div>
-        )}
-      </div>
-    </div>
+    <Card id="graph" title="Graph">
+    </Card>
   )
 }
 
-const Graph = ({ data }) => {
-  // From networktraffic.data: Count the number of different NodeID's to get a number of Nodes at play
-  // Also want to count the number of records per node
-  // And then display top 
-
-  const nodeCounts = data.reduce((acc, item) => {
-    if (item.NodeID) {
-      acc[item.NodeID] = (acc[item.NodeID] || 0) + 1;
-    }
-    return acc;
-  }, {});
-
-  const sortedNodes = Object.entries(nodeCounts)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 4); 
-
-  const labels = sortedNodes.map(([nodeID]) => nodeID);
-  const counts = sortedNodes.map(([_, count]) => count);
-
-  const [chartData, setChartData] = useState({
-    labels,
-    datasets: [
-      {
-        label: "Records per NodeID (Top 4)",
-        data: counts,
-        backgroundColor: [
-          "rgba(75,192,192,1)",
-          "#ecf0f1",
-          "#50AF95",
-          "#f3ba2f"
-        ],
-        borderColor: "black",
-        borderWidth: 2
-      }
-    ]
-  });
-
-  // When the chart updates
-  useEffect(() => {
-    setChartData({
-      labels,
-      datasets: [
-        {
-          label: "Records per NodeID (Top 4)",
-          data: counts,
-          backgroundColor: [
-            "rgba(75,192,192,1)",
-            "#ecf0f1",
-            "#50AF95",
-            "#f3ba2f"
-          ],
-          borderColor: "black",
-          borderWidth: 2
-        }
-      ]
-    });
-  }, [data]);
-
-  return (
-    <div id="graph" className="dashCard">
-      <div className="marker"></div>
-      <div className="cardHeader">
-        <span className="cardTitle">Graph</span>
-        <img src={Dots} alt="Dots" className="dots" />
-      </div>
-      <div className="cardContent">
-        <BarChart chartData={chartData} />
-      </div>
-    </div>
-  );
-}
-
-const MainDashContent = (props) => {
-  const networkTraffic = useNetworkTraffic();
-
-  // networkTraffic.data contains information from csv file
-  //console.log(networkTraffic.data)
+const MainDashContent = ({data}) => {
 
   return (
     <div className='dashContentContainer'>
-      <DeviceList data={networkTraffic.data}/>
-      <AnomalyList data={networkTraffic.data2}/>
-      <Announcements data={networkTraffic.data2}/>
-      <NetworkTraffic data={networkTraffic.data} 
-        error={networkTraffic.error} 
-        loading={networkTraffic.loading} 
-        data2={networkTraffic.data2}
-        handleFileChange={networkTraffic.handleFileChange}
-        handleParse={networkTraffic.handleParse}
-        model={networkTraffic.model}
-      />
-      <TrafficScore data={networkTraffic.data2}/>
-      <Graph data={networkTraffic.data}/>
+      <DeviceList data={data.nodes || []}/>
+      <AnomalyList data={data.nodes || []}/>
+      <Announcements /> 
+      <NetworkTraffic />
+      <TrafficScore />
+      <Graph />
     </div>
   )
 }
 
-
 const Dashboard = () => {
+  const [data, setData] = useState([])
+
+  // GET request to backend for user 1
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/users/1/")
+    .then(response => {
+      //console.log(response.data)
+      setData(response.data || []);
+    })
+  }, []);
+
+  const username = data.username
+  const email = data.email
+  const profileimage = data?.userprofile?.profile_image;
+
   return (
     <div id="dashContainer">
-      <Navbar />
+      <Navbar name={username} data={data.userprofile}/>
       <SideNavbar />
-      <MainDashContent />
+      <MainDashContent data={data}/>
     </div>
   );
 }

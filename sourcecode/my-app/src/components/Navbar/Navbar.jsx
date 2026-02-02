@@ -4,43 +4,24 @@ import notificationImg from '../../assets/notification.svg'
 import helpImg from '../../assets/help.svg'
 import searchImg from '../../assets/search.svg'
 import networkImg from '../../assets/network.svg'
-import Dropdown, { DropdownItem } from '../Dropdown/Dropdown'
+import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router"
 
-const Navbar = () => {
+const Navbar = ({name, data}) => {
+
   return (
-    <div className="navbar">
+    <nav className="navbar">
         <img src={networkImg} alt="" className='logo' />
-        <span>Hi Henry</span>
+        <span>Hi, {name}</span>
         <div className="searchbox">
             <input type="text" placeholder='Search' />
             <img src={searchImg} alt="" className='logo' />
         </div>
         <div className='navbarRight'>
-            <ul>
-                <li>Help</li>
-                <li>Notifications</li>
-            </ul>
-            <Dropdown
-            buttonText="Profile Picture"
-            content={
-                <>
-                <DropdownItem>
-                    <Link to="/profile">
-                        <span>Profile</span>
-                    </Link>
-                </DropdownItem>
-                <DropdownItem>
-                    <Link to="/settings">
-                        <span>Settings</span>
-                    </Link>
-                </DropdownItem>
-                <DropdownItem>Logout</DropdownItem>
-                </>
-            }
-            />
+            <Dropdown userData={data} />
         </div>
-    </div>
+        
+    </nav>
   )
 }
 

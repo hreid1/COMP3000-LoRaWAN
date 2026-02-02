@@ -4,11 +4,9 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
 
-# Models to be used: 
-    # Isolation Forest, 
-    # One-Class SVM, 
-    # Autoencoders, 
-    # KNN/LOF
+# Load datasets
+normal = pd.read_csv("./datasets/no-jammer.csv")
+jammer = pd.read_csv("./datasets/jammer.csv")
 
 # Goals:
     # Data from csv needs to be stored in database
