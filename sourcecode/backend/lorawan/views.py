@@ -12,7 +12,7 @@ from .isolationforest import runModel
 from .models import Node, Packet, MLModel, Anomaly, UserProfile
 from .permissions import IsOwnerOrReadOnly
 from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer
-from .services import preprocessing_service, mlmodel_service
+from .services import mlmodel_service
 
 @api_view(["GET"])
 def api_root(request, format=None):
@@ -98,14 +98,8 @@ class TestView(APIView):
         return Response({"File": uploaded_file})
     
 class RunModel(APIView):
-    parser_classes = [MultiPartParser]
-
     def post(self, request):
-        try: 
-            uploaded_file = request.FILES.get('file')
-            if not uploaded_file:
-                return Response({'error': 'No file found'})
-            results = preprocessing_service.run(uploaded_file)
-        except Exception as e:
-            return Response({"Dont work"})
+        uploaded_file = request.FILES.get('myFile')
+        results = mlmodel_service.MLModelService.run(uploaded_file)
+
         return Response(results)
