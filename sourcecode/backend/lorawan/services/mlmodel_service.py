@@ -1,4 +1,5 @@
 from sklearn.ensemble import IsolationForest
+from sklearn.neighbors import LocalOutlierFactor
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
@@ -42,16 +43,24 @@ class MLModelService:
         return df_scaled, train_scaled, df
     
     def runIsoaltionForest(train_scaled):
-        contamination = 0.001
+        contamination = 0.01
         random_state = 42
         n_estimators = 200
         model = IsolationForest(contamination=contamination, random_state=random_state, n_estimators=n_estimators, max_samples='auto')
         model.fit(train_scaled)
+        model_name = "Isolation Forest"
 
-        return model
+        return model, model_name
 
-    def runLocalOutlierFactor(processed_file):
-        return 0
+    def runLocalOutlierFactor(train_scaled):
+        n_neighbors = 20
+        contamination = 0.01
+        model = LocalOutlierFactor(n_neighbors=n_neighbors, contamination=contamination, novelty=True)
+        model.fit(train_scaled)
+        model_name = "Local Outlier Factor"
+
+        return model, model_name
+
     def runAutoencoder(processed_file):
         return 0
     
@@ -98,7 +107,8 @@ class MLModelService:
     
     def run(uploaded_file):
         df_scaled, train_scaled, df = MLModelService.preprocess(uploaded_file)
-        model = MLModelService.runIsoaltionForest(train_scaled)
+        #model = MLModelService.runIsoaltionForest(train_scaled)
+        model, model_name = MLModelService.runLocalOutlierFactor(train_scaled)
         predictions, scores = MLModelService.predict(model, df_scaled)
         performance = MLModelService.getPerformance(model, df_scaled, predictions, scores, df)
         
@@ -106,7 +116,7 @@ class MLModelService:
             "success": "success",
             "performance": performance,
             "model info": {
-                "model": "Isolation Forest"
+                "model": model_name
             },
             "file name": Path(uploaded_file.name).name
         }
