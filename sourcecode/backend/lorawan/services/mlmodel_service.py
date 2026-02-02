@@ -34,7 +34,7 @@ class MLModelService:
         
         # Preprocessing training and testing data
         df = df.dropna()
-        train_df = df.dropna()
+        train_df = train_df.dropna()
         scaler = StandardScaler()
         train_scaled = scaler.fit_transform(train_df[MLModelService.anomaly_inputs])
         df_scaled = scaler.transform(df[MLModelService.anomaly_inputs])
@@ -107,5 +107,6 @@ class MLModelService:
             "performance": performance,
             "model info": {
                 "model": "Isolation Forest"
-            }
+            },
+            "file name": Path(uploaded_file.name).name
         }

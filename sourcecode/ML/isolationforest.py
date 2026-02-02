@@ -4,8 +4,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.preprocessing import StandardScaler
 
 # Load datasets
-normal = pd.read_csv("../../datasets/normal_dataset.csv")
-jammer = pd.read_csv("../../datasets/jammer_dataset.csv")
+normal = pd.read_csv("./datasets/no-jammer.csv")
+jammer = pd.read_csv("./datasets/jammer.csv")
 
 # Drop rows
 normal = normal.dropna()
