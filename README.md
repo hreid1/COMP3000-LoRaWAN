@@ -5,4 +5,4 @@ LoRaWAN network anomaly detection application using machine learning
 
 ### Docker
 
-1. 
+1. `docker compose up --build` in terminal

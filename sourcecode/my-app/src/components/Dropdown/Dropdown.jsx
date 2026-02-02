@@ -22,16 +22,16 @@ const Dropdown = ({ userData }) => {
         <div className="dropdown-content">
           <div className="dropdown-item">
             <Link to="/profile">
-                <li>Profile</li>
+                <ul>Profile</ul>
             </Link>
           </div>
           <div className="dropdown-item">
             <Link to="/settings">
-                <li>Settings</li>
+                <ul>Settings</ul>
             </Link>
           </div>
           <div className="dropdown-item">
-            <li>Logout</li>
+            <ul>Logout</ul>
           </div>
         </div>
       )}

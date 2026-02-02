@@ -58,7 +58,15 @@
     gap: 0.75rem;
     transition: background-color 0.2s;
     font-size: 14px;
+    margin: 0.5rem;
+    border-radius: 0.5rem;
 }
+
+dropdown-item Link {
+    text-decoration: none;
+
+} 
+
 
 .dropdown-item:hover {
     background-color: #f5f5f5;
