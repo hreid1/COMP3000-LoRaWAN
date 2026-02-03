@@ -18,11 +18,11 @@ const DeviceList = ({data}) => {
   return(
     <Card id="deviceList" title="Device List">
       {data && data.map(node => (
-        <div key={node.id}>
-          <strong>Node {node.node_id}</strong>
-          <p>Owner: {node.owner}</p>
-          <p>Active {node.is_active}</p>
-          <p>Created: {new Date(node.created_at).toLocaleDateString()}</p>
+        <div key={node.id} className="deviceItem">
+          <strong className="deviceTitle">Node {node.node_id}</strong>
+          <p className="deviceInfo">Owner: {node.owner}</p>
+          <p className="deviceInfo">Active: {String(node.is_active)}</p>
+          <p className="deviceInfo">Created: {new Date(node.created_at).toLocaleDateString()}</p>
         </div>
       ))}
     </Card>
@@ -41,7 +41,7 @@ const AnomalyList = ({data}) => {
                 .filter(packet => packet.is_anomalous)
                 .map(packet => (
                   <div key={packet.id}>
-                    <p>Seq: {packet.sequence_number} SNR: {packet.snr} RSSI: {packet.rssi}</p>
+                    <p>Packet ID: {packet.id} Seq: {packet.sequence_number} SNR: {packet.snr} RSSI: {packet.rssi}</p>
                   </div>
                 ))
               }

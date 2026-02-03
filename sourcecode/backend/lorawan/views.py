@@ -8,7 +8,6 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from .isolationforest import runModel
 from .models import Node, Packet, MLModel, Anomaly, UserProfile
 from .permissions import IsOwnerOrReadOnly
 from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer
