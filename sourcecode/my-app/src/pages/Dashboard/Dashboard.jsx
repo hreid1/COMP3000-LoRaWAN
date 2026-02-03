@@ -128,17 +128,42 @@ const NetworkTraffic = () => {
 }
 
 const TrafficScore = () => {
-    // If number of anomalies > 100 -> Bad -> Show red colour
+  // If number of anomalies > 100 -> Bad -> Show red colour
   // 100 > If number of anomalies > 55 -> Moderate -> Show orange colour
   // 55 > Num of anomalies -> Good -> Show green colour
   // jammer.csv -> 33537 anomalies
   // no-jammer.csv
-  return (
-    <Card id="trafficScore" title="Traffic Score">
 
-    </Card>
-  )
+  const [data, setData] = useState([]);
 
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/anomaly/").then((response) => {
+      setData(response.data || []);
+    });
+  }, []);
+
+  if (data.count < 2) {
+    return (
+      <Card id="trafficScore" title="Traffic Score">
+        <p>Number of anomalies detected: {data.count}</p>
+        <p style={{ color: "green" }}>Healthy Traffic Score</p>
+      </Card>
+    );
+  } else if (data.count >= 2 && data.count < 4) {
+    return (
+      <Card id="trafficScore" title="Traffic Score">
+        <p>Number of anomalies detected: {data.count}</p>
+        <p style={{ color: "orange" }}>Moderate Traffic Score</p>
+      </Card>
+    );
+  } else {
+    return (
+      <Card id="trafficScore" title="Traffic Score">
+        <p>Number of anomalies detected: {data.count}</p>
+        <p style={{ color: "red" }}>Unhealthy Traffic Score</p>
+      </Card>
+    );
+  }
 }
 
 const Graph = () => {
