@@ -29,10 +29,12 @@ def api_root(request, format=None):
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        owner = User.objects.get(id=1)
+        serializer.save(owner=owner)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -47,7 +49,7 @@ class MLModelViewSet(viewsets.ModelViewSet):
     serializer_class = MLModelSerializer
 
 class AnomalyViewSet(viewsets.ModelViewSet):
-    queryset = Anomaly.objects.all()
+    queryset = Anomaly.objects.all().order_by("-detected_at")
     serializer_class = AnomalySerializer
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -60,41 +62,51 @@ class TestView(APIView):
         uploaded_file = request.FILES.get("myFile")
         df = pd.read_csv(uploaded_file)
 
-        # Extract each of the columns, add them to DB
-        column_names =[]
-        for i in df.columns:
-            column_names.append(i)
+        owner = request.user if request.user.is_authenticated else User.objects.first()
+        created_packets = []
 
-        first_row = df.iloc[0]
+        for idx, row in df.head(10).iterrows():
+        #for idx, row in df.iterrows():
+            try:
+                node_id = int(row.iloc[1])  # NodeID column
 
-        nodeid = first_row.iloc[1]
-        node = Node.objects.get(node_id=1)
+                node, _created = Node.objects.get_or_create(
+                    node_id=node_id,
+                    defaults={"owner": owner, "is_active": True},
+                )
 
-        packet = Packet(
-            nodeID=node, 
-            mac=first_row.iloc[2],
-            spreading_factor=first_row.iloc[3],
-            channel_frequency=first_row.iloc[4],
-            transmission_power=first_row.iloc[5],
-            bandwidth=first_row.iloc[6],  
-            coding_rate=first_row.iloc[7],
-            snr=first_row.iloc[8],
-            rssi=first_row.iloc[9],
-            sequence_number=first_row.iloc[10],  
-            payload=first_row.iloc[11],
-            payload_size=first_row.iloc[12],
-            num_recieved_per_node=first_row.iloc[13],
-            pdr_per_node=first_row.iloc[14],
-            current_seq_num=first_row.iloc[15],
-            num_recieved_per_node_per_window=first_row.iloc[16],
-            last_seq_num_at_window_start=first_row.iloc[17],
-            pdr_per_node_per_window=first_row.iloc[18],
-            inter_arrival_time_s=first_row.iloc[19],  
-            inter_arrival_time_m=first_row.iloc[20]   
-        )
-        packet.save()
+                packet = Packet(
+                    time=pd.to_datetime(row.iloc[0]),
+                    nodeID=node,
+                    mac=row.iloc[2],
+                    spreading_factor=int(row.iloc[3]),
+                    channel_frequency=float(row.iloc[4]),
+                    transmission_power=int(row.iloc[5]),
+                    bandwidth=int(row.iloc[6]),
+                    coding_rate=int(row.iloc[7]),
+                    snr=float(row.iloc[8]),
+                    rssi=float(row.iloc[9]),
+                    sequence_number=int(row.iloc[10]),
+                    payload=row.iloc[11],
+                    payload_size=int(row.iloc[12]),
+                    num_recieved_per_node=int(row.iloc[13]),
+                    pdr_per_node=int(row.iloc[14]),
+                    current_seq_num=int(row.iloc[15]),
+                    num_recieved_per_node_per_window=int(row.iloc[16]),
+                    last_seq_num_at_window_start=int(row.iloc[17]),
+                    pdr_per_node_per_window=int(row.iloc[18]),
+                    inter_arrival_time_s=float(row.iloc[19]),
+                    inter_arrival_time_m=float(row.iloc[20]),
+                )
+                packet.save()
+                created_packets.append(packet.id)
+            except Exception as e:
+                return Response({"error": f"Row {idx}: {str(e)}"}, status=400)
 
-        return Response({"File": uploaded_file})
+        return Response({
+            "message": f"Successfully created {len(created_packets)} packets",
+            "packet_ids": created_packets
+        })
     
 class RunModel(APIView):
     def post(self, request):

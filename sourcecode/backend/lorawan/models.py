@@ -54,7 +54,7 @@ class Node(models.Model):
 
 class Packet(models.Model):
     # Need to change time to time on dataset
-    time = models.DateTimeField(auto_now_add=True)
+    time = models.DateTimeField(null=True, blank=True)
     nodeID = models.ForeignKey(Node, on_delete=models.CASCADE)
 
     mac = models.CharField(max_length=6)

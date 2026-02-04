@@ -6,24 +6,61 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import './Devices.css'
 import Card from '../../components/Card/Card';
 
-const DeviceCard = () => (
-  <Card header={<span>Device Info</span>}>
-    <span>This is where the information for device 1, device 2 etc will go</span>
-  </Card>
-);
+const AddDevice = () => {
+  const [data, setData] = useState(""); 
+  const [isActive, setIsActive] = useState(true);
 
-const DeviceContent = () => (
-  <div className='deviceContentContainer'>
-    <DeviceCard />
-  </div>
-);
+  function handleAddDevice(e) {
+    e.preventDefault(); 
+    axios.post("http://localhost:8000/lorawan/nodes/", {
+      node_id: parseInt(data, 10), 
+      is_active: isActive
+    });
+    setData("");
+    setIsActive(true);
+  }
 
-const Devices = () => (
-  <div id="deviceContainer">
-    <Navbar />
-    <SideNavbar />
-    <DeviceContent />
-  </div>
-);
+  return (
+    <Card id="addDevice" className="addDevice">
+      <form onSubmit={handleAddDevice}>
+        <label>
+          Node ID:
+          <input
+            type="number"
+            value={data}
+            onChange={e => setData(e.target.value)}
+            required
+          />
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={isActive}
+            onChange={e => setIsActive(e.target.checked)}
+          />
+        </label>
+        <input type="submit" value="Add Node" />
+      </form>
+    </Card>
+  );
+};
+
+const DeviceContent = () => {
+  return(
+    <div className="deviceContentContainer">
+      <AddDevice/>
+    </div>
+  )
+};
+
+const Devices = () => {
+  return(
+    <div id="deviceContainer">
+      <Navbar />
+      <SideNavbar />
+      <DeviceContent />
+    </div>
+  )
+};
 
 export default Devices

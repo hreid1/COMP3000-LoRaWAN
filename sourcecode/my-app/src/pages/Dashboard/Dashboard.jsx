@@ -81,6 +81,26 @@ const NetworkTraffic = () => {
     })
   }
 
+  function handleAddToDB(){
+    if (!file){
+      setError("No file selected")
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("myFile", file, file.name)
+
+    axios.post("http://localhost:8000/lorawan/addmodel/", formData)
+    .then(response => {
+      console.log("File added to DB")
+      setFile(null);
+      setData([]);
+    })
+    .catch(err => {
+      console.error("Database upload failed")
+    })
+  }
+
   function handleFileChange(event) {
     const selectedFile = event.target.files[0];
     if (selectedFile) {
@@ -112,6 +132,7 @@ const NetworkTraffic = () => {
         <input type="file" onChange={handleFileChange}/>
         <button onClick={handleFileDisplay}>Display File</button>
         <button onClick={handleFileUpload}>Run File</button>
+        <button onClick={handleAddToDB}>Add to DB</button>
       </div>
       <div>
         {error 

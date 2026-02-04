@@ -105,7 +105,7 @@ class MLModelService:
         
         return performance 
     
-    def run(uploaded_file, model_choice):
+    def run(uploaded_file):
         df_scaled, train_scaled, df = MLModelService.preprocess(uploaded_file)
         #model, model_name = MLModelService.runIsoaltionForest(train_scaled)
         model, model_name = MLModelService.runLocalOutlierFactor(train_scaled)
