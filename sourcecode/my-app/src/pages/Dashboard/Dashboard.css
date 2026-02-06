@@ -39,8 +39,7 @@ input {
     align-items: stretch;
     background-color: #E5ECF4;
     padding: 1rem;
-    border-radius: 0.5rem 0 0 0;
-    overflow: auto;
+    overflow: hidden;  
     min-height: 100%;
     height: 100%;
 }
@@ -95,13 +94,12 @@ input {
     grid-column: 3 / 4;
     grid-row: 3 / 4;
     height: 100%;
+    overflow-y: auto;
 }
 
 #graph {
     grid-column: 1 / 3;
     grid-row: 3 / 4;
-    max-height: none;
-    min-height: 0;
     height: 100%;
     overflow-y: auto;
 }

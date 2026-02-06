@@ -3,7 +3,6 @@ import './SideNavbar.css'
 import Dots from '../../assets/dots.svg'
 import { Link } from "react-router"
 
-
 const SideNavbar = () => {
   return (
     <div className='sideNavbar'>
@@ -19,8 +18,12 @@ const SideNavbar = () => {
           <Link to="/logs">
             <li>Logs</li>
           </Link>
-          <li style={{ color: "red"}}>Maps</li>
-          <li style={{ color: "red"}}>AI-Model</li>
+          <Link to="/aiinfo">
+            <li>AI Info</li>
+          </Link>
+          <Link to="/map">
+            <li>Map</li>
+          </Link>
         </ul>
       </div>
     </div>

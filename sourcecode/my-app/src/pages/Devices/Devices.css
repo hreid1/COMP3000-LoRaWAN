@@ -17,12 +17,34 @@
 }
 
 .deviceContentContainer {
-    grid-column: 2 / 3;
-    grid-row: 2 / 3;
-
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    gap: 16px;
     background-color: #E5ECF4;
-    padding: 0.5rem;
-    border: 0.5px solid black;
+    padding: 1rem;
     border-radius: 0.5rem 0 0 0;
+    overflow: auto;
+    min-height: 100%;
+    height: 100%;
+
 }
 
+.deviceContainerLeft {
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+}
+
+.deviceContainerRight {
+    flex: 1;
+    overflow-y: auto
+}
+
+.deviceGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1rem;
+}

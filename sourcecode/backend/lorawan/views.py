@@ -12,6 +12,7 @@ from .models import Node, Packet, MLModel, Anomaly, UserProfile
 from .permissions import IsOwnerOrReadOnly
 from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer
 from .services import mlmodel_service
+from rest_framework.pagination import PageNumberPagination
 
 @api_view(["GET"])
 def api_root(request, format=None):
@@ -29,8 +30,12 @@ def api_root(request, format=None):
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['request'] = self.request
+        return context
 
     def perform_create(self, serializer):
         owner = User.objects.get(id=1)
@@ -56,6 +61,19 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+class NodePacketsViewSet(viewsets.ModelViewSet):
+    serializer_class = PacketSerializer
+    pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        node_id = self.kwargs['node_id']
+        return Packet.objects.filter(nodeID__node_id=node_id).order_by('-created_at')
+
 # Views
 class TestView(APIView):
     def post(self, request):
@@ -65,7 +83,7 @@ class TestView(APIView):
         owner = request.user if request.user.is_authenticated else User.objects.first()
         created_packets = []
 
-        for idx, row in df.head(10).iterrows():
+        for idx, row in df.head(1000).iterrows():
         #for idx, row in df.iterrows():
             try:
                 node_id = int(row.iloc[1])  # NodeID column

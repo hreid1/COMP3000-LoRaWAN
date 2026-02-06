@@ -1,11 +1,16 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
 from .models import UserProfile, Node, Packet, MLModel, Anomaly 
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 # User Profile?
 # Node
 # Packet
 # Anomaly Detection
+
+class PacketPagination(PageNumberPagination):
+    page_size = 10
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
@@ -33,7 +38,7 @@ class PacketSerializer(serializers.ModelSerializer):
 
 class NodeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
-    packets = PacketSerializer(source="packet_set", many=True, read_only=True)
+    packets_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Node
@@ -43,8 +48,12 @@ class NodeSerializer(serializers.ModelSerializer):
             "is_active", 
             "created_at", 
             "node_id",
-            "packets"
+            "packets_count"
         ]
+
+    def get_packets_count(self, obj):
+        return obj.packet_set.count()
+
 
 class UserProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source='user.username', read_only=True)

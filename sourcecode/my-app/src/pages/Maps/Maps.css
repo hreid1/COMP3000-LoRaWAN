@@ -1,0 +1,25 @@
+#mapContainer {
+    display: grid;
+    grid-template-columns: 220px 2fr;
+    grid-template-rows: auto 1fr;
+    width: 100vw;
+}
+
+.navbar {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+}
+
+.sideNavbar {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+}
+
+#mapContentContainer {
+    gap: 16px;
+    background-color: #E5ECF4;
+    padding: 1rem;
+    overflow: hidden;
+    flex: 1;
+    height: 100vh;
+}

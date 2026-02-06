@@ -6,6 +6,30 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import './Devices.css'
 import Card from '../../components/Card/Card';
 
+const Graph = () => {
+  return (
+    <Card id="graphDevice" title="Graph">
+
+    </Card>
+  )
+}
+
+const DeviceInfo = ({ nodeID, mac, location, isActive, packets }) => {
+  return(
+    <Card id="deviceInfo" title="Device Information">
+      <span>Device Info</span>
+      <div className="deviceInfoContent">
+        <p>Node ID: {nodeID}</p>
+        <p>MAC: {mac}</p>
+        <p>Location: {location}</p>
+        <p>Is Active: {isActive}</p>
+        <p>Packet Count: {packets}</p>
+      </div>
+
+    </Card>
+  )
+}
+
 const AddDevice = () => {
   const [data, setData] = useState(""); 
   const [isActive, setIsActive] = useState(true);
@@ -21,7 +45,7 @@ const AddDevice = () => {
   }
 
   return (
-    <Card id="addDevice" className="addDevice">
+    <Card id="addDevice" className="addDevice" title="Add Device">
       <form onSubmit={handleAddDevice}>
         <label>
           Node ID:
@@ -46,9 +70,38 @@ const AddDevice = () => {
 };
 
 const DeviceContent = () => {
+  const devices = [
+    { id: 1, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 2, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 3, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 4, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 5, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 6, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 7, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 8, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+    { id: 9, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
+  ]
+
   return(
     <div className="deviceContentContainer">
-      <AddDevice/>
+      <div className="deviceContainerLeft">
+        <AddDevice/>
+        <Graph />
+      </div>
+      <div className="deviceContainerRight">
+        <div className="deviceGrid">
+          {devices.map(device => (
+            <DeviceInfo 
+              key={device.id}
+              nodeID={device.nodeID}
+              mac={device.mac}
+              location={device.location}
+              isActive={device.isActive}
+              packets={device.packets}
+            />
+          ))}
+        </div>
+      </div>
     </div>
   )
 };
