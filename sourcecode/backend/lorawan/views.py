@@ -38,8 +38,7 @@ class NodeViewSet(viewsets.ModelViewSet):
         return context
 
     def perform_create(self, serializer):
-        owner = User.objects.get(id=1)
-        serializer.save(owner=owner)
+        serializer.save(created_by=self.request.user)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -52,6 +51,10 @@ class PacketViewSet(viewsets.ModelViewSet):
 class MLModelViewSet(viewsets.ModelViewSet):
     queryset = MLModel.objects.all()
     serializer_class = MLModelSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(created_by=self.request.user)
 
 class AnomalyViewSet(viewsets.ModelViewSet):
     queryset = Anomaly.objects.all().order_by("-detected_at")

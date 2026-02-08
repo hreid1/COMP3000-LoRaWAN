@@ -1,25 +1,70 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import SideNavbar from '../../components/Navbar/SideNavbar'
 import Card from '../../components/Card/Card'
+import axios from 'axios'
 import './AIinfo.css'
 
 const Graph = () => {
     return(
         <Card id="aiGraph" title="Graph">
-            <div>
-                Graph placeholder
-            </div>
         </Card>
     )
 }
 
 const AddModel = () => {
+    const [modelName, setModelName] = useState("")
+    const [modelVersion, setModelVersion] = useState("")
+    const [modelType, setModelType] = useState("")
+
+    function handleAddModel(e){
+        e.preventDefault()
+        axios.post("http://localhost:8000/lorawan/mlmodels/", {
+            name: modelName,
+            version: modelVersion,
+            algorithm_type: modelType,
+        })
+        .then(response => {
+            console.log("Model added successfully:", response.data);
+            setModelName("");
+            setModelVersion("");
+            setModelType("");
+        })
+        .catch(error => {
+            console.error("Error adding model:", error);
+        });
+    }
+
     return(
         <Card id="addModel" title="Add Model">
-            <div>
-                Add Model placeholder
-            </div>
+            <form onSubmit={handleAddModel} className="addModelContainer">
+                <label>
+                    Model Name
+                    <input 
+                        type="text" 
+                        value={modelName}
+                        onChange={e => setModelName(e.target.value)}
+                        required
+                    />
+                </label>
+                <label>
+                    Model Version
+                    <input 
+                        type="number" 
+                        value={modelVersion}
+                        onChange={e => setModelVersion(e.target.value)}
+                    />
+                </label>
+                <label>
+                    Model Type
+                    <input 
+                        type="text"
+                        value={modelType}
+                        onChange={e => setModelType(e.target.value)}
+                     />
+                </label>
+                <input type="submit" value="Add Model" />
+            </form>
         </Card>
     )
 }
@@ -48,7 +93,6 @@ const AImodel = ({ model_name, version, accuracy, precision, f1score, recall, si
 const ModelRetraining = () => {
     return(
         <Card id="aiModelRetraining" title="Model Retraining">
-            <p>Ability to retrain the models by uploading a file, gives a progress bar similar to Matlab progress chart</p>
         </Card>
     )
 }
@@ -56,12 +100,6 @@ const ModelRetraining = () => {
 const Statistics = () => {
     return(
         <Card id="aiStats" title="Information">
-            <div>
-                <p>Active Model: Isolation Forest</p>
-                <p>Files searched: 197,955</p>
-                <p>Anomalies Detected: 33,537</p>
-                <p>Type of Anomalies Detected: Jammer Attack</p>
-            </div>
         </Card>
     )
 }
@@ -69,8 +107,6 @@ const Statistics = () => {
 const ViewExistingModels = () => {
     return (
         <Card className="test" title="Existing models">
-            <p>Maybe add a button to view all existing models</p>
-            <p>?</p>
         </Card>
     )
 }

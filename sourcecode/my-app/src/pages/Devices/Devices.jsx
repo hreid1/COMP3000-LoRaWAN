@@ -25,7 +25,6 @@ const DeviceInfo = ({ nodeID, mac, location, isActive, packets }) => {
         <p>Is Active: {isActive}</p>
         <p>Packet Count: {packets}</p>
       </div>
-
     </Card>
   )
 }
@@ -46,7 +45,7 @@ const AddDevice = () => {
 
   return (
     <Card id="addDevice" className="addDevice" title="Add Device">
-      <form onSubmit={handleAddDevice}>
+      <form onSubmit={handleAddDevice} className="addDeviceContainer">
         <label>
           Node ID:
           <input

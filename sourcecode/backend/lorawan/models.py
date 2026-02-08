@@ -4,6 +4,7 @@ from pygments.lexers import get_lexer_by_name, get_all_lexers
 from pygments.styles import get_all_styles
 from pygments.formatters.html import HtmlFormatter
 from pygments import highlight
+from django.utils import timezone
 
 # Packet
     # Time: UTC
@@ -84,9 +85,13 @@ class Packet(models.Model):
         return f"Packet {self.id} at {self.time}"
 
 class MLModel(models.Model):
-    name = models.CharField()
+    name = models.CharField(max_length=200)
     version = models.FloatField()
-    algorithm_type = models.CharField()
+    algorithm_type = models.CharField(max_length=100)
+    created_by = models.ForeignKey(
+        "auth.User", related_name="ml_models", on_delete=models.SET_NULL, null=True
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Model: {self.name} {self.version}"

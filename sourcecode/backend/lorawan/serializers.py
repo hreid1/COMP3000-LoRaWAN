@@ -72,6 +72,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ["id", "username", "email", "nodes", "userprofile"]
 
 class MLModelSerializer(serializers.ModelSerializer):
+    created_by_username = serializers.CharField(source='created_by.username', read_only=True)
+    
     class Meta:
         model = MLModel
-        fields = "__all__"
+        fields = ['id', 'name', 'version', 'algorithm_type', 'created_by', 'created_at', 'updated_at']
