@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar/Navbar'
 import SideNavbar from '../../components/Navbar/SideNavbar'
 import Card from '../../components/Card/Card'
@@ -8,6 +8,22 @@ import './AIinfo.css'
 const Graph = () => {
     return(
         <Card id="aiGraph" title="Graph">
+        </Card>
+    )
+}
+
+const ModelRetraining = () => {
+    return(
+        <Card id="modelRetraining" title="Model Retraining">
+
+        </Card>
+    )
+}
+
+const Statistics = () => {
+    return(
+        <Card id="aiStats" title="Statistics">
+
         </Card>
     )
 }
@@ -69,75 +85,41 @@ const AddModel = () => {
     )
 }
 
-const AImodel = ({ model_name, version, accuracy, precision, f1score, recall, silhouette }) => {
+const AImodel = ({ model }) => {
+    
     return(
-        <Card title="AI Model Info">
-            <div className="aimodelinfo">
-                <p>Model Name: {model_name}</p>
-                <p>Version: {version}</p>
-                <p>Model Type: Unsupervised</p>
-                <p>Last Used: 01/01/2001 14:42:38</p>
-            </div>
-            <h4>Performance Metrics</h4>
-            <div className="aimodelperformance">
-                <p>Accuracy: {accuracy}</p>
-                <p>Precision: {precision}</p>
-                <p>F1 Score: {f1score}</p>
-                <p>Recall: {recall}</p>
-                <p>Silhouette Score: {silhouette}</p>
-            </div>
-        </Card>
-    )
-}
-
-const ModelRetraining = () => {
-    return(
-        <Card id="aiModelRetraining" title="Model Retraining">
-        </Card>
-    )
-}
-
-const Statistics = () => {
-    return(
-        <Card id="aiStats" title="Information">
-        </Card>
-    )
-}
-
-const ViewExistingModels = () => {
-    return (
-        <Card className="test" title="Existing models">
-        </Card>
+        <div id="aiModelInfoContainer">
+            <Card id="aiModelInfo" title="AI Model Info">
+                <p>Model Name: </p>
+                <p>Version: {}</p>
+                <p>Model Type: {}</p>
+                <p>Created At: {}</p>
+            </Card>
+        </div>
     )
 }
 
 const AIinfoContentContainer = () => {
-    const models = [
-        { id: 1, model_name: "Isolation Forest", version: "1.0", accuracy: "95.2%", precision: "0.94", recall: "0.90", f1score: "0.92", silhouette: "0.85" },
-        { id: 2, model_name: "Local Outlier Factor", version: "1.0", accuracy: "92.1%", precision: "0.91", recall: "0.87", f1score: "0.89", silhouette: "0.82" },
-        { id: 3, model_name: "Local Outlier Factor", version: "1.0", accuracy: "92.1%", precision: "0.91", recall: "0.87", f1score: "0.89", silhouette: "0.82" },
-        { id: 4, model_name: "Local Outlier Factor", version: "1.0", accuracy: "92.1%", precision: "0.91", recall: "0.87", f1score: "0.89", silhouette: "0.82" },
-    ]
+    const [data, setData] = useState([])
+
+    useEffect(() => {
+        axios.get("http://127.0.0.1:8000/lorawan/mlmodels/")
+        .then((response) => {
+            setData(response.data || []);
+        })
+        .catch(error => {
+            console.error("Error fetching models:", error);
+        })
+    }, []);
+
+    console.log(data)
 
     return(
-        <div className="aiInfoContentContainer">
+        <div id="aiInfoContentContainer">
             <AddModel />
             <ModelRetraining />
-            <div id="aiModelInfoGrid">
-                {models.map(model => (
-                    <AImodel 
-                        key={model.id}
-                        model_name={model.model_name}
-                        version={model.version}
-                        accuracy={model.accuracy}
-                        precision={model.precision}
-                        recall={model.recall}
-                        f1score={model.f1score}
-                        silhouette={model.silhouette}
-                    />
-                ))}
-            </div>
-            <ViewExistingModels />
+            <AImodel />
+            
             <Graph />
             <Statistics />
         </div>

@@ -1,60 +1,52 @@
 #aiContainer {
     display: grid;
-    height: 100vh;
-    grid-template-columns: 220px 1fr;
+    grid-template-columns: 220px 2fr;
     grid-template-rows: auto 1fr;
+    width: 100vw;
+    min-height: 100vh;
+    height: 100vh;
+    overflow-x: hidden;
 }
 
-.aiInfoContentContainer {
+#aiInfoContentContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: auto auto 1fr;
-    background-color: #E5ECF4;
+    grid-template-columns: 1fr 0.5fr 0.5fr;
+    grid-template-rows: 220px 1fr 1fr ;
     gap: 16px;
+    align-items: stretch;
+    background-color: #E5ECF4;
     padding: 1rem;
-    overflow: auto;
+    overflow: hidden;  
+    min-height: 100%;
     height: 100%;
 }
 
-#addModel {
-    grid-row: 1;
-    grid-column: 1 / 3;
-}
-
-.addModelContainer {
-    display: flex;
-    flex-direction: column;
-}
-
-.addModelContainer label {
-    padding: 0.5rem;
-}
-
-#aiModelRetraining {
-    grid-row: 2;
-    grid-column: 1 / 3;
-}
-
-#aiModelInfoGrid {
-    grid-row: 1 / 3;
-    grid-column: 3 / 5;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto;
-    gap: 16px;
-}
-
-#aiGraph {
-    grid-row: 3;
+#aiModelInfoContainer {
     grid-column: 2 / 4;
+    grid-row: 1 / 3;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+#addModel {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
 }
 
 #aiStats {
-    grid-row: 3;
-    grid-column: 4;
+    grid-column: 3 / 4;
+    grid-row: 3 / 4;
 }
 
-.test {
-    grid-row: 3;
-    grid-column: 1;
+
+#modelRetraining {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+
+}
+
+#aiGraph {
+    grid-column: 1 / 3;
+    grid-row: 3 / 4;
+
 }

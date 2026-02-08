@@ -51,10 +51,13 @@ class PacketViewSet(viewsets.ModelViewSet):
 class MLModelViewSet(viewsets.ModelViewSet):
     queryset = MLModel.objects.all()
     serializer_class = MLModelSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        owner = User.objects.get(id=1)
+        serializer.save(created_by=owner)
+        #serializer.save(created_by=self.request.user)
 
 class AnomalyViewSet(viewsets.ModelViewSet):
     queryset = Anomaly.objects.all().order_by("-detected_at")
