@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Link } from "react-router"
 import './Dropdown.css'
+import Profile from '../../pages/Profile/Profile.jsx'
 
 const Dropdown = ({ userData }) => {
     const [open, setOpen] = useState(false)

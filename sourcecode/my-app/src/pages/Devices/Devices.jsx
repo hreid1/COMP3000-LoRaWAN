@@ -56,6 +56,7 @@ const AddDevice = () => {
           />
         </label>
         <label>
+          Is Active:
           <input
             type="checkbox"
             checked={isActive}

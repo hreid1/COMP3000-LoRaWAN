@@ -67,6 +67,7 @@ const NetworkTraffic = () => {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
+  const [selectedModel, setSelectedModel] = useState("IsolationForest"); // default model
 
   function handleFileUpload(event){
     if (!file) {
@@ -75,6 +76,7 @@ const NetworkTraffic = () => {
     }
     const formData = new FormData()
     formData.append("myFile", file, file.name)
+    formData.append("model", selectedModel) 
     axios.post("http://localhost:8000/lorawan/run/", formData)
     .then (response => {
       console.log(response)
@@ -130,6 +132,12 @@ const NetworkTraffic = () => {
     <Card id="networkTraffic" title="Network Traffic">
       <div className="btn-column">
         <input type="file" onChange={handleFileChange}/>
+        
+        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
+          <option value="IsolationForest">Isolation Forest</option>
+          <option value="LocalOutlierFactor">Local Outlier Factor</option>
+        </select>
+        
         <button onClick={handleFileDisplay}>Display File</button>
         <button onClick={handleFileUpload}>Run File</button>
         <button onClick={handleAddToDB}>Add to DB</button>

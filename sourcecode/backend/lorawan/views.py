@@ -135,6 +135,7 @@ class TestView(APIView):
 class RunModel(APIView):
     def post(self, request):
         uploaded_file = request.FILES.get('myFile')
-        results = mlmodel_service.MLModelService.run(uploaded_file)
+        model_type = request.POST.get('model', 'IsolationForest') 
+        results = mlmodel_service.MLModelService.run(uploaded_file, model_type)
 
         return Response(results)

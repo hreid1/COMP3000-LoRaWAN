@@ -2,7 +2,9 @@ import React from 'react'
 
 const Profile = () => {
     return(
-        <span>This is my Profile page</span>
+        <div id="profileContainer">
+            <span>This is my Profile page</span>
+        </div>
     )
 }
 

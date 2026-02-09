@@ -28,16 +28,24 @@
     grid-template-columns: repeat(2, 1fr);
 }
 
+#aiModelInfo {
+    margin-right: 8px;
+}
+
 #addModel {
     grid-column: 1 / 2;
     grid-row: 1 / 2;
+}
+
+#addModel form {
+    display: flex;
+    flex-direction: column;
 }
 
 #aiStats {
     grid-column: 3 / 4;
     grid-row: 3 / 4;
 }
-
 
 #modelRetraining {
     grid-column: 1 / 2;

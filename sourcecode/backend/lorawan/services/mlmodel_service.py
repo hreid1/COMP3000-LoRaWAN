@@ -105,10 +105,14 @@ class MLModelService:
         
         return performance 
     
-    def run(uploaded_file):
+    def run(uploaded_file, model_type='IsolationForest'):
         df_scaled, train_scaled, df = MLModelService.preprocess(uploaded_file)
-        #model, model_name = MLModelService.runIsoaltionForest(train_scaled)
-        model, model_name = MLModelService.runLocalOutlierFactor(train_scaled)
+        
+        if model_type == 'IsolationForest':
+            model, model_name = MLModelService.runIsoaltionForest(train_scaled)
+        else:
+            model, model_name = MLModelService.runLocalOutlierFactor(train_scaled)
+        
         predictions, scores = MLModelService.predict(model, df_scaled)
         performance = MLModelService.getPerformance(model, df_scaled, predictions, scores, df)
         

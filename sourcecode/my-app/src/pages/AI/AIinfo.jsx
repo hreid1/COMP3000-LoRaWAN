@@ -85,16 +85,18 @@ const AddModel = () => {
     )
 }
 
-const AImodel = ({ model }) => {
+const AImodel = ({ data }) => {
     
     return(
         <div id="aiModelInfoContainer">
-            <Card id="aiModelInfo" title="AI Model Info">
-                <p>Model Name: </p>
-                <p>Version: {}</p>
-                <p>Model Type: {}</p>
-                <p>Created At: {}</p>
-            </Card>
+            {data && data.map(model => (
+                <Card key ={model.id} id="aiModelInfo" title="AI Model Info">
+                    <p>Model Name: {model.name} </p>
+                    <p>Version: {model.version}</p>
+                    <p>Model Type: {model.algorithm_type}</p>
+                    <p>Created At: {new Date(model.created_at).toLocaleString()}</p>
+                </Card>
+            ))}
         </div>
     )
 }
@@ -105,21 +107,19 @@ const AIinfoContentContainer = () => {
     useEffect(() => {
         axios.get("http://127.0.0.1:8000/lorawan/mlmodels/")
         .then((response) => {
-            setData(response.data || []);
+            setData(response.data.results || []);
         })
         .catch(error => {
             console.error("Error fetching models:", error);
         })
     }, []);
 
-    console.log(data)
 
     return(
         <div id="aiInfoContentContainer">
             <AddModel />
             <ModelRetraining />
-            <AImodel />
-            
+            <AImodel data={data} />
             <Graph />
             <Statistics />
         </div>

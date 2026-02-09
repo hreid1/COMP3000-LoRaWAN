@@ -7,6 +7,7 @@ import networkImg from '../../assets/network.svg'
 import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router"
 
+
 const Navbar = ({name, data}) => {
 
   return (
