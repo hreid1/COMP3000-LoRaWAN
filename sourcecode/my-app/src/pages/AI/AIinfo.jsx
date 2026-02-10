@@ -28,6 +28,7 @@ const Statistics = () => {
     )
 }
 
+
 const AddModel = () => {
     const [modelName, setModelName] = useState("")
     const [modelVersion, setModelVersion] = useState("")
@@ -119,7 +120,7 @@ const AIinfoContentContainer = () => {
         <div id="aiInfoContentContainer">
             <AddModel />
             <ModelRetraining />
-            <AImodel data={data} />
+            <AIInfo2 />
             <Graph />
             <Statistics />
         </div>

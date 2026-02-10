@@ -8,9 +8,9 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from .models import Node, Packet, MLModel, Anomaly, UserProfile
+from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo
 from .permissions import IsOwnerOrReadOnly
-from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer
+from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer
 from .services import mlmodel_service
 from rest_framework.pagination import PageNumberPagination
 
@@ -23,7 +23,9 @@ def api_root(request, format=None):
             "packets": reverse("lorawan:packet-list", request=request, format = format),
             "mlmodels": reverse("lorawan:mlmodel-list", request=request, format = format),
             "anomalies": reverse("lorawan:anomaly-list", request=request, format=format),
-            "userprofiles": reverse("lorawan:userprofile-list", request=request, format=format)
+            "userprofiles": reverse("lorawan:userprofile-list", request=request, format=format),
+            "modeltraininginfos": reverse("lorawan:modeltraininginfo-list", request=request, format=format),
+            "modelpredictioninfos": reverse("lorawan:modelpredictioninfo-list", request=request, format=format)
         }
     )
 
@@ -67,18 +69,20 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
-class StandardResultsSetPagination(PageNumberPagination):
-    page_size = 20
-    page_size_query_param = 'page_size'
-    max_page_size = 100
-
 class NodePacketsViewSet(viewsets.ModelViewSet):
     serializer_class = PacketSerializer
-    pagination_class = StandardResultsSetPagination
     
     def get_queryset(self):
         node_id = self.kwargs['node_id']
         return Packet.objects.filter(nodeID__node_id=node_id).order_by('-created_at')
+
+class ModelTrainingInfoViewSet(viewsets.ModelViewSet):
+    queryset = ModelTrainingInfo.objects.all() 
+    serializer_class = ModelTrainingInfoSerializer
+
+class ModelPredictionInfoViewSet(viewsets.ModelViewSet):
+    queryset = ModelPredictionInfo.objects.all()
+    serializer_class = ModelPredictionInfoSerailizer
 
 # Views
 class TestView(APIView):

@@ -99,9 +99,36 @@ class MLModel(models.Model):
 class Anomaly(models.Model):
     packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
-    is_anomaly = models.BooleanField()
-    confidence = models.FloatField(null=True, blank=True)
     detected_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"Packet {self.packet_id} {self.model.name}: {self.is_anomaly}"
+        return f"Packet {self.packet_id} {self.model.name}:"
+
+class ModelTrainingInfo(models.Model):
+    model_id = models.ForeignKey(MLModel, on_delete=models.CASCADE)
+    trained_by_id = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True)
+    trained_at = models.DateTimeField(null=True)
+    training_data_file = models.CharField(max_length=100)
+    num_training_samples = models.IntegerField()
+
+    # Subject to change 
+    contamination = models.FloatField()
+
+    is_active = models.BooleanField(default=False)
+
+class ModelPredictionInfo(models.Model):
+    model_id = models.ForeignKey(MLModel, on_delete=models.CASCADE)
+    training_run_id = models.ForeignKey(ModelTrainingInfo, on_delete=models.CASCADE)
+    predicted_at = models.DateField()
+    input_file_name = models.CharField()
+    num_packets = models.IntegerField()
+
+    # Peformance Metrics
+    anomalies_detected = models.IntegerField()
+    anomaly_percentage = models.FloatField()
+    mean_anomaly_score = models.FloatField()
+    min_anomaly_score = models.FloatField()
+    max_anomaly_score = models.FloatField()
+    accuracy = models.FloatField()
+    recall = models.FloatField()
+    f1_score = models.FloatField()

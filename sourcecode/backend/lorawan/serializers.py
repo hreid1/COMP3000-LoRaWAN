@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
-from .models import UserProfile, Node, Packet, MLModel, Anomaly 
+from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelPredictionInfo, ModelTrainingInfo
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -77,3 +77,13 @@ class MLModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = MLModel
         fields = ['id', 'name', 'version', 'algorithm_type', 'created_by', 'created_at']
+
+class ModelTrainingInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ModelTrainingInfo
+        fields = "__all__"
+
+class ModelPredictionInfoSerailizer(serializers.ModelSerializer):
+    class Meta:
+        model = ModelPredictionInfo
+        fields = "__all__"
