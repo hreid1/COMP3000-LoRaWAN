@@ -86,26 +86,10 @@ const AddModel = () => {
     )
 }
 
-const AImodel = ({ data }) => {
-    
-    return(
-        <div id="aiModelInfoContainer">
-            {data && data.map(model => (
-                <Card key ={model.id} id="aiModelInfo" title="AI Model Info">
-                    <p>Model Name: {model.name} </p>
-                    <p>Version: {model.version}</p>
-                    <p>Model Type: {model.algorithm_type}</p>
-                    <p>Created At: {new Date(model.created_at).toLocaleString()}</p>
-                </Card>
-            ))}
-        </div>
-    )
-}
-
-const AIinfoContentContainer = () => {
+const AiModelContainer = () => {
     const [data, setData] = useState([])
 
-    useEffect(() => {
+        useEffect(() => {
         axios.get("http://127.0.0.1:8000/lorawan/mlmodels/")
         .then((response) => {
             setData(response.data.results || []);
@@ -115,12 +99,33 @@ const AIinfoContentContainer = () => {
         })
     }, []);
 
+    return(
+        <div id="aiModelContainer">
+            <div className="aiModelInfoContainerSearchbar">
+                <span>Sort By</span>
+                <span>Filter By</span>
+                <span>Search</span>
+            </div>
+            <div className="aiModelGrid">
+                {data && data.map(model => (
+                    <Card key={model.id} title={model.name} id="aiModelInfo">
+                        <p>Name: {model.name}</p>
+                        <p>Algorithm Type: {model.algorithm_type}</p>
+                        <p>Algorithm Version: {model.version}</p>
+                        <p>Created at: {new Date(model.created_at).toLocaleString()}</p>
+                    </Card>
+                ))}
+            </div>
+        </div>
+    )
+}
 
+const AIinfoContentContainer = () => {
     return(
         <div id="aiInfoContentContainer">
             <AddModel />
             <ModelRetraining />
-            <AIInfo2 />
+            <AiModelContainer />
             <Graph />
             <Statistics />
         </div>

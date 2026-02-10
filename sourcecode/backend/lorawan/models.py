@@ -116,6 +116,9 @@ class ModelTrainingInfo(models.Model):
 
     is_active = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"Model: {self.model_id.name} was trained at {self.trained_at}"
+
 class ModelPredictionInfo(models.Model):
     model_id = models.ForeignKey(MLModel, on_delete=models.CASCADE)
     training_run_id = models.ForeignKey(ModelTrainingInfo, on_delete=models.CASCADE)
@@ -132,3 +135,6 @@ class ModelPredictionInfo(models.Model):
     accuracy = models.FloatField()
     recall = models.FloatField()
     f1_score = models.FloatField()
+
+    def __str__(self):
+        return f"Model: {self.model_id.name} was ran on file {self.input_file_name} at {self.predicted_at}"

@@ -14,10 +14,12 @@ import Card from '../../components/Card/Card'
 Chart.register(CategoryScale);
 
 const DeviceList = ({data}) => {
+  
+  const displayedData = data && data.slice(0, 20);
 
   return(
     <Card id="deviceList" title="Device List">
-      {data && data.map(node => (
+      {displayedData && displayedData.map(node => (
         <div key={node.id} className="deviceItem">
           <strong className="deviceTitle">Node {node.node_id}</strong>
           <p className="deviceInfo">Owner: {node.owner}</p>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import axios from 'axios'
 import Navbar from '../../components/Navbar/Navbar'
@@ -14,16 +14,16 @@ const Graph = () => {
   )
 }
 
-const DeviceInfo = ({ nodeID, mac, location, isActive, packets }) => {
+const DeviceInfo = ({ nodeID, owner, isActive, createdAt, packetCount }) => {
   return(
     <Card id="deviceInfo" title="Device Information">
       <span>Device Info</span>
       <div className="deviceInfoContent">
         <p>Node ID: {nodeID}</p>
-        <p>MAC: {mac}</p>
-        <p>Location: {location}</p>
+        <p>Owner: {owner}</p>
+        <p>Packet Count: {packetCount}</p>
         <p>Is Active: {isActive}</p>
-        <p>Packet Count: {packets}</p>
+        <p>Created At: {createdAt}</p>
       </div>
     </Card>
   )
@@ -70,17 +70,19 @@ const AddDevice = () => {
 };
 
 const DeviceContent = () => {
-  const devices = [
-    { id: 1, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 2, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 3, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 4, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 5, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 6, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 7, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 8, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-    { id: 9, nodeID: 1, mac: "00-00-00-00", location: "SW Farm", isActive: true, packets: 0},
-  ]
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/nodes/")
+    .then((response) => {
+      setData(response.data.results || []);
+    })
+    .catch(error => {
+      console.error("Error fetching models: ", error)
+    })
+  }, []);
+  
+  console.log(data)
 
   return(
     <div className="deviceContentContainer">
@@ -90,14 +92,14 @@ const DeviceContent = () => {
       </div>
       <div className="deviceContainerRight">
         <div className="deviceGrid">
-          {devices.map(device => (
+          {data && data.map(device => (
             <DeviceInfo 
               key={device.id}
-              nodeID={device.nodeID}
-              mac={device.mac}
-              location={device.location}
-              isActive={device.isActive}
-              packets={device.packets}
+              nodeID={device.node_id}
+              owner={device.owner}
+              isActive={device.is_active}
+              createdAt={new Date(device.created_at).toLocaleString()}
+              packetCount={device.packets_count}
             />
           ))}
         </div>
