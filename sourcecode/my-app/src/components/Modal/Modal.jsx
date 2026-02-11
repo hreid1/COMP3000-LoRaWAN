@@ -9,8 +9,8 @@ const Modal = ({ open, children, onClose }) => {
     <>
         <div className="overlay_styles"></div>
         <div className="modal_styles">
-            <button onClick={onClose}>Close Modal</button>
             {children}
+            <button onClick={onClose}>Close Modal</button>
         </div>
     </>,
     document.getElementById('portal')

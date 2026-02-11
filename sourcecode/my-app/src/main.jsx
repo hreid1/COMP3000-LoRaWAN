@@ -23,8 +23,6 @@ import Maps from './pages/Maps/Maps';
 
 const router = createBrowserRouter([
     { path:"/", element:<App/>},
-    { path:"/profile", element:<Profile/>},
-    { path:"/settings", element:<Settings/>},
     { path:"/devices", element:<Devices/>},
     { path:"/dashboard", element:<Dashboard/>},
     { path:"/logs", element:<Logs/>},

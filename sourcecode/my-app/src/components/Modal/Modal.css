@@ -6,6 +6,7 @@
     background-color: #FFF;
     padding: 50px;
     z-index: 1000;
+    border-radius: 0.5rem;
 }
 
 .overlay_styles {

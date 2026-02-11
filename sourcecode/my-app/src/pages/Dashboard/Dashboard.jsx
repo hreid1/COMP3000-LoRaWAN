@@ -54,14 +54,9 @@ const AnomalyList = () => {
 }
 
 const Announcements = () => {
-  const [isOpen, setIsOpen] = useState(false)
 
   return(
     <Card id="announcements" title="Announcements">
-      <button onClick={() => setIsOpen(true)}>Open Modal</button>
-      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-        Hello
-      </Modal>
     </Card>
   )
 }

@@ -6,9 +6,8 @@
 
 .dropdown-header {
     background-color: white;
-    border: 1px solid #ddd;
     padding: 0.5rem 1rem;
-    border-radius: 0.25rem;
+    border-radius: 0.125rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -22,9 +21,9 @@
 }
 
 .profile-image {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    border-radius: 10%;
     object-fit: cover;
     border: 2px solid #ddd;
 }

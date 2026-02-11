@@ -5,6 +5,7 @@ import SideNavbar from '../../components/Navbar/SideNavbar'
 import Card from '../../components/Card/Card'
 import axios from 'axios'
 import './AIinfo.css'
+import Modal from '../../components/Modal/Modal'
 
 const Graph = () => {
     return(
@@ -91,6 +92,7 @@ const AiModelContainer = () => {
     const [data, setData] = useState([]);
     const [selectedID, setSelectedID] = useState(null);
     const [historyData, setHistoryData] = useState([]);
+    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
       axios
@@ -111,8 +113,13 @@ const AiModelContainer = () => {
             })
     }, []);
 
+    const handleModalClick = (modelID) => {
+        // Set open
+        setIsOpen(true)
+        setSelectedID(modelID)
+        console.log(selectedID)
 
-    console.log(historyData)
+    }
 
     return (
       <div id="aiModelContainer">
@@ -129,35 +136,33 @@ const AiModelContainer = () => {
                 <p>Algorithm Type: {model.algorithm_type}</p>
                 <p>Algorithm Version: {model.version}</p>
                 <p>Created at: {new Date(model.created_at).toLocaleString()}</p>
-                <button onClick={() => setSelectedID(selectedID === model.id ? null : model.id)}>
-                  {selectedID === model.id ? 'Close' : 'View History'}
-                </button>
-                {selectedID === model.id && (
-                  <div className="aiHistoryMenu">
-                    <h4>Previous Runs</h4>
-                    {historyData.filter(item => item.model_id === model.id).length === 0 ? (
-                      <p>No predictions found for this model.</p>
-                    ) : (
-                      historyData
-                        .filter(item => item.model_id === model.id)
-                        .map(item => (
-                          <div key={item.id} className="aiHistoryItem">
-                            <p>File:{item.input_file_name}</p>
-                            <p>Date: {new Date(item.predicted_at).toLocaleString()}</p>
-                            <p>Packets Analyzed: {item.num_packets}</p>
-                            <p>Anomalies Detected: {item.anomalies_detected} ({item.anomaly_percentage.toFixed(2)}%)</p>
-                            {item.accuracy && (
-                              <p>Accuracy: {(item.accuracy * 100).toFixed(2)}%</p>
-                            )}
-                            <p>Precision: {(item.precision * 100).toFixed(2)}%</p>
-                            <p>Recall: {(item.recall * 100).toFixed(2)}%</p>
-                            <p>F1 Score: {(item.f1_score* 100).toFixed(2)}%</p>
-                            <p>Silhouette Score: {(item.silhouette_score * 100).toFixed(2)}%</p>
-                          </div>
-                        ))
-                    )}
-                  </div>
-                )}
+                <button onClick={() => {
+                    setIsOpen(true)
+                    setSelectedID(selectedID === model.id ? null : model.id)
+                }}>View</button>
+                <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+                    {historyData.filter((item) => item.model_id === model.id)
+                        .length === 0 ? (
+                            <p>No predictions found for this model</p>
+                        ) : (
+                            historyData
+                                .filter((item) => item.model_id === model.id)
+                                .map((item) => (
+                                    <div key={item.id} className="aiHistoryItem">
+                                        <p>File: {item.input_file_name}</p>
+                                        <p>Date: {new Date(item.predicted_at).toLocaleDateString()}</p>
+                                        <p>Packets Analysed: {item.num_packets}</p>
+                                        <p>Anomalies Detected: {item.anomalies_detected}</p>
+                                        <p>Accuracy: {(item.accuracy * 100).toFixed(2)}</p>
+                                        <p>Precision: {(item.precision * 100).toFixed(2)}</p>
+                                        <p>Recall: {(item.recall * 100).toFixed(2)}</p>
+                                        <p>F1 Score: {(item.f1_score * 100).toFixed(2)}</p>
+                                        <p>Silhouette Score: {(item.silhouette_score * 100).toFixed(2)}</p>
+                                    </div>
+                                ))
+                        )
+                    }
+                </Modal>
               </Card>
             ))}
         </div>

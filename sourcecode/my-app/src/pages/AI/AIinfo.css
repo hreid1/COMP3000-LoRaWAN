@@ -59,6 +59,7 @@
     background: #fff;
     display: flex;
     flex-direction: column;
+    border-radius: 0.5rem;
 }
 
 .aiModelInfoContainerSearchbar {
@@ -69,6 +70,7 @@
     padding: 1rem;
     margin: 0.5rem;
     border: 1px solid black;
+    border-radius: 0.5rem;
     flex-shrink: 0;
 }
 
@@ -91,4 +93,5 @@
 .aiHistoryItem {
     padding: 0.5rem;
     border: 1px solid black;
+    margin: 0.25rem;
 }

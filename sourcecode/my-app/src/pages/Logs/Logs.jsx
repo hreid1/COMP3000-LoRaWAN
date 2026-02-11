@@ -5,26 +5,31 @@ import Navbar from '../../components/Navbar/Navbar'
 import './Logs.css'
 import Card from '../../components/Card/Card';
 
-const LogCard = () => (
-  <Card header={<span>Logs</span>}>
-    <span className="logOption">Search:</span>
-    <span className="logOption">Filter:</span>
-    <span className="logOption">Email:</span>
-  </Card>
-);
+const LogItem = () => {
+  return (
+    <Card title="Log Card">
+      <span>Hello Test</span>
+    </Card>
+  )
+}
 
-const LogContent = () => (
-  <div className="logContentContainer">
-    <LogCard />
-  </div>
-);
+const LogContent = () => {
+  return(
+    <div className="logContentContainer">
+      <LogItem />
 
-const Logs = () => (
-  <div id="logContainer">
-    <Navbar />
-    <SideNavbar />
-    <LogContent />
-  </div>
-);
+    </div>
+  )
+}
+
+const Logs = () => {
+  return(
+    <div id="logContainer">
+      <Navbar />
+      <SideNavbar />
+      <LogContent />
+    </div>
+  )
+}
 
 export default Logs

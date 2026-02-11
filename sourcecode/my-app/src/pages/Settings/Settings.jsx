@@ -10,30 +10,11 @@ import Navbar from '../../components/Navbar/Navbar';
         // Preferences: Light/dark mode, 
         // Legal stuff: Removing account + linked details
 
-const SettingsCard = () => {
-    return(
-        <Card header={<span>Settings</span>}>
-            <span className="setOption">Username: </span>
-            <span className="setOption">Password: </span>
-            <span className="setOption">Email: </span>
-        </Card>
-    )
-}
-
-const SettingsContent = () => {
-    return(
-        <div className='settingsContentContainer'>
-            <SettingsCard />
-        </div>
-    )
-}
-
 const Settings = () => {
     return(
         <div id="settingsContainer">
-            <Navbar />
-            <SideNavbar />
-            <SettingsContent />
+            <span>Hello Test from settings</span>
+
         </div>
     )
 }
