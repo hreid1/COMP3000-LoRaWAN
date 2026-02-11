@@ -10,6 +10,7 @@ import { CategoryScale } from 'chart.js/auto'
 import { Data } from '../../utils/Data'
 import { BarChart } from '../../components/Charts/Graph'
 import Card from '../../components/Card/Card'
+import Modal from '../../components/Modal/Modal'
 
 Chart.register(CategoryScale);
 
@@ -53,10 +54,14 @@ const AnomalyList = () => {
 }
 
 const Announcements = () => {
+  const [isOpen, setIsOpen] = useState(false)
 
   return(
     <Card id="announcements" title="Announcements">
-
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+        Hello
+      </Modal>
     </Card>
   )
 }
@@ -200,6 +205,7 @@ const TrafficScore = () => {
 const Graph = () => {
   return(
     <Card id="graph" title="Graph">
+
     </Card>
   )
 }
