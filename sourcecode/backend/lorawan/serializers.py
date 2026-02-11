@@ -23,7 +23,7 @@ class AnomalySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Anomaly
-        fields = ["id", "packet_id", "packet_sequence", "model", "model_name", "is_anomaly", "detected_at"]
+        fields = ["id", "packet_id", "packet_sequence", "model", "model_name", "detected_at"]
 
 
 class PacketSerializer(serializers.ModelSerializer):

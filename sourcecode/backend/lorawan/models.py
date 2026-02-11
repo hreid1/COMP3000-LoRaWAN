@@ -121,20 +121,23 @@ class ModelTrainingInfo(models.Model):
 
 class ModelPredictionInfo(models.Model):
     model_id = models.ForeignKey(MLModel, on_delete=models.CASCADE)
-    training_run_id = models.ForeignKey(ModelTrainingInfo, on_delete=models.CASCADE)
-    predicted_at = models.DateField()
-    input_file_name = models.CharField()
+    training_run_id = models.ForeignKey(ModelTrainingInfo, on_delete=models.CASCADE, null=True, blank=True)
+    predicted_at = models.DateTimeField(auto_now_add=True)
+    input_file_name = models.CharField(max_length=255)
     num_packets = models.IntegerField()
 
-    # Peformance Metrics
+    # Performance Metrics
     anomalies_detected = models.IntegerField()
     anomaly_percentage = models.FloatField()
+    silhouette_score = models.FloatField(null=True, blank=True)
     mean_anomaly_score = models.FloatField()
+    std_anomaly_score = models.FloatField(null=True, blank=True)
     min_anomaly_score = models.FloatField()
     max_anomaly_score = models.FloatField()
-    accuracy = models.FloatField()
-    recall = models.FloatField()
-    f1_score = models.FloatField()
+    accuracy = models.FloatField(null=True, blank=True)
+    precision = models.FloatField(null=True, blank=True)
+    recall = models.FloatField(null=True, blank=True)
+    f1_score = models.FloatField(null=True, blank=True)
 
     def __str__(self):
         return f"Model: {self.model_id.name} was ran on file {self.input_file_name} at {self.predicted_at}"

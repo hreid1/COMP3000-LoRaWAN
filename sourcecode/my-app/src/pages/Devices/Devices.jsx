@@ -17,7 +17,6 @@ const Graph = () => {
 const DeviceInfo = ({ nodeID, owner, isActive, createdAt, packetCount }) => {
   return(
     <Card id="deviceInfo" title="Device Information">
-      <span>Device Info</span>
       <div className="deviceInfoContent">
         <p>Node ID: {nodeID}</p>
         <p>Owner: {owner}</p>

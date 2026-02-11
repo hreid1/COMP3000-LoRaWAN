@@ -31,27 +31,23 @@ const DeviceList = ({data}) => {
   )
 }
 
-const AnomalyList = ({data}) => {
+const AnomalyList = () => {
+  const [data, setData] = useState([])
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
+    .then((response) => {
+      setData(response.data.results)
+    })
+  }, [])
 
   return(
     <Card id="anomalyList" title="Anomaly List">
-      {data && data.map(node => (
-        <div key={node.id}>
-          {node.packets && node.packets.length > 0 && (
-            <div>
-              {node.packets
-                .filter(packet => packet.is_anomalous)
-                .map(packet => (
-                  <div key={packet.id}>
-                    <p>Packet ID: {packet.id} Seq: {packet.sequence_number} SNR: {packet.snr} RSSI: {packet.rssi}</p>
-                  </div>
-                ))
-              }
-            </div>
-          )}
+      {data && data.map(packet => (
+        <div key={packet.id}>
+          <span>Packet ID: {packet.packet_id} was flagged to be anomalous by Model: {packet.model_name}</span>
         </div>
       ))}
-
     </Card>
   )
 }
@@ -69,9 +65,10 @@ const NetworkTraffic = () => {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
-  const [selectedModel, setSelectedModel] = useState("IsolationForest"); // default model
+  const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
+  const [results, setResults] = useState([]);
 
-  function handleFileUpload(event){
+  function handleFileRun(event){
     if (!file) {
       console.error("No File")
       return;
@@ -81,9 +78,11 @@ const NetworkTraffic = () => {
     formData.append("model", selectedModel) 
     axios.post("http://localhost:8000/lorawan/run/", formData)
     .then (response => {
-      console.log(response)
+      console.log(response.data.performance)
+      setResults(response.data.performance)
     })
   }
+
 
   function handleAddToDB(){
     if (!file){
@@ -124,7 +123,7 @@ const NetworkTraffic = () => {
       const res = rows.reduce((acc, e, i) => {
         return [...acc, [[e], columns[i]]];
       }, []);
-      console.log(res)
+      //console.log(res)
       setData(res)
     };
     reader.readAsText(file);
@@ -141,7 +140,7 @@ const NetworkTraffic = () => {
         </select>
         
         <button onClick={handleFileDisplay}>Display File</button>
-        <button onClick={handleFileUpload}>Run File</button>
+        <button onClick={handleFileRun}>Run File</button>
         <button onClick={handleAddToDB}>Add to DB</button>
       </div>
       <div>
@@ -168,7 +167,8 @@ const TrafficScore = () => {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/anomaly/").then((response) => {
+    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
+    .then((response) => {
       setData(response.data || []);
     });
   }, []);

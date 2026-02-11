@@ -83,3 +83,12 @@
     grid-auto-rows: auto;
     gap: 16px;
 }
+
+.aiHistoryMenu {
+    padding: 0.5rem;
+}
+
+.aiHistoryItem {
+    padding: 0.5rem;
+    border: 1px solid black;
+}

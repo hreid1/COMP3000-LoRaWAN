@@ -142,4 +142,47 @@ class RunModel(APIView):
         model_type = request.POST.get('model', 'IsolationForest') 
         results = mlmodel_service.MLModelService.run(uploaded_file, model_type)
 
+        # Get or create the MLModel instance
+        ml_model, _ = MLModel.objects.get_or_create(
+            algorithm_type=model_type,
+            defaults={
+                'name': results['model info']['model'],
+                'version': 1.0,
+                'created_by': request.user if request.user.is_authenticated else User.objects.first()
+            }
+        )
+
+        # Get the active training run or None
+        training_run = ModelTrainingInfo.objects.filter(
+            model_id=ml_model, 
+            is_active=True
+        ).first()
+
+        # Extract performance metrics
+        performance = results['performance']
+        supervised = performance.get('supervised_metrics', {})
+        anomaly_scores = performance.get('anomaly_scores', {})
+
+        # Create ModelPredictionInfo entry
+        prediction_info = ModelPredictionInfo.objects.create(
+            model_id=ml_model,
+            training_run_id=training_run,
+            input_file_name=results['file name'],
+            num_packets=results['num_packets'],
+            anomalies_detected=performance['anomaly_count'],
+            anomaly_percentage=performance['anomaly_percentage'],
+            silhouette_score=performance.get('silhouette_score'),
+            mean_anomaly_score=anomaly_scores.get('mean'),
+            std_anomaly_score=anomaly_scores.get('std'),
+            min_anomaly_score=anomaly_scores.get('min'),
+            max_anomaly_score=anomaly_scores.get('max'),
+            accuracy=supervised.get('accuracy'),
+            precision=supervised.get('precision'),
+            recall=supervised.get('recall'),
+            f1_score=supervised.get('f1_score')
+        )
+
+        # Add prediction info ID to results
+        results['prediction_id'] = prediction_info.id
+
         return Response(results)

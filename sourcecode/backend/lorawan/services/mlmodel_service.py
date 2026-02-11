@@ -89,7 +89,6 @@ class MLModelService:
 
         # Supervised learning metrics
             # For jammer.csv assigning columns with node121 as anomaly
-
         if df_original is not None:
             if 'NodeID' in df_original.columns:
                 y_true = (df_original['NodeID'] == 121).astype(int)
@@ -104,6 +103,10 @@ class MLModelService:
                 }
         
         return performance 
+
+    # Adding to ModelPredictionsInfo
+    def addResultsToDB():
+        return 0
     
     def run(uploaded_file, model_type='IsolationForest'):
         df_scaled, train_scaled, df = MLModelService.preprocess(uploaded_file)
@@ -122,5 +125,6 @@ class MLModelService:
             "model info": {
                 "model": model_name
             },
-            "file name": Path(uploaded_file.name).name
+            "file name": Path(uploaded_file.name).name,
+            "num_packets": len(df)
         }
