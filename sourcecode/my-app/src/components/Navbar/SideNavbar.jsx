@@ -24,6 +24,12 @@ const SideNavbar = () => {
           <Link to="/map">
             <li>Map</li>
           </Link>
+          <Link to="/admin">
+            <li>Admin</li>
+          </Link>
+          <Link to="/anomaly">
+            <li>Anomaly</li>
+          </Link>
         </ul>
       </div>
     </div>

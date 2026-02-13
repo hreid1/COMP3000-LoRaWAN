@@ -41,25 +41,40 @@
     - Network traffic feed
     - Network traffic score (e.g. high score -> green -> less anomalies, regular packet intervals etc)
     - Recent alerts feed
-  - Device management
-    - Device list with search filter
-    - Device details page (metrics, history)
-    - Status indicators (e.g. green for online, maintenance/updated needed for yellow, offline for red)
-    - Signal strength (RSSI) visualisation
-  - Machine Learning
-  - Anomaly visualisation
-    - Anomaly feed/list with timestamps
-    - Security levels (e.g. Critical, high, medium, low)
-    - Anomaly type -> dataset only has jammer attack
-    - Filter by date, severity, device
-    - Anomaly detail view with explanation
-  - Historical charts
-    - RSSI over time
-    - Packet count over time
-    - Battery level trend
-    - Anomaly trend
-- Database
-- API Endpoints
+  - Device Page
+    - Device list with search/filter (name, ID, status)
+    - Add/Remove devices functionality
+    - Device status indicator (green = online, yellow = maintenace, red = offline)
+    - RSSI visualisation
+    - Packet count metrics per device
+    - Individual device detail view with:
+      - Historical metrics (RSSI, packet count, battery)
+      - Anomaly history for that device
+  - Anomaly
+    - Anomaly feed/list 
+    - Security severity levels (critical, high, medium, low)
+    - Anomaly Type (jammer attack)
+    - Filters
+    - Anomaly detail view with
+      - Packet details
+      - Why it was flagged
+      - affected device info
+      - ML model confidence score
+  - Logs
+    - Network traffic logs
+    - Packet history
+    - Export functionality
+    - Time range filtering
+  - Maps
+    - Geographic visualisation of devices
+  - AI Info
+    - Model information (algorithms used, accuracy metrics, training data info)
+    - Model performance graphs
+    - Prediction explanations 
+    - Retraining history/logs
+  - Profile
+    - User information
+  - Settings
 
 ## Languages/Frameworks 
 

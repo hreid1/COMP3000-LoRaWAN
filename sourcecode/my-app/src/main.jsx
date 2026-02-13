@@ -20,6 +20,8 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Logs from './pages/Logs/Logs'
 import AIinfo from './pages/AI/AIinfo';
 import Maps from './pages/Maps/Maps';
+import Anomaly from './pages/Anomaly/Anomaly';
+import Admin from './pages/Admin/admin';
 
 const router = createBrowserRouter([
     { path:"/", element:<App/>},
@@ -28,6 +30,8 @@ const router = createBrowserRouter([
     { path:"/logs", element:<Logs/>},
     { path:"/aiinfo", element:<AIinfo/>},
     { path:"/map", element:<Maps/>},
+    { path:"/anomaly", element:<Anomaly/>},
+    { path:"/admin", element:<Admin/>}
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
