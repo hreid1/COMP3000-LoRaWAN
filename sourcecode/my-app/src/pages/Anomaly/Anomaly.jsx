@@ -1,6 +1,4 @@
 import React from 'react'
-import Navbar from '../../components/Navbar/Navbar'
-import SideNavbar from '../../components/Navbar/SideNavbar'
 
 const AnomalyContent = () => {
   return(
@@ -13,8 +11,6 @@ const AnomalyContent = () => {
 const Anomaly = () => {
   return (
     <div>
-      <Navbar />
-      <SideNavbar />
       <AnomalyContent />
     </div>
   )

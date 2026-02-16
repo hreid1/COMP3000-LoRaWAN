@@ -6,42 +6,17 @@ input {
     cursor: pointer
 }
 
-#dashContainer {
-    display: grid;
-    grid-template-columns: 220px 2fr;
-    grid-template-rows: auto 1fr;
-    width: 100vw;
-    min-height: 100vh;
-    height: 100vh;
-    overflow-x: hidden;
-}
-
-.navbar {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-}
-
-.sideNavbar {
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
-}
-
-.dashContentContainer {
-  grid-column: 2 / 3;   
-  grid-row: 2 / 3;      
-}
-
 .dashContentContainer {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     grid-template-rows: 220px 1fr 1fr ;
     gap: 16px;
     align-items: stretch;
-    background-color: #E5ECF4;
     padding: 1rem;
-    overflow: hidden;  
-    min-height: 100%;
+    overflow: auto;
     height: 100%;
+    width: 100%;
+    background-color: #E5ECF4;
 }
 
 #deviceList {

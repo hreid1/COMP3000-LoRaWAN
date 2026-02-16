@@ -3,8 +3,6 @@ import axios from 'axios'
 import { useState, useEffect, useMemo } from 'react'
 import Papa from 'papaparse'
 import './Dashboard.css'
-import SideNavbar from '../../components/Navbar/SideNavbar'
-import Navbar from '../../components/Navbar/Navbar'
 import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
 import { Data } from '../../utils/Data'
@@ -236,11 +234,7 @@ const Dashboard = () => {
   const profileimage = data?.userprofile?.profile_image;
 
   return (
-    <div id="dashContainer">
-      <Navbar name={username} data={data.userprofile}/>
-      <SideNavbar />
-      <MainDashContent data={data}/>
-    </div>
+    <MainDashContent data={data}/>
   );
 }
 

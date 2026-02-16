@@ -1,5 +1,7 @@
-import React from 'react'
+import React, {useState} from 'react'
 import './Admin.css'
+import Card from '../../components/Card/Card'
+import axios from 'axios'
 
 const ModelRetraining = () => {
     return(

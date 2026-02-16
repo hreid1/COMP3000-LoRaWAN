@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
-import Navbar from '../../components/Navbar/Navbar'
-import SideNavbar from '../../components/Navbar/SideNavbar'
 import Card from '../../components/Card/Card'
 import axios from 'axios'
 import './AIinfo.css'
@@ -116,11 +114,7 @@ const AIinfoContentContainer = () => {
 
 const AIinfo = () => {
     return (
-        <div id="aiContainer">
-            <Navbar />
-            <SideNavbar />
-            <AIinfoContentContainer />
-        </div>
+        <AIinfoContentContainer />
     )
 }
 

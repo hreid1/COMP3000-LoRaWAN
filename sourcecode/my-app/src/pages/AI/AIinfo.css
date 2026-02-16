@@ -1,24 +1,14 @@
-#aiContainer {
-    display: grid;
-    grid-template-columns: 220px 2fr;
-    grid-template-rows: auto 1fr;
-    width: 100vw;
-    min-height: 100vh;
-    height: 100vh;
-    overflow-x: hidden;
-}
-
 #aiInfoContentContainer {
     display: grid;
     grid-template-columns: 1fr 0.5fr 0.5fr;
     grid-template-rows: repeat(220px 1fr 1fr);
+    background-color: #E5ECF4;
     gap: 16px;
     align-items: stretch;
-    background-color: #E5ECF4;
     padding: 1rem;
-    overflow: hidden;  
-    min-height: 100%;
+    overflow: auto;  
     height: 100%;
+    width: 100%;
 }
 
 

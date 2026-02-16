@@ -1,7 +1,5 @@
 import React from "react";
 import { useState } from "react";
-import SideNavbar from '../../components/Navbar/SideNavbar'
-import Navbar from '../../components/Navbar/Navbar'
 import './Logs.css'
 import Card from '../../components/Card/Card';
 
@@ -24,11 +22,7 @@ const LogContent = () => {
 
 const Logs = () => {
   return(
-    <div id="logContainer">
-      <Navbar />
-      <SideNavbar />
-      <LogContent />
-    </div>
+    <LogContent />
   )
 }
 

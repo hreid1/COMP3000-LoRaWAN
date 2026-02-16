@@ -1,8 +1,6 @@
 import React from 'react'
 import './Maps.css'
 import Card from '../../components/Card/Card'
-import SideNavbar from '../../components/Navbar/SideNavbar'
-import Navbar from '../../components/Navbar/Navbar'
 
 const MapItem = () => {
     return(
@@ -23,11 +21,7 @@ const MapContentContainer = () => {
 
 const Maps = () => {
   return (
-    <div id="mapContainer">
-        <Navbar />
-        <SideNavbar />
-        <MapContentContainer />
-    </div>
+    <MapContentContainer />
   )
 }
 

@@ -22,16 +22,22 @@ import AIinfo from './pages/AI/AIinfo';
 import Maps from './pages/Maps/Maps';
 import Anomaly from './pages/Anomaly/Anomaly';
 import Admin from './pages/Admin/admin';
+import MainLayout from './layouts/MainLayout';
 
 const router = createBrowserRouter([
-    { path:"/", element:<App/>},
-    { path:"/devices", element:<Devices/>},
-    { path:"/dashboard", element:<Dashboard/>},
-    { path:"/logs", element:<Logs/>},
-    { path:"/aiinfo", element:<AIinfo/>},
-    { path:"/map", element:<Maps/>},
-    { path:"/anomaly", element:<Anomaly/>},
-    { path:"/admin", element:<Admin/>}
+    { path: "/", element: <App /> },
+    {
+        element: <MainLayout />,
+        children: [
+            { path: "/dashboard", element: <Dashboard /> },
+            { path: "/devices", element: <Devices /> },
+            { path: "/logs", element: <Logs /> },
+            { path: "/aiinfo", element: <AIinfo /> },
+            { path: "/map", element: <Maps /> },
+            { path: "/anomaly", element: <Anomaly /> },
+            { path: "/admin", element: <Admin /> }
+        ]
+    }
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
