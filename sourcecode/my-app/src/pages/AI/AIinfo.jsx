@@ -72,32 +72,33 @@ const AiModelContainer = () => {
                     setIsOpen(true)
                     setSelectedID(selectedID === model.id ? null : model.id)
                 }}>View</button>
-                <Modal open={isOpen} onClose={() => setIsOpen(false)}>
-                    {historyData.filter((item) => item.model_id === model.id)
-                        .length === 0 ? (
-                            <p>No predictions found for this model</p>
-                        ) : (
-                            historyData
-                                .filter((item) => item.model_id === model.id)
-                                .map((item) => (
-                                    <div key={item.id} className="aiHistoryItem">
-                                        <p>File: {item.input_file_name}</p>
-                                        <p>Date: {new Date(item.predicted_at).toLocaleDateString()}</p>
-                                        <p>Packets Analysed: {item.num_packets}</p>
-                                        <p>Anomalies Detected: {item.anomalies_detected}</p>
-                                        <p>Accuracy: {(item.accuracy * 100).toFixed(2)}</p>
-                                        <p>Precision: {(item.precision * 100).toFixed(2)}</p>
-                                        <p>Recall: {(item.recall * 100).toFixed(2)}</p>
-                                        <p>F1 Score: {(item.f1_score * 100).toFixed(2)}</p>
-                                        <p>Silhouette Score: {(item.silhouette_score * 100).toFixed(2)}</p>
-                                    </div>
-                                ))
-                        )
-                    }
-                </Modal>
               </Card>
             ))}
         </div>
+        <Modal open={isOpen} onClose={() => setIsOpen(false)}>
+            <h2>Prediction History</h2>
+            {selectedID && historyData.filter((item) => item.model_id === selectedID)
+                .length === 0 ? (
+                    <p>No predictions found for this model</p>
+                ) : (
+                    historyData
+                        .filter((item) => item.model_id === selectedID)
+                        .map((item) => (
+                            <div key={item.id} className="aiHistoryItem">
+                                <p>File: {item.input_file_name}</p>
+                                <p>Date: {new Date(item.predicted_at).toLocaleDateString()}</p>
+                                <p>Packets Analysed: {item.num_packets}</p>
+                                <p>Anomalies Detected: {item.anomalies_detected}</p>
+                                <p>Accuracy: {(item.accuracy * 100).toFixed(2)}</p>
+                                <p>Precision: {(item.precision * 100).toFixed(2)}</p>
+                                <p>Recall: {(item.recall * 100).toFixed(2)}</p>
+                                <p>F1 Score: {(item.f1_score * 100).toFixed(2)}</p>
+                                <p>Silhouette Score: {(item.silhouette_score * 100).toFixed(2)}</p>
+                            </div>
+                        ))
+                )
+            }
+        </Modal>
       </div>
     );
 }

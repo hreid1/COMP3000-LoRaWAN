@@ -1,0 +1,58 @@
+.deviceCard {
+    background: #e2e0e0;
+    border-radius: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    width: 200px;
+    height: fit-content;
+    align-items: stretch;
+}
+
+.deviceInfoContent {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.deviceInfoHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 1px solid #eee;
+}
+
+.deviceNodeID {
+    font-size: 1.1rem;
+    font-weight: bold;
+}
+
+.deviceStatus {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.deviceStatus.inactive {
+    background: #fbe9e7;
+    color: #c62828;
+}
+
+.deviceInfoRow {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    padding: 0.25rem 0;
+}
+
+.deviceInfoLabel {
+    color: #666;
+}
+
+.deviceInfoValue {
+    font-weight: 500;
+}

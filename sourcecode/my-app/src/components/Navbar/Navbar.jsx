@@ -8,7 +8,7 @@ import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router"
 
 
-const Navbar = ({name, data}) => {
+const Navbar = ({name , data}) => {
 
   return (
     <nav className="navbar">

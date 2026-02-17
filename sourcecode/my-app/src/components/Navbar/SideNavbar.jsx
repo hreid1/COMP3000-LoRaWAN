@@ -12,6 +12,9 @@ const SideNavbar = () => {
           <Link to="/dashboard">
             <li>Home</li>
           </Link>
+          <Link to="/anomaly">
+            <li>Anomaly</li>
+          </Link>
           <Link to="/devices">
             <li>Devices</li>
           </Link>
@@ -26,9 +29,6 @@ const SideNavbar = () => {
           </Link>
           <Link to="/admin">
             <li>Admin</li>
-          </Link>
-          <Link to="/anomaly">
-            <li>Anomaly</li>
           </Link>
         </ul>
       </div>

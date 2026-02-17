@@ -5,4 +5,5 @@
     height: 100%;
     width: 100%;
     background-color: #E5ECF4;
+    box-sizing: border-box;
 }

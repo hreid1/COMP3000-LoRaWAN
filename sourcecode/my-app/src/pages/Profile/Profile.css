@@ -4,4 +4,5 @@
     width: 100%;
     overflow: auto;
     background-color: #E5ECF4;
+    box-sizing: border-box;
 }

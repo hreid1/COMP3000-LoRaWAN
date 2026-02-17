@@ -9,21 +9,12 @@
     overflow: auto;  
     height: 100%;
     width: 100%;
+    box-sizing: border-box;
 }
 
 
 #aiModelInfo {
     margin-right: 8px;
-}
-
-#addModel {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-}
-
-#addModel form {
-    display: flex;
-    flex-direction: column;
 }
 
 #aiStats {
@@ -45,7 +36,7 @@
 
 #aiModelContainer {
     grid-row: 1 / 3;
-    grid-column: 2 / 4;
+    grid-column: 1 / 4;
     background: #fff;
     display: flex;
     flex-direction: column;

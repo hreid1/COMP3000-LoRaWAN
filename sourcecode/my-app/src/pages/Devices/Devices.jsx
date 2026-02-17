@@ -3,6 +3,7 @@ import React from 'react'
 import axios from 'axios'
 import './Devices.css'
 import Card from '../../components/Card/Card';
+import DeviceCard from '../../components/Card/DeviceCard';
 
 const Graph = () => {
   return (
@@ -14,16 +15,15 @@ const Graph = () => {
 
 const DeviceInfo = ({ nodeID, owner, isActive, createdAt, packetCount }) => {
   return(
-    <Card id="deviceInfo" title="Device Information">
-      <div className="deviceInfoContent">
-        <p>Node ID: {nodeID}</p>
-        <p>Owner: {owner}</p>
-        <p>Packet Count: {packetCount}</p>
-        <p>Is Active: {isActive}</p>
-        <p>Created At: {createdAt}</p>
-      </div>
-    </Card>
+    <DeviceCard 
+      nodeID={nodeID}
+      owner={owner}
+      isActive={isActive}
+      createdAt={createdAt}
+      packetCount={packetCount}
+    />
   )
+
 }
 
 const AddDevice = () => {
@@ -53,6 +53,9 @@ const AddDevice = () => {
           />
         </label>
         <label>
+          MAC
+        </label>
+        <label>
           Is Active:
           <input
             type="checkbox"
@@ -66,7 +69,27 @@ const AddDevice = () => {
   );
 };
 
-const DeviceContent = () => {
+const Test = () => {
+  return(
+    <Card>
+      <span>Test</span>
+    </Card>
+  )
+}
+
+const DeviceStatistics = () => {
+  return(
+    <Card>
+      <span>Device Statistics</span>
+      <ul>How many devices are active/offline</ul>
+      <ul>How many packets total/being read</ul>
+      <ul>What devices are transmitting anomalies</ul>
+
+    </Card>
+  )
+}
+
+const DeviceList = () => {
   const [data, setData] = useState([])
 
   useEffect(() => {
@@ -79,18 +102,14 @@ const DeviceContent = () => {
     })
   }, []);
   
-  console.log(data)
+  //console.log(data)
 
-  return(
-    <div className="deviceContentContainer">
-      <div className="deviceContainerLeft">
-        <AddDevice/>
-        <Graph />
-      </div>
-      <div className="deviceContainerRight">
-        <div className="deviceGrid">
-          {data && data.map(device => (
-            <DeviceInfo 
+  return (
+    <Card title="Devices">
+      <div className="deviceGrid">
+        {data &&
+          data.map((device) => (
+            <DeviceInfo
               key={device.id}
               nodeID={device.node_id}
               owner={device.owner}
@@ -99,6 +118,27 @@ const DeviceContent = () => {
               packetCount={device.packets_count}
             />
           ))}
+      </div>
+    </Card>
+  );
+}
+
+const DeviceContent = () => {
+
+  return(
+    <div className="deviceContentContainer">
+      <div className="deviceContainerTop">
+        <DeviceStatistics />
+        <Test />
+        <Test />
+      </div>
+      <div className="deviceMainContainer">
+        <div className="deviceContainerLeft">
+          <AddDevice/>
+          <Graph />
+        </div>
+        <div className="deviceContainerRight">
+          <DeviceList />
         </div>
       </div>
     </div>

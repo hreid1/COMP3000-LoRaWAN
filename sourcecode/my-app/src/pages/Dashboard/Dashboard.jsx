@@ -5,12 +5,10 @@ import Papa from 'papaparse'
 import './Dashboard.css'
 import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
-import { Data } from '../../utils/Data'
-import { BarChart } from '../../components/Charts/Graph'
 import Card from '../../components/Card/Card'
+import DeviceCard from '../../components/Card/DeviceCard'
 import Modal from '../../components/Modal/Modal'
-
-Chart.register(CategoryScale);
+import Step1 from '../../components/Charts/Graph'
 
 const DeviceList = ({data}) => {
   
@@ -198,7 +196,7 @@ const TrafficScore = () => {
 const Graph = () => {
   return(
     <Card id="graph" title="Graph">
-
+      <Step1 />
     </Card>
   )
 }
@@ -228,10 +226,6 @@ const Dashboard = () => {
       setData(response.data || []);
     })
   }, []);
-
-  const username = data.username
-  const email = data.email
-  const profileimage = data?.userprofile?.profile_image;
 
   return (
     <MainDashContent data={data}/>

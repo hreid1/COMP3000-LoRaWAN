@@ -1,0 +1,21 @@
+#adminContentContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+    grid-auto-rows: min-content;
+    padding: 1rem;
+    gap: 16px;
+}
+
+#addModel form {
+    display: flex;
+    flex-direction: column;
+}
+
+#addModel form label {
+    padding: 4px;
+}
+
+#addModel form label input {
+    margin-left: 4px;
+}

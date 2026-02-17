@@ -6,7 +6,7 @@ import axios from 'axios'
 const ModelRetraining = () => {
     return(
         <Card id="modelRetraining" title="Model Retraining">
-
+            <span>Retraining specific models - changing modelTrainingInfo </span>
         </Card>
     )
 }
@@ -35,7 +35,7 @@ const AddModel = () => {
     }
 
     return(
-        <Card id="addModel" title="Add Model">
+        <Card id="addModel" title="Add ML Model">
             <form onSubmit={handleAddModel} className="addModelContainer">
                 <label>
                     Model Name
@@ -68,14 +68,47 @@ const AddModel = () => {
     )
 }
 
+const ManageUsers = () => {
+    return(
+        <Card id="manageUsers" title="User Management">
+            <span>CRUD on users and roles</span>
+            <ul></ul>
+        </Card>
+
+    )
+}
+
+const ManageModels = () => {
+    return(
+        <Card title="Model Management">
+            <ul>Adjusting threshold/parameters of models</ul>
+            <ul>Export data</ul>
+        </Card>
+    )
+}
+
+const ManageSystem = () => {
+    return(
+        <Card title="System Management">
+            <ul>System status indicator</ul>
+            <ul></ul>
+
+        </Card>
+    )
+}
+
 const AdminContent = () => {
     return(
-        <div>
+        <div id="adminContentContainer">
             <AddModel />
             <ModelRetraining />
+            <ManageUsers />
+            <ManageModels />
+            <ManageSystem />
         </div>
     )
 }
+
 
 const Admin = () => {
   return (

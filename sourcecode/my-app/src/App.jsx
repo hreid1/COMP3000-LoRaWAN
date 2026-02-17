@@ -17,16 +17,18 @@ Main content
   - Device List
 
 */
-import { useState, useEffect } from 'react'
-import Dashboard from './pages/Dashboard/Dashboard'
-import profile from './pages/Profile/Profile'
+import { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const App = () => {
-  return (
-    <div>
-      <Dashboard />
-    </div>
-  )
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Redirect to dashboard on page load
+    navigate('/dashboard')
+  }, [navigate])
+
+  return null
 }
 
 export default App
