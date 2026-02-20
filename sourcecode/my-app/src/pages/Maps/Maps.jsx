@@ -5,9 +5,7 @@ import Card from '../../components/Card/Card'
 const MapItem = () => {
     return(
         <Card id="mapItem" title="Map">
-
         </Card>
-
     )
 }
 

@@ -72,3 +72,8 @@
     flex: 1;
     min-height: 0;
 }
+
+#deviceGraph {
+    overflow-x: auto;
+    overflow-y: auto;
+}

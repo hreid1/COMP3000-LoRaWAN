@@ -1,10 +1,10 @@
 import React from 'react'
 import Card from '../../components/Card/Card'
+import './Anomaly.css'
 
-const AnomalyContent = () => {
-
+const AnomalyCard = () => {
   return(
-    <Card title="What should be included">
+    <Card id="anomalyCard" title="What should be included">
       <ul>List of anomalies</ul>
       <ul>Anomaly Details</ul>
       <ul>Filter by: Date, Model, device</ul>
@@ -12,6 +12,15 @@ const AnomalyContent = () => {
       <ul>Actions on those anomalies - dismiss</ul>
       <ul>Graphs to show recent trends/historical data</ul>
     </Card>
+    
+  )
+}
+
+const AnomalyContent = () => {
+  return(
+    <div id="anomalyContentContainer">
+      <AnomalyCard />
+    </div>
   )
 }
 

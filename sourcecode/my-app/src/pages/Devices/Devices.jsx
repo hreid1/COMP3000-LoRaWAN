@@ -4,11 +4,12 @@ import axios from 'axios'
 import './Devices.css'
 import Card from '../../components/Card/Card';
 import DeviceCard from '../../components/Card/DeviceCard';
+import Example from '../../components/Charts/Graph';
 
 const Graph = () => {
   return (
-    <Card id="graphDevice" title="Graph">
-
+    <Card id="deviceGraph" title="Graph">
+      <Example />
     </Card>
   )
 }
@@ -124,7 +125,6 @@ const DeviceList = () => {
 }
 
 const DeviceContent = () => {
-
   return(
     <div className="deviceContentContainer">
       <div className="deviceContainerTop">
@@ -147,7 +147,9 @@ const DeviceContent = () => {
 
 const Devices = () => {
   return(
-    <DeviceContent />
+    <div>
+      <DeviceContent />
+    </div>
   )
 };
 

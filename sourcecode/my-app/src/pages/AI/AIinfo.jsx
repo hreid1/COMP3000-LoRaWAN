@@ -4,10 +4,12 @@ import Card from '../../components/Card/Card'
 import axios from 'axios'
 import './AIinfo.css'
 import Modal from '../../components/Modal/Modal'
+import Example from '../../components/Charts/Graph'
 
 const Graph = () => {
     return(
         <Card id="aiGraph" title="Graph">
+            <Example />
         </Card>
     )
 }

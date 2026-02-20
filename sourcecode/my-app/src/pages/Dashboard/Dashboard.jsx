@@ -11,21 +11,23 @@ import Modal from '../../components/Modal/Modal'
 import Step1 from '../../components/Charts/Graph'
 
 const DeviceList = ({data}) => {
-  
   const displayedData = data && data.slice(0, 20);
 
-  return(
+  return (
     <Card id="deviceList" title="Device List">
-      {displayedData && displayedData.map(node => (
-        <div key={node.id} className="deviceItem">
-          <strong className="deviceTitle">Node {node.node_id}</strong>
-          <p className="deviceInfo">Owner: {node.owner}</p>
-          <p className="deviceInfo">Active: {String(node.is_active)}</p>
-          <p className="deviceInfo">Created: {new Date(node.created_at).toLocaleDateString()}</p>
-        </div>
-      ))}
+      {displayedData &&
+        displayedData.map((device) => (
+          <DeviceCard
+            key={device.id}
+            nodeID={device.node_id}
+            owner={device.owner}
+            isActive={device.is_active}
+            createdAt={new Date(device.created_at).toLocaleString()}
+            packetCount={device.packets_count}
+          />
+        ))}
     </Card>
-  )
+  );
 }
 
 const AnomalyList = () => {
