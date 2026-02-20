@@ -24,74 +24,88 @@ const DeviceInfo = ({ nodeID, owner, isActive, createdAt, packetCount }) => {
       packetCount={packetCount}
     />
   )
-
 }
 
 const AddDevice = () => {
-  const [data, setData] = useState(""); 
+  const [nodeId, setNodeId] = useState(""); 
+  const [mac, setMac] = useState("");
+  const [location, setLocation] = useState("");
   const [isActive, setIsActive] = useState(true);
 
   function handleAddDevice(e) {
     e.preventDefault(); 
     axios.post("http://localhost:8000/lorawan/nodes/", {
-      node_id: parseInt(data, 10), 
+      node_id: parseInt(nodeId, 10), 
       is_active: isActive
     });
-    setData("");
+    setNodeId("");
+    setMac("");
+    setLocation("");
     setIsActive(true);
   }
 
   return (
-    <Card id="addDevice" className="addDevice" title="Add Device">
-      <form onSubmit={handleAddDevice} className="addDeviceContainer">
-        <label>
-          Node ID:
+    <Card id="addDevice" title="Add Device Form">
+      <form onSubmit={handleAddDevice} className="addDeviceForm">
+        <div className="formRow">
+          <label htmlFor="nodeId">Node ID</label>
           <input
+            id="nodeId"
             type="number"
-            value={data}
-            onChange={e => setData(e.target.value)}
+            value={nodeId}
+            onChange={e => setNodeId(e.target.value)}
             required
           />
-        </label>
-        <label>
-          MAC
-        </label>
-        <label>
-          Is Active:
+        </div>
+        <div className="formRow">
+          <label htmlFor="mac">MAC</label>
           <input
+            id="mac"
+            type="text"
+            value={mac}
+            onChange={e => setMac(e.target.value)}
+          />
+        </div>
+        <div className="formRow">
+          <label htmlFor="location">Location</label>
+          <input
+            id="location"
+            type="text"
+            value={location}
+            onChange={e => setLocation(e.target.value)}
+          />
+        </div>
+        <div className="formRow">
+          <label htmlFor="isActive">Is Active</label>
+          <input
+            id="isActive"
             type="checkbox"
             checked={isActive}
             onChange={e => setIsActive(e.target.checked)}
           />
-        </label>
-        <input type="submit" value="Add Node" />
+        </div>
+        <button type="submit" className="addDeviceBtn">Add</button>
       </form>
     </Card>
   );
 };
 
-const Test = () => {
-  return(
-    <Card>
-      <span>Test</span>
-    </Card>
-  )
-}
-
 const DeviceStatistics = () => {
   return(
-    <Card>
-      <span>Device Statistics</span>
-      <ul>How many devices are active/offline</ul>
-      <ul>How many packets total/being read</ul>
-      <ul>What devices are transmitting anomalies</ul>
-
+    <Card title="Statistics">
+      <ul className="statsList">
+        <li>How many devices are active/offline</li>
+        <li>How many packets total/being read</li>
+        <li>What devices are transmitting anomalies</li>
+      </ul>
     </Card>
   )
 }
 
 const DeviceList = () => {
   const [data, setData] = useState([])
+  const [search, setSearch] = useState("")
+  const [sortBy, setSortBy] = useState("node_id")
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/lorawan/nodes/")
@@ -102,14 +116,34 @@ const DeviceList = () => {
       console.error("Error fetching models: ", error)
     })
   }, []);
-  
-  //console.log(data)
+
+  const filteredData = data.filter(device =>
+    String(device.node_id).includes(search)
+  );
 
   return (
     <Card title="Devices">
+      <div className="deviceListControls">
+        <select
+          className="deviceSort"
+          value={sortBy}
+          onChange={e => setSortBy(e.target.value)}
+        >
+          <option value="node_id">Sort by: Node ID</option>
+          <option value="created_at">Sort by: Date</option>
+          <option value="is_active">Sort by: Status</option>
+        </select>
+        <input
+          className="deviceSearch"
+          type="text"
+          placeholder="Search..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+        />
+      </div>
       <div className="deviceGrid">
-        {data &&
-          data.map((device) => (
+        {filteredData &&
+          filteredData.map((device) => (
             <DeviceInfo
               key={device.id}
               nodeID={device.node_id}
@@ -124,17 +158,27 @@ const DeviceList = () => {
   );
 }
 
-const DeviceContent = () => {
+const Map = () => {
   return(
+    <Card title="Map">
+    </Card>
+  )
+}
+
+const DeviceContent = () => {
+  return (
     <div className="deviceContentContainer">
       <div className="deviceContainerTop">
         <DeviceStatistics />
-        <Test />
-        <Test />
+        <DeviceStatistics />
+        <DeviceStatistics />
       </div>
-      <div className="deviceMainContainer">
+      <div className="deviceContainerMiddle">
+        <Map />
+      </div>
+      <div className="deviceContainerBottom">
         <div className="deviceContainerLeft">
-          <AddDevice/>
+          <AddDevice />
           <Graph />
         </div>
         <div className="deviceContainerRight">
@@ -142,7 +186,7 @@ const DeviceContent = () => {
         </div>
       </div>
     </div>
-  )
+  );
 };
 
 const Devices = () => {
