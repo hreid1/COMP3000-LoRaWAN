@@ -24,9 +24,6 @@ const SideNavbar = () => {
           <Link to="/aiinfo">
             <li>AI Info</li>
           </Link>
-          <Link to="/map">
-            <li>Map</li>
-          </Link>
           <Link to="/admin">
             <li>Admin</li>
           </Link>

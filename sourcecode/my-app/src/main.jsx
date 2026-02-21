@@ -19,7 +19,6 @@ import Devices from './pages/Devices/Devices';
 import Dashboard from './pages/Dashboard/Dashboard';
 import Logs from './pages/Logs/Logs'
 import AIinfo from './pages/AI/AIinfo';
-import Maps from './pages/Maps/Maps';
 import Anomaly from './pages/Anomaly/Anomaly';
 import Admin from './pages/Admin/admin';
 import MainLayout from './layouts/MainLayout';
@@ -33,7 +32,6 @@ const router = createBrowserRouter([
             { path: "/devices", element: <Devices /> },
             { path: "/logs", element: <Logs /> },
             { path: "/aiinfo", element: <AIinfo /> },
-            { path: "/map", element: <Maps /> },
             { path: "/anomaly", element: <Anomaly /> },
             { path: "/admin", element: <Admin /> }
         ]
