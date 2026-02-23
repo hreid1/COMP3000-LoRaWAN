@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import './Navbar.css'
 import notificationImg from '../../assets/notification.svg'
 import helpImg from '../../assets/help.svg'
@@ -6,23 +6,109 @@ import searchImg from '../../assets/search.svg'
 import networkImg from '../../assets/network.svg'
 import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router"
+import Settings from '../../pages/Settings/Settings.jsx'
+import Modal from '../Modal/Modal.jsx'
 
+import Box from '@mui/material/Box'
+import AppBar from '@mui/material/AppBar'
+import Toolbar from '@mui/material/Toolbar'
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Container from '@mui/material/Container';
+import AdbIcon from '@mui/icons-material/Adb';
+import Avatar from '@mui/material/Avatar';
+import Tooltip from '@mui/material/Tooltip';
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 
-const Navbar = ({name , data}) => {
+const NavbarV2 = ({name}) => {
+  const [navOpen, setNavOpen] = useState(null)
 
+  const handleNavOpen = (event) => {
+    setNavOpen(event.currentTarget);
+  }
+
+  const handleCloseNavMenu = () => {
+    setNavOpen(null)
+  }
+
+  return(
+    <AppBar position='static'>
+      <Container>
+        <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
+          <Box>
+            <AdbIcon />
+          </Box>
+          <Box>
+            <Typography>
+              Hi, Admin
+            </Typography>
+          </Box>
+          <Box>
+            <Tooltip>
+              <IconButton onClick={handleNavOpen}>
+                <Avatar />
+              </IconButton>
+            </Tooltip>
+            <Menu 
+              open={Boolean(navOpen)}
+              onClose={handleCloseNavMenu}
+              sx={{ mt: '45px' }}
+              anchorEl={navOpen}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+            >
+              <MenuItem>
+                <Button variant='contained'>
+                  <Typography>
+                    Profile
+                  </Typography>
+                </Button>
+              </MenuItem>
+              <MenuItem>
+                <Button variant='contained'>
+                  <Typography>
+                    Settings
+                  </Typography>
+                </Button>
+              </MenuItem>
+            </Menu>
+          </Box>
+        </Toolbar>
+      </Container>
+    </AppBar>
+  )
+}
+
+const NavbarV1 = ({name, data}) => {
   return (
     <nav className="navbar">
-        <img src={networkImg} alt="" className='logo' />
-        <span>Hi, {name}</span>
-        <div className="searchbox">
-            <input type="text" placeholder='Search' />
-            <img src={searchImg} alt="" className='logo' />
-        </div>
-        <div className='navbarRight'>
-            <Dropdown userData={data} />
-        </div>
-        
+      <img src={networkImg} alt="" className="logo" />
+      <span>Hi, {name}</span>
+      <div className="searchbox">
+        <input type="text" placeholder="Search" />
+        <img src={searchImg} alt="" className="logo" />
+      </div>
+      <div className="navbarRight">
+        <Dropdown userData={data} />
+      </div>
     </nav>
+  );
+}
+
+
+const Navbar = () => {
+
+  return (
+    <NavbarV2 />
   )
 }
 

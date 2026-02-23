@@ -3,8 +3,16 @@ import './SideNavbar.css'
 import Dots from '../../assets/dots.svg'
 import { Link } from "react-router"
 
-const SideNavbar = () => {
-  return (
+const SideNavbarV2 = () => {
+  return(
+    <div>
+
+    </div>
+  )
+}
+
+const SideNavbarV1 = () => {
+  return(
     <div className='sideNavbar'>
       <img src={Dots} alt="" className='logo'/>
       <div className='menuContent'>
@@ -18,11 +26,11 @@ const SideNavbar = () => {
           <Link to="/devices">
             <li>Devices</li>
           </Link>
-          <Link to="/logs">
-            <li>Logs</li>
-          </Link>
           <Link to="/aiinfo">
             <li>AI Info</li>
+          </Link>
+          <Link to="/logs">
+            <li>Logs</li>
           </Link>
           <Link to="/admin">
             <li>Admin</li>
@@ -30,6 +38,12 @@ const SideNavbar = () => {
         </ul>
       </div>
     </div>
+  )
+}
+
+const SideNavbar = () => {
+  return (
+    <SideNavbarV2 />
   )
 }
 

@@ -10,7 +10,9 @@ Home page -> Login -> Dashboard
 
 import React, { StrictMode } from 'react';
 import ReactDOM from 'react-dom/client';
+import { ThemeProvider } from '@mui/material/styles';
 import App from './App';
+import theme from './theme';
 import './App.css';
 import {createBrowserRouter, RouterProvider} from 'react-router-dom'
 import Profile from './pages/Profile/Profile';
@@ -40,6 +42,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+            <RouterProvider router={router} />
+        </ThemeProvider>
     </StrictMode>
 );

@@ -10,6 +10,14 @@ import DeviceCard from '../../components/Card/DeviceCard'
 import Modal from '../../components/Modal/Modal'
 import Step1 from '../../components/Charts/Graph'
 
+import Button from '@mui/material/Button'
+
+const Test = () => {
+  return(
+    <Button variant="contained">Hello World</Button>
+  )
+}
+
 const DeviceList = ({data}) => {
   const displayedData = data && data.slice(0, 20);
 
@@ -213,6 +221,7 @@ const MainDashContent = ({data}) => {
       <NetworkTraffic />
       <TrafficScore />
       <Graph />
+      <Test />
     </div>
   )
 }
