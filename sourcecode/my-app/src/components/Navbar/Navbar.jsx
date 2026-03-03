@@ -66,20 +66,9 @@ const NavbarV2 = ({name}) => {
                 horizontal: 'right',
               }}
             >
-              <MenuItem>
-                <Button variant='contained'>
-                  <Typography>
-                    Profile
-                  </Typography>
-                </Button>
-              </MenuItem>
-              <MenuItem>
-                <Button variant='contained'>
-                  <Typography>
-                    Settings
-                  </Typography>
-                </Button>
-              </MenuItem>
+              <MenuItem>Profile</MenuItem>
+              <MenuItem>Settings</MenuItem>
+              <MenuItem>Logout</MenuItem>
             </Menu>
           </Box>
         </Toolbar>

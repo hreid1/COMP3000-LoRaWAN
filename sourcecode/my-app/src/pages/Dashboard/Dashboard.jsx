@@ -9,6 +9,7 @@ import Card from '../../components/Card/Card'
 import DeviceCard from '../../components/Card/DeviceCard'
 import Modal from '../../components/Modal/Modal'
 import Step1 from '../../components/Charts/Graph'
+import AlertMessage from '../../components/Alert/Alert'
 
 import Button from '@mui/material/Button'
 
@@ -67,25 +68,52 @@ const Announcements = () => {
   )
 }
 
-const NetworkTraffic = () => {
+const NetworkTraffic = ({ onAlert }) => {
   const [file, setFile] = useState(null);
   const [data, setData] = useState([]);
   const [error, setError] = useState("");
   const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
   const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false)
 
   function handleFileRun(event){
     if (!file) {
       console.error("No File")
       return;
     }
+    
+    setLoading(true)
     const formData = new FormData()
     formData.append("myFile", file, file.name)
     formData.append("model", selectedModel) 
+
     axios.post("http://localhost:8000/lorawan/run/", formData)
     .then (response => {
       console.log(response.data.performance)
       setResults(response.data.performance)
+
+      const anomalyCount = response.data.performance?.anomaly_count || 0;
+
+      if (anomalyCount > 0){
+        onAlert({
+          message: `Anomalies found: ${anomalyCount}`,
+          severity: `warning`
+        });
+      } else {
+        onAlert({
+          message: `No Anomalies found`,
+          severity: `success`
+        })
+      }
+      setLoading(false)
+    })
+    .catch(err => {
+      console.error("Error running Model:", err)
+      onAlert({
+        message: `Failed to run model`,
+        severity: `error`
+      })
+      setLoading(false)
     })
   }
 
@@ -146,7 +174,7 @@ const NetworkTraffic = () => {
         </select>
         
         <button onClick={handleFileDisplay}>Display File</button>
-        <button onClick={handleFileRun}>Run File</button>
+        <button onClick={handleFileRun} disabled={loading}>{loading ? 'Running...' : 'Run File'}</button>
         <button onClick={handleAddToDB}>Add to DB</button>
       </div>
       <div>
@@ -211,14 +239,14 @@ const Graph = () => {
   )
 }
 
-const MainDashContent = ({data}) => {
+const MainDashContent = ({data, onAlert}) => {
 
   return (
     <div className='dashContentContainer'>
       <DeviceList data={data.nodes || []}/>
       <AnomalyList data={data.nodes || []}/>
       <Announcements /> 
-      <NetworkTraffic />
+      <NetworkTraffic onAlert={onAlert} />
       <TrafficScore />
       <Graph />
       <Test />
@@ -228,6 +256,9 @@ const MainDashContent = ({data}) => {
 
 const Dashboard = () => {
   const [data, setData] = useState([])
+  const [alertOpen, setAlertOpen] = useState(false)
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertSeverity, setAlertSeverity] = useState('info')
 
   // GET request to backend for user 1
   useEffect(() => {
@@ -238,8 +269,22 @@ const Dashboard = () => {
     })
   }, []);
 
+  const handleAlert = (alertData) => {
+    setAlertMessage(alertData.message)
+    setAlertSeverity(alertData.severity)
+    setAlertOpen(true)
+  }
+
   return (
-    <MainDashContent data={data}/>
+    <>
+      <MainDashContent data={data} onAlert={handleAlert}/>
+      <AlertMessage 
+        open={alertOpen}
+        message={alertMessage}
+        severity={alertSeverity}
+        onClose={() => setAlertOpen(false)}
+      />
+    </>
   );
 }
 

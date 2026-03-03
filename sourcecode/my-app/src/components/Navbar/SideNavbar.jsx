@@ -1,13 +1,53 @@
-import React from 'react'
-import './SideNavbar.css'
+import React, { useState } from 'react'
 import Dots from '../../assets/dots.svg'
 import { Link } from "react-router"
 
-const SideNavbarV2 = () => {
-  return(
-    <div>
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import HomeIcon from '@mui/icons-material/Home'
+import WarningIcon from '@mui/icons-material/Warning'
+import DevicesIcon from '@mui/icons-material/Devices'
+import SchoolIcon from '@mui/icons-material/School'
+import StorageIcon from '@mui/icons-material/Storage'
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 
-    </div>
+const SideNavbarV2 = () => {
+  const menuItems = [
+    { label: 'Home', path: '/dashboard', icon: <HomeIcon /> },
+    { label: 'Anomaly', path: '/anomaly', icon: <WarningIcon /> },
+    { label: 'Devices', path: '/devices', icon: <DevicesIcon /> },
+    { label: 'AI Info', path: '/aiinfo', icon: <SchoolIcon /> },
+    { label: 'Logs', path: '/logs', icon: <StorageIcon /> },
+    { label: 'Admin', path: '/admin', icon: <AdminPanelSettingsIcon /> },
+  ]
+
+  return (
+    <Box sx={{ width: 250 }}>
+      {menuItems.map((item) => (
+        <Box
+          key={item.label}
+          component={Link}
+          to={item.path}
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            p: 2,
+            mb: 1,
+            backgroundColor: '#f5f5f5',
+            borderRadius: 1,
+            textDecoration: 'none',
+            color: 'black',
+            '&:hover': {
+              backgroundColor: '#e0e0e0',
+            },
+          }}
+        >
+          {item.icon}
+          <Typography>{item.label}</Typography>
+        </Box>
+      ))}
+    </Box>
   )
 }
 
