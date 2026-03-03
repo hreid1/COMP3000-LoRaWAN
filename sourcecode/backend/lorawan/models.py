@@ -141,3 +141,38 @@ class ModelPredictionInfo(models.Model):
 
     def __str__(self):
         return f"Model: {self.model_id.name} was ran on file {self.input_file_name} at {self.predicted_at}"
+
+
+class Alert(models.Model):
+    SEVERITY_CHOICES = [
+        ('low', 'Low'),
+        ('medium', 'Medium'),
+        ('high', 'High'),
+        ('warning', 'Warning'),
+        ('error', 'Error'),
+        ('success', 'Success'),
+    ]
+    
+    ALERT_TYPE_CHOICES = [
+        ('anomaly', 'Anomaly'),
+        ('system', 'System'),
+    ]
+
+    owner = models.ForeignKey(
+        "auth.User", related_name="alerts", on_delete=models.CASCADE
+    )
+    title = models.CharField(max_length=200)
+    message = models.CharField(max_length=500)
+    alert_type = models.CharField(max_length=20, choices=ALERT_TYPE_CHOICES, default='system')
+    severity = models.CharField(max_length=20, choices=SEVERITY_CHOICES, default='medium')
+
+    node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True, blank=True)
+    packet = models.ForeignKey(Packet, on_delete=models.SET_NULL, null=True, blank=True)
+    anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True, blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    resolved_at = models.DateField(null=True, blank=True)
+
+    def __str__(self):
+        return f"Alert: {self.title} ({self.severity})"
+

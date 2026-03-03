@@ -61,9 +61,27 @@ const AnomalyList = () => {
 }
 
 const Announcements = () => {
+  const [data , setData] = useState([])
+
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/users/1/").then((response) => {
+      console.log(response.data.alerts);
+      setData(response.data.alerts);
+    });
+  }, []);
+
+  const handleOnclick = () => {
+    
+  }
 
   return(
     <Card id="announcements" title="Announcements">
+      {data && data.map(alert => (
+        <div key={alert.id} style={{}}>
+          <span>{alert.message}</span>
+          <button>Viewed</button>
+        </div>
+      ))}
     </Card>
   )
 }
@@ -96,13 +114,17 @@ const NetworkTraffic = ({ onAlert }) => {
 
       if (anomalyCount > 0){
         onAlert({
-          message: `Anomalies found: ${anomalyCount}`,
-          severity: `warning`
+          title: `Anomaly Detection Alert`,
+          message: `${anomalyCount} anomalies detected in network traffic!`,
+          severity: `warning`,
+          alertType: 'anomaly'
         });
       } else {
         onAlert({
-          message: `No Anomalies found`,
-          severity: `success`
+          title: `Analysis Complete`,
+          message: `No anomalies detected`,
+          severity: `success`,
+          alertType: 'system'
         })
       }
       setLoading(false)
@@ -110,8 +132,10 @@ const NetworkTraffic = ({ onAlert }) => {
     .catch(err => {
       console.error("Error running Model:", err)
       onAlert({
+        title: `Error`,
         message: `Failed to run model`,
-        severity: `error`
+        severity: `error`,
+        alertType: 'system'
       })
       setLoading(false)
     })
@@ -249,7 +273,6 @@ const MainDashContent = ({data, onAlert}) => {
       <NetworkTraffic onAlert={onAlert} />
       <TrafficScore />
       <Graph />
-      <Test />
     </div>
   )
 }
@@ -269,10 +292,32 @@ const Dashboard = () => {
     })
   }, []);
 
-  const handleAlert = (alertData) => {
+
+
+  const handleAlert = async (alertData) => {
     setAlertMessage(alertData.message)
     setAlertSeverity(alertData.severity)
     setAlertOpen(true)
+
+    try {
+      const response = await axios.post(
+        "http://127.0.0.1:8000/lorawan/alerts/",
+        {
+          title: alertData.title,
+          message: alertData.message,
+          alert_type: alertData.alertType || 'anomaly',
+          severity: alertData.severity
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }
+      )
+      console.log("Alert saved to DB:", response.data)
+    } catch (error) {
+      console.error("Error saving alert to DB:", error.response?.data || error.message)
+    }
   }
 
   return (

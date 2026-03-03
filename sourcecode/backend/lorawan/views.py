@@ -8,11 +8,12 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo
+from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo, Alert
 from .permissions import IsOwnerOrReadOnly
-from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer
+from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer, AlertSerializer
 from .services import mlmodel_service
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny
 
 @api_view(["GET"])
 def api_root(request, format=None):
@@ -25,7 +26,8 @@ def api_root(request, format=None):
             "anomalies": reverse("lorawan:anomaly-list", request=request, format=format),
             "userprofiles": reverse("lorawan:userprofile-list", request=request, format=format),
             "modeltraininginfos": reverse("lorawan:modeltraininginfo-list", request=request, format=format),
-            "modelpredictioninfos": reverse("lorawan:modelpredictioninfo-list", request=request, format=format)
+            "modelpredictioninfos": reverse("lorawan:modelpredictioninfo-list", request=request, format=format),
+            "alerts": reverse("lorawan:alert-list", request=request, format=format),
         }
     )
 
@@ -83,6 +85,18 @@ class ModelTrainingInfoViewSet(viewsets.ModelViewSet):
 class ModelPredictionInfoViewSet(viewsets.ModelViewSet):
     queryset = ModelPredictionInfo.objects.all()
     serializer_class = ModelPredictionInfoSerailizer
+
+class AlertViewSet(viewsets.ModelViewSet):
+    serializer_class = AlertSerializer
+    permission_classes = [permissions.AllowAny]
+
+    
+    def get_queryset(self):
+        return Alert.objects.all()
+    
+    def perform_create(self, serializer):
+        owner = User.objects.get(id=1)
+        serializer.save(owner=owner)
 
 # Views
 class TestView(APIView):

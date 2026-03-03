@@ -21,9 +21,11 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 const NavbarV2 = ({name}) => {
   const [navOpen, setNavOpen] = useState(null)
+  const [NotiOpen, setNotiOpen] = useState(null)
 
   const handleNavOpen = (event) => {
     setNavOpen(event.currentTarget);
@@ -32,6 +34,16 @@ const NavbarV2 = ({name}) => {
   const handleCloseNavMenu = () => {
     setNavOpen(null)
   }
+
+  const handleNotiOpen = (e) => {
+    setNotiOpen(e.currentTarget);
+  }
+
+  const handleCloseNotiMenu = () => {
+    setNotiOpen(false)
+  }
+
+  
 
   return(
     <AppBar position='static' sx={{ width: '100%', overflow: 'hidden' }}>
@@ -45,6 +57,19 @@ const NavbarV2 = ({name}) => {
           </Typography>
         </Box>
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Tooltip>
+            <IconButton>
+              <NotificationsIcon onClick={handleNotiOpen}/>
+            </IconButton>
+          </Tooltip>
+          <Menu
+            open={Boolean(NotiOpen)}
+            onClose={handleCloseNotiMenu}
+            anchorEl={NotiOpen}
+          >
+            <MenuItem></MenuItem>
+
+          </Menu>
           <Tooltip sx={{}}>
             <IconButton onClick={handleNavOpen}>
               <Avatar />

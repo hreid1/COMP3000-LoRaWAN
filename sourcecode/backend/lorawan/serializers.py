@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
-from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelPredictionInfo, ModelTrainingInfo
+from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelPredictionInfo, ModelTrainingInfo, Alert
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -63,13 +63,20 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = ['username', 'email', 'role', 'organisation', 'profile_image']
 
+class AlertSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Alert
+        fields = ['id', 'title', 'message', 'alert_type', 'severity', 'created_at']
+        read_only_fields = ['id', 'created_at', 'owner']
+
 class UserSerializer(serializers.ModelSerializer):
     nodes = NodeSerializer(many=True, read_only=True)
     userprofile = UserProfileSerializer(read_only=True)
+    alerts = AlertSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "nodes", "userprofile"]
+        fields = ["id", "username", "email", "nodes", "userprofile", "alerts"]
 
 class MLModelSerializer(serializers.ModelSerializer):
     #created_by_username = serializers.CharField(source='created_by.username', read_only=True)
