@@ -20,7 +20,7 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import Logs from './pages/Logs/Logs'
 import AIinfo from './pages/AI/AIinfo';
 import Anomaly from './pages/Anomaly/Anomaly';
-import Admin from './pages/Admin/admin';
+import Admin from './pages/Admin/Admin';
 import MainLayout from './layouts/MainLayout';
 
 const router = createBrowserRouter([
