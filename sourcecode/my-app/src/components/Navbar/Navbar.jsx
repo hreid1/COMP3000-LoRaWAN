@@ -34,45 +34,43 @@ const NavbarV2 = ({name}) => {
   }
 
   return(
-    <AppBar position='static'>
-      <Container>
-        <Toolbar disableGutters sx={{ display: 'flex', justifyContent: 'space-between', flexDirection: 'row'}}>
-          <Box>
-            <AdbIcon />
-          </Box>
-          <Box>
-            <Typography>
-              Hi, Admin
-            </Typography>
-          </Box>
-          <Box>
-            <Tooltip>
-              <IconButton onClick={handleNavOpen}>
-                <Avatar />
-              </IconButton>
-            </Tooltip>
-            <Menu 
-              open={Boolean(navOpen)}
-              onClose={handleCloseNavMenu}
-              sx={{ mt: '45px' }}
-              anchorEl={navOpen}
-              anchorOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: 'top',
-                horizontal: 'right',
-              }}
-            >
-              <MenuItem>Profile</MenuItem>
-              <MenuItem>Settings</MenuItem>
-              <MenuItem>Logout</MenuItem>
-            </Menu>
-          </Box>
-        </Toolbar>
-      </Container>
+    <AppBar position='static' sx={{ width: '100%', overflow: 'hidden' }}>
+      <Toolbar disableGutters sx={{ display: 'flex', alignItems: 'center', px: 2, boxSizing: 'border-box' }}>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-start' }}>
+          <AdbIcon />
+        </Box>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
+          <Typography>
+            Hi, Admin
+          </Typography>
+        </Box>
+        <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
+          <Tooltip sx={{}}>
+            <IconButton onClick={handleNavOpen}>
+              <Avatar />
+            </IconButton>
+          </Tooltip>
+          <Menu 
+            open={Boolean(navOpen)}
+            onClose={handleCloseNavMenu}
+            sx={{ mt: '45px' }}
+            anchorEl={navOpen}
+            anchorOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+            keepMounted
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'right',
+            }}
+          >
+            <MenuItem>Profile</MenuItem>
+            <MenuItem>Settings</MenuItem>
+            <MenuItem>Logout</MenuItem>
+          </Menu>
+        </Box>
+      </Toolbar>
     </AppBar>
   )
 }

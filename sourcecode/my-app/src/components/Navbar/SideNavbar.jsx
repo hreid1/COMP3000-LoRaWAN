@@ -22,7 +22,7 @@ const SideNavbarV2 = () => {
   ]
 
   return (
-    <Box sx={{ width: 250 }}>
+    <Box>
       {menuItems.map((item) => (
         <Box
           key={item.label}
@@ -32,8 +32,9 @@ const SideNavbarV2 = () => {
             display: 'flex',
             alignItems: 'center',
             gap: 2,
-            p: 2,
+            p: 1,
             mb: 1,
+            margin: 2,
             backgroundColor: '#f5f5f5',
             borderRadius: 1,
             textDecoration: 'none',
@@ -44,7 +45,7 @@ const SideNavbarV2 = () => {
           }}
         >
           {item.icon}
-          <Typography>{item.label}</Typography>
+          <Typography sx={{fontSize: 14,}}>{item.label}</Typography>
         </Box>
       ))}
     </Box>
