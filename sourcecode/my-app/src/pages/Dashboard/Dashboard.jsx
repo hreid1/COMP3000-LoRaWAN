@@ -13,45 +13,24 @@ import AlertMessage from '../../components/Alert/Alert'
 
 import Button from '@mui/material/Button'
 
-const Test = () => {
-  return(
-    <Button variant="contained">Hello World</Button>
-  )
-}
-
-const DeviceList = ({data}) => {
-  const displayedData = data && data.slice(0, 20);
-
+const DeviceList = ({devices}) => {
+  const devices20 = devices.splice(1, 20)
+  console.log(devices20)
   return (
     <Card id="deviceList" title="Device List">
-      {displayedData &&
-        displayedData.map((device) => (
-          <DeviceCard
-            key={device.id}
-            nodeID={device.node_id}
-            owner={device.owner}
-            isActive={device.is_active}
-            createdAt={new Date(device.created_at).toLocaleString()}
-            packetCount={device.packets_count}
-          />
-        ))}
+      {devices20.map(device => (
+        <div key={device.id}>
+          <span>Device: {device.id}</span>
+        </div>
+      ))}
     </Card>
   );
 }
 
-const AnomalyList = () => {
-  const [data, setData] = useState([])
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
-    .then((response) => {
-      setData(response.data.results)
-    })
-  }, [])
-
+const AnomalyList = ({ anomalies }) => {
   return(
     <Card id="anomalyList" title="Anomaly List">
-      {data && data.map(packet => (
+      {anomalies.map(packet => (
         <div key={packet.id}>
           <span>Packet ID: {packet.packet_id} was flagged to be anomalous by Model: {packet.model_name}</span>
         </div>
@@ -65,14 +44,9 @@ const Announcements = () => {
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/lorawan/users/1/").then((response) => {
-      console.log(response.data.alerts);
       setData(response.data.alerts);
     });
   }, []);
-
-  const handleOnclick = () => {
-
-  }
 
   return(
     <Card id="announcements" title="Announcements">
@@ -267,33 +241,52 @@ const MainDashContent = ({data, onAlert}) => {
 
   return (
     <div className='dashContentContainer'>
-      <DeviceList data={data.nodes || []}/>
-      <AnomalyList data={data.nodes || []}/>
-      <Announcements /> 
+      <DeviceList devices={data.devices}/>
+      <AnomalyList anomalies={data.anomalies}/>
+      <Announcements announcements={data.announcements}/> 
       <NetworkTraffic onAlert={onAlert} />
       <TrafficScore />
       <Graph />
-      <Test />
     </div>
   )
 }
 
 const Dashboard = () => {
-  const [data, setData] = useState([])
+  const [data, setData] = useState({
+    devices: [],
+    anomalies: [],
+    announcements: [],
+    trafficScore: null,
+    loading: true,
+    error: null,
+  })
+
   const [alertOpen, setAlertOpen] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [alertSeverity, setAlertSeverity] = useState('info')
 
   // GET request to backend for user 1
   useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/users/1/")
-    .then(response => {
-      //console.log(response.data)
-      setData(response.data || []);
-    })
+    const fetchData = async () => {
+      try {
+        const [user, anomalies] = await Promise.all([
+          axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
+          axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
+        ])
+        setData({
+          devices: user.data.nodes || [],
+          anomalies: anomalies.data.results || [],
+          announcements: user.data.alerts || [],
+          trafficScore: anomalies.data.count,
+          loading: false,
+          error: null
+        })
+      } catch (err){
+        setData(prev => ({ ...prev, loading: false, error: err.message}))
+      }
+    }
+    fetchData()
   }, []);
-
-
 
   const handleAlert = async (alertData) => {
     setAlertMessage(alertData.message)
@@ -323,7 +316,12 @@ const Dashboard = () => {
 
   return (
     <>
-      <MainDashContent data={data} onAlert={handleAlert}/>
+      <MainDashContent 
+        data={data} 
+        onAlert={handleAlert}
+        loading={data.loading} 
+        error={data.error}
+      />
       <AlertMessage 
         open={alertOpen}
         message={alertMessage}

@@ -14,11 +14,11 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings'
 const SideNavbarV2 = () => {
   const menuItems = [
     { label: 'Home', path: '/dashboard', icon: <HomeIcon /> },
-    { label: 'Anomaly', path: '/anomaly', icon: <WarningIcon /> },
     { label: 'Devices', path: '/devices', icon: <DevicesIcon /> },
     { label: 'AI Info', path: '/aiinfo', icon: <SchoolIcon /> },
-    { label: 'Logs', path: '/logs', icon: <StorageIcon /> },
     { label: 'Admin', path: '/admin', icon: <AdminPanelSettingsIcon /> },
+    { label: 'Anomaly', path: '/anomaly', icon: <WarningIcon /> },
+    { label: 'Logs', path: '/logs', icon: <StorageIcon /> },
   ]
 
   return (

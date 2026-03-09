@@ -1,0 +1,24 @@
+Things to do
+- Add functionality to profile, settings and logout
+- Add login page
+	- Configure code so that it fetches information regarding the user who logged in
+	- Modifies page
+- Finish shift to materialUI
+- Clean up UI/UX structure
+	- AI Models
+	- Devices display -> Devices page
+	- Device list display -> dashboard
+- Add customisation for graphs (e.g. a user can pick if they want to see num of packets per node against time)
+- Finish off pages
+	- Admin
+	- Anomaly
+	- Profile
+	- Settings -> change password, email, username
+- Encryption/secure stuff
+- Add functionality to statistics for AI-info page
+- Add marker on side nav bar to tell the user what page they are on
+- Add functionality to page
+- Convert devices information to fetch from dataset not just changing a few
+- Font is a bit weird on google	
+- Add a way to restructure the dashboard
+	- Or choose what to put on dashboard

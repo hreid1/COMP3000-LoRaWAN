@@ -43,8 +43,6 @@ const NavbarV2 = ({name}) => {
     setNotiOpen(false)
   }
 
-  
-
   return(
     <AppBar position='static' sx={{ width: '100%', overflow: 'hidden' }}>
       <Toolbar disableGutters sx={{ display: 'flex', alignItems: 'center', px: 2, boxSizing: 'border-box' }}>
