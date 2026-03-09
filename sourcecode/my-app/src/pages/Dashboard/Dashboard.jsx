@@ -71,7 +71,7 @@ const Announcements = () => {
   }, []);
 
   const handleOnclick = () => {
-    
+
   }
 
   return(
@@ -273,6 +273,7 @@ const MainDashContent = ({data, onAlert}) => {
       <NetworkTraffic onAlert={onAlert} />
       <TrafficScore />
       <Graph />
+      <Test />
     </div>
   )
 }
