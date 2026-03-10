@@ -2,7 +2,7 @@ import React from "react";
 import ReactDom from 'react-dom'
 import './Modal.css'
 
-const Modal = ({ open, children, onClose }) => {
+const Modal2 = ({ open, children, onClose }) => {
   if (!open) return null;
 
   return ReactDom.createPortal(
@@ -17,4 +17,4 @@ const Modal = ({ open, children, onClose }) => {
   )
 };
 
-export default Modal;
+export default Modal2;
