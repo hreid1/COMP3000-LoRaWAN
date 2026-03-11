@@ -179,13 +179,23 @@ const Map2 = () => {
 const DeviceContent = () => {
   return (
     <div className="deviceContentContainer">
-      <DeviceStatistics />
-      <DeviceStatistics />
-      <DeviceStatistics />
-      <Map2 />
-      <AddDevice />
-      <Graph />
-      <DeviceList />
+      <div className="top">
+        <DeviceStatistics />
+        <DeviceStatistics />
+        <DeviceStatistics />
+      </div>
+      <div className="middle">
+        <Map2/>
+      </div>
+      <div className="bottom">
+        <div className="bottomLeft">
+          <AddDevice />
+          <Graph />
+        </div>
+        <div className="bottomRight">
+          <DeviceList />
+        </div>
+      </div>
       <Graph />
     </div>
   );

@@ -26,7 +26,9 @@ const CardV1 = ({ id, title, children, marker }) => {
       id={id}
       sx={{ 
         position: 'relative',
-        height: '100%'
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
       }}
     >
       <Box 
@@ -38,7 +40,9 @@ const CardV1 = ({ id, title, children, marker }) => {
           width: '4px', 
           height: '100%', 
           bgcolor: 'primary.main',
-          borderRadius: '4px 0 0 4px'
+          borderRadius: '4px 0 0 4px',
+          zIndex: 10,
+          pointerEvents: 'none'
         }} 
       />
       <CardHeader
@@ -48,10 +52,10 @@ const CardV1 = ({ id, title, children, marker }) => {
             <MoreVertIcon />
           </IconButton>
         }
-        sx={{ paddingBottom: 0 }}
+        sx={{ paddingBottom: 0, flexShrink: 0 }}
       />
       <Divider />
-      <CardContent>
+      <CardContent sx={{ flex: 1, overflow: 'auto', minHeight: 0 }}>
         {children}
       </CardContent>
     </MuiCard>

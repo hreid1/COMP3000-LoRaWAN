@@ -189,6 +189,9 @@ const RunModel = () => {
     const [error, setError]= useState("")
     const [selectedModel, setSelectedModel] = useState("IsolationForest")
     const [results, setResults] = useState([])
+    const [alertOpen, setAlertOpen] = useState(false)
+    const [alertMessage, setAlertMessage] = useState("")
+    const [alertSeverity, setAlertSeverity] = useState("success")
 
     function handleFileRun(event){
         if (!file){
@@ -202,6 +205,14 @@ const RunModel = () => {
         .then (response => {
             console.log(response.data.performance)
             setResults(response.data.performance)
+            setAlertMessage("Model ran successfully")
+            setAlertSeverity("success")
+            setAlertOpen(true)
+        })
+        .catch(err => {
+          setAlertMessage("Error running model")
+          setAlertSeverity("error")
+          setAlertOpen(true)
         })
     }
 
@@ -235,6 +246,15 @@ const RunModel = () => {
     return(
     <Card title="Run Model" id="runModel">
       <Box sx={{display: "flex", flexDirection: "column", gap: "16px"}}>
+        {alertOpen && (
+          <Alert 
+            severity={alertSeverity}
+            onClose={() => setAlertOpen(false)}
+            sx={{ mb:2, position: "absolute", top: "50%", left: "50%" }}
+          >
+            {alertMessage}
+          </Alert>
+        )}
         <Button 
           variant='contained'
           component="label"
@@ -269,6 +289,20 @@ const RunModel = () => {
 const AIinfoContentContainer = () => {
     return(
         <div id="aiInfoContentContainer">
+          <div className="top">
+
+          </div>
+          <div className='middle'>
+
+          </div>
+          <div className="bottom">
+            <div className="bottomLeft">
+
+            </div>
+            <div className="bottomRight">
+            </div>
+
+          </div>
             <AiModelContainer />
             <RunModel />
             <Graph />
