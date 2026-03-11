@@ -5,6 +5,8 @@ import './Devices.css'
 import Card from '../../components/Card/Card';
 import DeviceCard from '../../components/Card/DeviceCard';
 import Example from '../../components/Charts/Graph';
+import Map from '../../components/Map/Map';
+import { Box, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem } from '@mui/material';
 
 const Graph = () => {
   return (
@@ -46,46 +48,45 @@ const AddDevice = () => {
 
   return (
     <Card id="addDevice" title="Add Device Form">
-      <form onSubmit={handleAddDevice} className="addDeviceForm">
-        <div className="formRow">
-          <label htmlFor="nodeId">Node ID</label>
-          <input
-            id="nodeId"
-            type="number"
-            value={nodeId}
-            onChange={e => setNodeId(e.target.value)}
-            required
-          />
-        </div>
-        <div className="formRow">
-          <label htmlFor="mac">MAC</label>
-          <input
-            id="mac"
-            type="text"
-            value={mac}
-            onChange={e => setMac(e.target.value)}
-          />
-        </div>
-        <div className="formRow">
-          <label htmlFor="location">Location</label>
-          <input
-            id="location"
-            type="text"
-            value={location}
-            onChange={e => setLocation(e.target.value)}
-          />
-        </div>
-        <div className="formRow">
-          <label htmlFor="isActive">Is Active</label>
-          <input
-            id="isActive"
-            type="checkbox"
-            checked={isActive}
-            onChange={e => setIsActive(e.target.checked)}
-          />
-        </div>
-        <button type="submit" className="addDeviceBtn">Add</button>
-      </form>
+      <Box component="form" onSubmit={handleAddDevice} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <TextField
+          label="Node ID"
+          type="number"
+          value={nodeId}
+          onChange={e => setNodeId(e.target.value)}
+          required
+          fullWidth
+          variant="outlined"
+        />
+        <TextField
+          label="MAC"
+          type="text"
+          value={mac}
+          onChange={e => setMac(e.target.value)}
+          fullWidth
+          variant="outlined"
+        />
+        <TextField
+          label="Location"
+          type="text"
+          value={location}
+          onChange={e => setLocation(e.target.value)}
+          fullWidth
+          variant="outlined"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isActive}
+              onChange={e => setIsActive(e.target.checked)}
+            />
+          }
+          label="Is Active"
+        />
+        <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+          Add Device
+        </Button>
+      </Box>
     </Card>
   );
 };
@@ -105,7 +106,7 @@ const DeviceStatistics = () => {
 const DeviceList = () => {
   const [data, setData] = useState([])
   const [search, setSearch] = useState("")
-  const [sortBy, setSortBy] = useState("node_id")
+  const [sortBy, setSortBy] = useState("name")
 
   useEffect(() => {
     axios.get("http://127.0.0.1:8000/lorawan/nodes/")
@@ -122,25 +123,34 @@ const DeviceList = () => {
   );
 
   return (
-    <Card title="Devices">
-      <div className="deviceListControls">
-        <select
-          className="deviceSort"
-          value={sortBy}
-          onChange={e => setSortBy(e.target.value)}
-        >
-          <option value="node_id">Sort by: Node ID</option>
-          <option value="created_at">Sort by: Date</option>
-          <option value="is_active">Sort by: Status</option>
-        </select>
-        <input
-          className="deviceSearch"
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
+    <Card title="Devices" id="deviceContainer">
+      <Box sx={{ mb: 3 }}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={6}>
+            <TextField
+              select
+              fullWidth
+              label="Sort by"
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              size="small"
+            >
+              <MenuItem value="name">Name</MenuItem>
+              <MenuItem value="created_at">Date</MenuItem>
+            </TextField>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <TextField
+              fullWidth
+              label="Search Device Node..."
+              placeholder="Search..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              size="small"
+            />
+          </Grid>
+        </Grid>
+      </Box>
       <div className="deviceGrid">
         {filteredData &&
           filteredData.map((device) => (
@@ -158,9 +168,10 @@ const DeviceList = () => {
   );
 }
 
-const Map = () => {
+const Map2 = () => {
   return(
-    <Card title="Map">
+    <Card title="Map" id="mapBox" >
+      <Map />
     </Card>
   )
 }
@@ -168,23 +179,14 @@ const Map = () => {
 const DeviceContent = () => {
   return (
     <div className="deviceContentContainer">
-      <div className="deviceContainerTop">
-        <DeviceStatistics />
-        <DeviceStatistics />
-        <DeviceStatistics />
-      </div>
-      <div className="deviceContainerMiddle">
-        <Map />
-      </div>
-      <div className="deviceContainerBottom">
-        <div className="deviceContainerLeft">
-          <AddDevice />
-          <Graph />
-        </div>
-        <div className="deviceContainerRight">
-          <DeviceList />
-        </div>
-      </div>
+      <DeviceStatistics />
+      <DeviceStatistics />
+      <DeviceStatistics />
+      <Map2 />
+      <AddDevice />
+      <Graph />
+      <DeviceList />
+      <Graph />
     </div>
   );
 };

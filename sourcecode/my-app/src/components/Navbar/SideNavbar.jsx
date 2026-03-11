@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Dots from '../../assets/dots.svg'
-import { Link } from "react-router"
+import { Link } from "react-router-dom"
 
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'

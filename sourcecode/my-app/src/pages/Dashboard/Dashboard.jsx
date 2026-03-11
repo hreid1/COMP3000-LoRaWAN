@@ -12,6 +12,7 @@ import Step1 from '../../components/Charts/Graph'
 import AlertMessage from '../../components/Alert/Alert'
 
 import Button from '@mui/material/Button'
+import CircularProgress from '@mui/material/CircularProgress';
 
 const DeviceList = ({devices}) => {
   const devices20 = devices.splice(1, 20)
