@@ -26,3 +26,8 @@ Things to do
 - Add logs for actions e.g. running a file against a model, adding a model, removing nodes packets, models etc
 - Fix AI-info page
 - Add scroll wheel functionality to map in mapbox
+- Add functionality so when a packet is flagged as anomalous it flags the node as ananomalous and a 'Seek assistance/view it' is shown
+- Tests
+	- Unit Tests
+	- Integration Tests
+	- Canary Tests
