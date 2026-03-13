@@ -10,83 +10,79 @@ import DeviceCard from '../../components/Card/DeviceCard'
 import Modal from '../../components/Modal/Modal'
 import Step1 from '../../components/Charts/Graph'
 import AlertMessage from '../../components/Alert/Alert'
-
-import Button from '@mui/material/Button'
-import CircularProgress from '@mui/material/CircularProgress';
+import { 
+  Container, 
+  Grid, 
+  Button, 
+  Box, 
+  CircularProgress,
+  Typography,
+  Paper
+} from '@mui/material'
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const AnomalyTimeline = () => {
-  const [anomalies, setAnomalies] = useState([])
-  
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
-      .then(response => setAnomalies(response.data.results || []))
-      .catch(err => console.error("Error fetching anomalies:", err))
-  }, [])
-  
   return(
-    <Card title="Anomaly Timeline">
-      {anomalies.length === 0 ? (
-        <p>No anomalies detected</p>
-      ) : (
-        anomalies.map(anomaly => (
-          <div key={anomaly.id} style={{padding: '8px 0', borderBottom: '1px solid #eee'}}>
-            <span>Packet {anomaly.packet_id}: {anomaly.model_name}</span>
-          </div>
-        ))
-      )}
+    <Card title="Anomaly Timeline" id="anomalyTimeline">
+
     </Card>
   )
 }
 
 const RecentActivity = () => {
   return(
-    <Card title="Recent Activity">
+    <Card title="Recent Activity" id="recentActivity">
+
     </Card>
   )
 }
 
-const NetworkOverview = () => {
+const NetworkOverview = ({ devices, stats, anomalies }) => {
+  const totalDevices = devices.length
+  const totalAnomalies = anomalies.length
 
+  const averageRSSI = stats && stats.length > 0
+    ? (stats.reduce((sum, packet) => sum + packet.rssi, 0) / stats.length).toFixed(2)
+    : 'N/A'
+
+  const averageSNR = stats && stats.length > 0
+    ? (stats.reduce((sum, packet) => sum + packet.snr, 0) / stats.length).toFixed(2)
+    : 'N/A'
+
+  let trafficStatus = ''
+  let trafficColour = ''
+
+  if (totalAnomalies > 10) {
+    trafficStatus = 'Unhealthy'
+    trafficColour = 'red'
+  } else if (totalAnomalies > 5) {
+    trafficStatus = 'Moderate'
+    trafficColour = 'orange'
+  } else {
+    trafficStatus = 'Healthy'
+    trafficColour = 'green'
+  } 
 
   return(
     <div id="networkOverview">
       <Card title="Total Devices">
+        <span>Total number of devices: {totalDevices}</span>
       </Card>
       <Card title="Active Anomalies">
+        <span>Total number of Anomalies: {totalAnomalies}</span>
       </Card>
       <Card title="Average RSSI">
+        <span>{averageRSSI}</span>
       </Card>
-      <Card title="Average PDR">
+      <Card title="Average SNR">
+        <span>{averageSNR}</span>
+      </Card>
+      <Card title="Traffic Score">
+        <span style={{ color: trafficColour, fontWeight: 'bold'}}>
+          {trafficStatus}
+        </span>
       </Card>
     </div>
-  )
-}
-
-
-
-const DeviceList = ({devices}) => {
-  const devices20 = devices.splice(1, 20)
-  console.log(devices20)
-  return (
-    <Card id="deviceList" title="Device List">
-      {devices20.map(device => (
-        <div key={device.id}>
-          <span>Device: {device.id}</span>
-        </div>
-      ))}
-    </Card>
-  );
-}
-
-const AnomalyList = ({ anomalies }) => {
-  return(
-    <Card id="anomalyList" title="Anomaly List">
-      {anomalies.map(packet => (
-        <div key={packet.id}>
-          <span>Packet ID: {packet.packet_id} was flagged to be anomalous by Model: {packet.model_name}</span>
-        </div>
-      ))}
-    </Card>
   )
 }
 
@@ -111,50 +107,106 @@ const Announcements = () => {
   )
 }
 
-const TrafficScore = () => {
-  // If number of anomalies > 100 -> Bad -> Show red colour
-  // 100 > If number of anomalies > 55 -> Moderate -> Show orange colour
-  // 55 > Num of anomalies -> Good -> Show green colour
-  // jammer.csv -> 33537 anomalies
-  // no-jammer.csv
+const Graph = ({ data }) => {
+  const chartData = data && data.length > 0
+    ? data
+        .sort((a, b) => new Date(a.time) - new Date(b.time))
+        .map(packet => ({
+          time: new Date(packet.time).toLocaleTimeString(),
+          snr: parseFloat(packet.snr),
+        }))
+    : []
 
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
-    .then((response) => {
-      setData(response.data || []);
-    });
-  }, []);
-
-  if (data.count < 2) {
-    return (
-      <Card id="trafficScore" title="Traffic Score">
-        <p>Number of anomalies detected: {data.count}</p>
-        <p style={{ color: "green" }}>Healthy Traffic Score</p>
-      </Card>
-    );
-  } else if (data.count >= 2 && data.count < 4) {
-    return (
-      <Card id="trafficScore" title="Traffic Score">
-        <p>Number of anomalies detected: {data.count}</p>
-        <p style={{ color: "orange" }}>Moderate Traffic Score</p>
-      </Card>
-    );
-  } else {
-    return (
-      <Card id="trafficScore" title="Traffic Score">
-        <p>Number of anomalies detected: {data.count}</p>
-        <p style={{ color: "red" }}>Unhealthy Traffic Score</p>
-      </Card>
-    );
-  }
+  return (
+    <Card id="graph" title="SNR over Time">
+      {chartData.length > 0 ? (
+        <LineChart
+          width={700}
+          height={300}
+          data={chartData}
+          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis 
+            dataKey="time" 
+            angle={-45}
+            textAnchor="end"
+            height={80}
+            label={{ value: 'Time', position: 'insideBottomRight', offset: -10}}
+          />
+          <YAxis 
+            label={{ value: 'SNR (dB)', angle: -90, position: 'insideLeft' }}
+          />
+          <Tooltip 
+            formatter={(value) => value.toFixed(2)}
+            labelStyle={{ color: '#000' }}
+          />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="snr"
+            stroke="#0097a7"
+            dot={false}
+            strokeWidth={2}
+            name="SNR (dB)"
+            isAnimationActive={true}
+          />
+        </LineChart>
+      ) : (
+        <p>No data available</p>
+      )}
+    </Card>
+  )
 }
 
-const Graph = () => {
+const Graph2 = ({data}) => {
+  const chartData = data && data.length > 0
+    ? data
+      .sort((a, b) => new Date(a.time) - new Date(b.time))
+      .map(packet => ({
+        time: new Date(packet.time).toLocaleDateString(),
+        rssi: parseFloat(packet.rssi)
+      }))
+    : []
+
   return(
-    <Card id="graph" title="Graph">
-      <Step1 />
+        <Card id="graph" title="RSSI over Time">
+      {chartData.length > 0 ? (
+        <LineChart
+          width={700}
+          height={300}
+          data={chartData}
+          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis 
+            dataKey="time" 
+            angle={-45}
+            textAnchor="end"
+            height={80}
+            label={{ value: 'Time', position: 'insideBottomRight', offset: -10 }}
+          />
+          <YAxis 
+            label={{ value: 'RSSI (dB)', angle: -90, position: 'insideLeft' }}
+          />
+          <Tooltip 
+            formatter={(value) => value.toFixed(2)}
+            labelStyle={{ color: '#000' }}
+          />
+          <Legend />
+          <Line
+            type="monotone"
+            dataKey="rssi"
+            stroke="#0097a7"
+            dot={false}
+            strokeWidth={2}
+            name="RSSI (dB)"
+            isAnimationActive={true}
+          />
+        </LineChart>
+      ) : (
+        <p>No data available</p>
+      )}
     </Card>
   )
 }
@@ -163,29 +215,16 @@ const MainDashContent = ({data, onAlert}) => {
 
   return (
     <div className='dashContentContainer'>
-      <NetworkOverview />
-      <div id="graph1">
-        <Card title="Network Traffic">  
-          <Step1 />
-        </Card>
+      <div className="top">
+        <NetworkOverview devices={data.devices} stats={data.packets} anomalies={data.anomalies} />
       </div>
-      <div id="graph2">
-        <Card title="Anomaly Trends">
-          <Step1 />
-        </Card>
+      <div className="middle">
+        <Graph data={data.packets}/>
+        <Graph2 data={data.packets}/>
       </div>
-      <div id="graph3">
-        <Card title="Device Status">
-          <Step1 />
-        </Card>
-      </div>
-      <div id="recentActivity">
+      <div className="bottom">
         <RecentActivity />
-      </div>
-      <div id="announcements">
         <Announcements />
-      </div>
-      <div id="anomalyTimeline">
         <AnomalyTimeline />
       </div>
     </div>
@@ -197,7 +236,7 @@ const Dashboard = () => {
     devices: [],
     anomalies: [],
     announcements: [],
-    trafficScore: null,
+    packets: [],
     loading: true,
     error: null,
   })
@@ -210,15 +249,16 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [user, anomalies] = await Promise.all([
+        const [user, anomalies, packets] = await Promise.all([
           axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
-          axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
+          axios.get("http://127.0.0.1:8000/lorawan/anomaly/"),
+          axios.get("http://127.0.0.1:8000/lorawan/packets/")
         ])
         setData({
           devices: user.data.nodes || [],
           anomalies: anomalies.data.results || [],
           announcements: user.data.alerts || [],
-          trafficScore: anomalies.data.count,
+          packets: packets.data.results || [],
           loading: false,
           error: null
         })
