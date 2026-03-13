@@ -1,6 +1,6 @@
 #aiInfoContentContainer {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(1fr 2fr);
     grid-template-rows: auto;
     background-color: #E5ECF4;
     gap: 8px;

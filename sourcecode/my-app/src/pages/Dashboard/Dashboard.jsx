@@ -14,6 +14,56 @@ import AlertMessage from '../../components/Alert/Alert'
 import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress';
 
+const AnomalyTimeline = () => {
+  const [anomalies, setAnomalies] = useState([])
+  
+  useEffect(() => {
+    axios.get("http://127.0.0.1:8000/lorawan/anomaly/")
+      .then(response => setAnomalies(response.data.results || []))
+      .catch(err => console.error("Error fetching anomalies:", err))
+  }, [])
+  
+  return(
+    <Card title="Anomaly Timeline">
+      {anomalies.length === 0 ? (
+        <p>No anomalies detected</p>
+      ) : (
+        anomalies.map(anomaly => (
+          <div key={anomaly.id} style={{padding: '8px 0', borderBottom: '1px solid #eee'}}>
+            <span>Packet {anomaly.packet_id}: {anomaly.model_name}</span>
+          </div>
+        ))
+      )}
+    </Card>
+  )
+}
+
+const RecentActivity = () => {
+  return(
+    <Card title="Recent Activity">
+    </Card>
+  )
+}
+
+const NetworkOverview = () => {
+
+
+  return(
+    <div id="networkOverview">
+      <Card title="Total Devices">
+      </Card>
+      <Card title="Active Anomalies">
+      </Card>
+      <Card title="Average RSSI">
+      </Card>
+      <Card title="Average PDR">
+      </Card>
+    </div>
+  )
+}
+
+
+
 const DeviceList = ({devices}) => {
   const devices20 = devices.splice(1, 20)
   console.log(devices20)
@@ -57,135 +107,6 @@ const Announcements = () => {
           <button>Viewed</button>
         </div>
       ))}
-    </Card>
-  )
-}
-
-const NetworkTraffic = ({ onAlert }) => {
-  const [file, setFile] = useState(null);
-  const [data, setData] = useState([]);
-  const [error, setError] = useState("");
-  const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
-  const [results, setResults] = useState([]);
-  const [loading, setLoading] = useState(false)
-
-  function handleFileRun(event){
-    if (!file) {
-      console.error("No File")
-      return;
-    }
-    
-    setLoading(true)
-    const formData = new FormData()
-    formData.append("myFile", file, file.name)
-    formData.append("model", selectedModel) 
-
-    axios.post("http://localhost:8000/lorawan/run/", formData)
-    .then (response => {
-      console.log(response.data.performance)
-      setResults(response.data.performance)
-
-      const anomalyCount = response.data.performance?.anomaly_count || 0;
-
-      if (anomalyCount > 0){
-        onAlert({
-          title: `Anomaly Detection Alert`,
-          message: `${anomalyCount} anomalies detected in network traffic!`,
-          severity: `warning`,
-          alertType: 'anomaly'
-        });
-      } else {
-        onAlert({
-          title: `Analysis Complete`,
-          message: `No anomalies detected`,
-          severity: `success`,
-          alertType: 'system'
-        })
-      }
-      setLoading(false)
-    })
-    .catch(err => {
-      console.error("Error running Model:", err)
-      onAlert({
-        title: `Error`,
-        message: `Failed to run model`,
-        severity: `error`,
-        alertType: 'system'
-      })
-      setLoading(false)
-    })
-  }
-
-
-  function handleAddToDB(){
-    if (!file){
-      setError("No file selected")
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("myFile", file, file.name)
-
-    axios.post("http://localhost:8000/lorawan/addmodel/", formData)
-    .then(response => {
-      console.log("File added to DB")
-      setFile(null);
-      setData([]);
-    })
-    .catch(err => {
-      console.error("Database upload failed")
-    })
-  }
-
-  function handleFileChange(event) {
-    const selectedFile = event.target.files[0];
-    if (selectedFile) {
-      setFile(selectedFile);
-    } else {
-      setFile(null);
-    }
-  }
-
-  function handleFileDisplay() {
-    const reader = new FileReader();
-    reader.onload = async ({ target }) => {
-      const csv = Papa.parse(target.result, { header: true});
-      const parsedData = csv?.data;
-      const rows = Object.keys(parsedData[0]);
-      const columns = Object.values(parsedData[0]);
-      const res = rows.reduce((acc, e, i) => {
-        return [...acc, [[e], columns[i]]];
-      }, []);
-      //console.log(res)
-      setData(res)
-    };
-    reader.readAsText(file);
-  }
-
-  return(
-    <Card id="networkTraffic" title="Network Traffic">
-      <div className="btn-column">
-        <input type="file" onChange={handleFileChange}/>
-        
-        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
-          <option value="IsolationForest">Isolation Forest</option>
-          <option value="LocalOutlierFactor">Local Outlier Factor</option>
-        </select>
-        
-        <button onClick={handleFileDisplay}>Display File</button>
-        <button onClick={handleFileRun} disabled={loading}>{loading ? 'Running...' : 'Run File'}</button>
-        <button onClick={handleAddToDB}>Add to DB</button>
-      </div>
-      <div>
-        {error 
-          ? error
-          : data.map((e, i) => (
-            <div key={i} className='item'>
-              {e[0]}:{e[1]}
-            </div>
-          ))
-        }
-      </div>
     </Card>
   )
 }
@@ -242,12 +163,31 @@ const MainDashContent = ({data, onAlert}) => {
 
   return (
     <div className='dashContentContainer'>
-      <DeviceList devices={data.devices}/>
-      <AnomalyList anomalies={data.anomalies}/>
-      <Announcements announcements={data.announcements}/> 
-      <NetworkTraffic onAlert={onAlert} />
-      <TrafficScore />
-      <Graph />
+      <NetworkOverview />
+      <div id="graph1">
+        <Card title="Network Traffic">  
+          <Step1 />
+        </Card>
+      </div>
+      <div id="graph2">
+        <Card title="Anomaly Trends">
+          <Step1 />
+        </Card>
+      </div>
+      <div id="graph3">
+        <Card title="Device Status">
+          <Step1 />
+        </Card>
+      </div>
+      <div id="recentActivity">
+        <RecentActivity />
+      </div>
+      <div id="announcements">
+        <Announcements />
+      </div>
+      <div id="anomalyTimeline">
+        <AnomalyTimeline />
+      </div>
     </div>
   )
 }
