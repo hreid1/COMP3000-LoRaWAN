@@ -202,6 +202,8 @@ const DeviceContent = () => {
 };
 
 const Devices = () => {
+
+  
   return(
     <div>
       <DeviceContent />
