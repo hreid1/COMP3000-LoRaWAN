@@ -14,12 +14,11 @@ Things to do
 	- Anomaly
 	- Profile
 	- Settings -> change password, email, username
-- Encryption/secure stuff
+- Encryption/secure stuff -> salted passwords
 - Add functionality to statistics for AI-info page
 - Add marker on side nav bar to tell the user what page they are on
 - Add functionality to page
-- Convert devices information to fetch from dataset not just changing a few
-- Font is a bit weird on google	
+- Convert devices information to fetch from a dataset not just changing a few
 - Add a way to restructure the dashboard
 	- Or choose what to put on dashboard
 - Need to include loading for dashboard -> everything loads at once instead of separate http requests for each 

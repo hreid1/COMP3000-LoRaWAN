@@ -17,7 +17,8 @@ import {
   Box, 
   CircularProgress,
   Typography,
-  Paper
+  Paper,
+  Alert
 } from '@mui/material'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
@@ -67,9 +68,13 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
     <div id="networkOverview">
       <Card title="Total Devices">
         <span>Total number of devices: {totalDevices}</span>
+        <p></p>
+        <span>Display total of offline/online devices</span>
       </Card>
       <Card title="Active Anomalies">
         <span>Total number of Anomalies: {totalAnomalies}</span>
+        <p></p>
+        <span>Should give over timeframe</span>
       </Card>
       <Card title="Average RSSI">
         <span>{averageRSSI}</span>
@@ -86,14 +91,7 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
   )
 }
 
-const Announcements = () => {
-  const [data , setData] = useState([])
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/users/1/").then((response) => {
-      setData(response.data.alerts);
-    });
-  }, []);
+const Announcements = ({data}) => {
 
   return(
     <Card id="announcements" title="Announcements">
@@ -211,8 +209,24 @@ const Graph2 = ({data}) => {
   )
 }
 
-const MainDashContent = ({data, onAlert}) => {
+const MainDashContent = ({data, loading, error, onAlert}) => {
+  if (loading) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
+  if (error) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <Alert severity='error' sx={{fontWeight: 'bold'}}>
+          Error: {error}
+        </Alert>
+      </Box>
+    )
+  }
   return (
     <div className='dashContentContainer'>
       <div className="top">
@@ -224,7 +238,7 @@ const MainDashContent = ({data, onAlert}) => {
       </div>
       <div className="bottom">
         <RecentActivity />
-        <Announcements />
+        <Announcements data={data.announcements}/>
         <AnomalyTimeline />
       </div>
     </div>
