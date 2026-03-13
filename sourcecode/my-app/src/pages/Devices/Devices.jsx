@@ -6,7 +6,7 @@ import Card from '../../components/Card/Card';
 import DeviceCard from '../../components/Card/DeviceCard';
 import Example from '../../components/Charts/Graph';
 import Map from '../../components/Map/Map';
-import { Box, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem } from '@mui/material';
+import { Box, Alert, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem, CircularProgress } from '@mui/material';
 
 const Graph = () => {
   return (
@@ -176,7 +176,25 @@ const Map2 = () => {
   )
 }
 
-const DeviceContent = () => {
+const DeviceContent = ({data, loading, error}) => {
+  if (loading) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (error) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <Alert severity='error' sx={{fontWeight: 'bold'}}>
+          Error: {error}
+        </Alert>
+      </Box>
+    )
+  }
+
   return (
     <div className="deviceContentContainer">
       <div className="top">
@@ -202,12 +220,36 @@ const DeviceContent = () => {
 };
 
 const Devices = () => {
+  const [data, setData] = useState({
+    devices: [],
+    loading: true,
+    error: null,
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [devices] = await Promise.all([
+          axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
+        ])
+        setData({
+          devices: devices.data.nodes || [],
+          loading: false,
+          error: null
+        })
+
+      } catch (err) {
+        setData(prev => ({ ...prev, loading: false, error: err.message}))
+      }
+    }
+    fetchData()
+  }, []);
 
   
   return(
-    <div>
-      <DeviceContent />
-    </div>
+    <>
+      <DeviceContent data={data} loading={data.loading} error={data.error}/>
+    </>
   )
 };
 

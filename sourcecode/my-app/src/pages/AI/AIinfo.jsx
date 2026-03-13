@@ -6,18 +6,21 @@ import './AIinfo.css'
 import Modal2 from '../../components/Modal/Modal'
 import Example from '../../components/Charts/Graph'
 
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
-import Stack from '@mui/material/Stack';
-import Alert from '@mui/material/Alert';
-import Select from '@mui/material/Select';
+import { 
+  Box,
+  Button,
+  Typography, 
+  Modal,
+  TextField,
+  MenuItem,
+  Paper,
+  Grid,
+  Container,
+  Stack,
+  Alert, 
+  Select,
+  CircularProgress,
+} from "@mui/material"
 
 const Graph = () => {
     return(
@@ -35,10 +38,10 @@ const Statistics = () => {
     )
 }
 
-const AiModelContainer = () => {
+const AiModelContainer = ({}) => {
   const [open, setOpen] = useState(false)
-  const [selectedID, setSelectedID] = useState(null)
   const [data, setData] = useState([])
+  const [selectedID, setSelectedID] = useState(null)
   const [historyData, setHistoryData] = useState([])
   const [search, setSearch] = useState("")
   const [sortBy, setSortBy] = useState("name")
@@ -286,35 +289,65 @@ const RunModel = () => {
     )
 }
 
-const AIinfoContentContainer = () => {
+const AIinfoContentContainer = ({data, loading, error}) => {
+  if (loading) {
     return(
-        <div id="aiInfoContentContainer">
-          <div className="top">
-
-          </div>
-          <div className='middle'>
-
-          </div>
-          <div className="bottom">
-            <div className="bottomLeft">
-
-            </div>
-            <div className="bottomRight">
-            </div>
-
-          </div>
-            <AiModelContainer />
-            <RunModel />
-            <Graph />
-            <Statistics />
-        </div>
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <CircularProgress />
+      </Box>
     )
+  }
+
+  if (error) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <Alert severity='error' sx={{fontWeight: 'bold'}}>
+          Error: {error}
+        </Alert>
+      </Box>
+    )
+  }
+
+  return(
+    <div id="aiInfoContentContainer">
+      <AiModelContainer data={data}/>
+      <RunModel />
+      <Graph />
+      <Statistics />
+    </div>
+  )
 }
 
 const AIinfo = () => {
-    return (
-        <AIinfoContentContainer />
-    )
+  const [data, setData] = useState({
+    models: [],
+    loading: true,
+    error: null,
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [aimodels] = await Promise.all([
+          axios.get("http://127.0.0.1:8000/lorawan/mlmodels/")
+        ])
+        setData({
+          models: aimodels.data.results,
+          loading: false,
+          error: null
+        })
+      } catch (err) {
+        setData(prev => ({ ...prev, loading:false, error: err.message}))
+      }
+    }
+    fetchData()
+  }, []);
+
+  return (
+    <>
+      <AIinfoContentContainer data={data} loading={data.loading} error={data.error}/>
+    </>
+  )
 }
 
 export default AIinfo
