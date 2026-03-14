@@ -23,6 +23,14 @@
 #runModel {
     grid-column: 3 / 4;
     grid-row: 1 / 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.btn-column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 #aiGraph {

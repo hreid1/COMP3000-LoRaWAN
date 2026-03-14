@@ -212,7 +212,6 @@ const RunModel = () => {
     })
   }
 
-
   function handleAddToDB(){
     if (!file){
       setError("No file selected")
@@ -264,9 +263,8 @@ const RunModel = () => {
   }
 
 
-
   return(
-    <Card id="networkTraffic" title="Network Traffic">
+    <Card id="runModel" title="Run Model">
       <div className="btn-column">
         <input type="file" onChange={handleFileChange}/>
         
