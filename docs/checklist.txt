@@ -31,3 +31,4 @@ Things to do
 	- Unit Tests
 	- Integration Tests
 	- Canary Tests
+- After running a model, a popup should appear telling the user the summary of the ran e.g. a modal menu, including name of file, performance metrics,

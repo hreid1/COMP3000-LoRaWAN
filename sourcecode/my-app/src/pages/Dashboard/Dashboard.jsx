@@ -31,9 +31,57 @@ const AnomalyTimeline = () => {
 }
 
 const RecentActivity = () => {
+  const activityData = [
+    {
+      id: 1,
+      type: "device_added",
+      message: "Node ID 1005 has been added",
+      user: "Admin",
+      severity: "low",
+      created_at: "17:35 14/03/2026",
+    },
+    {
+      id: 2,
+      type: "anomaly_detected",
+      message: "An Anomaly has been detected at node 42 by Model: Isolation Forest",
+      severity: "high",
+      created_at: "17:55 14/03/2026",
+    },
+    {
+      id: 3,
+      type: "model_ran",
+      message: "The isolation forest model was ran on dataset jammer.csv",
+      severity: "normal",
+      created_at: "17:56 14/03/2026",
+    },
+    {
+      id: 4,
+      type: "device_offline",
+      message: "Node 42 is offline",
+      severity: "medium",
+      created_at: "17:57 14/03/2026",
+    },
+  ]
+
+  const getSeverityColor = (severity) => {
+    switch (severity) {
+      case 'high': return '#d32f2f'      
+      case 'medium': return '#f57c00'    
+      case 'low': return '#fbc02d'       
+      case 'resolved': return '#388e3c'  
+      default: return '#1976d2'         
+    }
+  }
+
   return(
     <Card title="Recent Activity" id="recentActivity">
-
+      {activityData.map(activity => (
+        <div key={activity.id} style={{border: `2px solid ${getSeverityColor(activity.severity)}`, padding: "8px", margin: "2px"}}>
+          <div>
+            <span>{activity.message}</span>
+          </div>
+        </div>
+      ))}
     </Card>
   )
 }
@@ -92,13 +140,48 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
+  const alerts = [
+    {
+      id: 1,
+      title: "System Maintenance",
+      message: "Scheduled Maintenance on March 15th, 2026 from 12-1AM",
+      date: "15/03/2026",
+      priority: "high",
+    },
+    {
+      id: 2,
+      title: "New version of Isolation Forest has been deployed",
+      message: "Use this model now",
+      date: "16/03/2026",
+      priority: "normal",
+    },
+    {
+      id: 3,
+      title: "Network Expansion",
+      message: "5 new gateway nodes have been added for extra network coverage",
+      date: "16/03/2026",
+      priority: "normal",
+    },
+  ]
 
+  const getPriority = (priority) => {
+    switch(priority){
+      case 'high': return '#27F542'
+      case 'normal': return '#F527F5'
+    }
+
+  }
+ 
   return(
     <Card id="announcements" title="Announcements">
-      {data && data.map(alert => (
-        <div key={alert.id} style={{}}>
-          <span>{alert.message}</span>
-          <button>Viewed</button>
+      {alerts.map(alert => (
+        <div key={alert.id} style={{padding: "1rem", margin: "2px", border: `2px solid ${getPriority(alert.priority)}`}}>
+          <div>
+            <span>Title: {alert.title}</span>
+          </div>
+          <div>
+            <span>Message: {alert.message}</span>
+          </div>
         </div>
       ))}
     </Card>
