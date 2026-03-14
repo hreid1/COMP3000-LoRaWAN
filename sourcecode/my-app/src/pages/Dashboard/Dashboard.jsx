@@ -20,12 +20,68 @@ import {
   Paper,
   Alert
 } from '@mui/material'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar, ScatterChart, Scatter } from 'recharts';
 
-const AnomalyTimeline = () => {
-  return(
-    <Card title="Anomaly Timeline" id="anomalyTimeline">
+const AnomalyTimeline = ({ data }) => {
+  const chartData = data && data.length > 0
+    ? data
+      .reduce((acc, anomaly) => {
+        const date = new Date(anomaly.detected_at)
+        const dateString = date.toLocaleDateString()
+        const hour = date.getHours()
+        const timeLabel = `${dateString} ${hour}:00`
+        
+        const existing = acc.find(item => item.timeLabel === timeLabel)
+        if (existing) {
+          existing.count += 1
+        } else {
+          acc.push({ 
+            timeLabel, 
+            count: 1,
+            date: dateString,
+            hour: hour
+          })
+        }
+        return acc
+      }, [])
+    : []
 
+  return (
+    <Card title="Anomalies Over Time" id="anomalyTimeline">
+      <LineChart width={'95%'} height={300} data={chartData} style={{alignItems: "center", padding: "1rem"}}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis 
+          dataKey="timeLabel" 
+          angle={-45}
+          textAnchor="end"
+          height={100}
+        />
+        <YAxis />
+        <Tooltip 
+          content={({ payload }) => {
+            if (payload && payload.length) {
+              const data = payload[0].payload
+              return (
+                <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}>
+                  <p style={{ margin: '0 0 4px 0' }}><strong>Date: {data.date}</strong></p>
+                  <p style={{ margin: '0 0 4px 0' }}>Hour: {data.hour}:00</p>
+                  <p style={{ margin: 0 }}>Count: {data.count}</p>
+                </div>
+              )
+            }
+            return null
+          }}
+        />
+        <Legend />
+        <Line 
+          type="monotone" 
+          dataKey="count" 
+          stroke="#d32f2f" 
+          name="Anomaly Count"
+          dot={{ fill: '#d32f2f', r: 5 }}
+          strokeWidth={2}
+        />
+      </LineChart>
     </Card>
   )
 }
@@ -315,9 +371,9 @@ const MainDashContent = ({data, loading, error, onAlert}) => {
         <NetworkOverview devices={data.devices} stats={data.packets} anomalies={data.anomalies} />
         <Graph data={data.packets}/>
         <Graph2 data={data.packets}/>
-        <RecentActivity />
+        <RecentActivity data={data.anomalies}/>
         <Announcements data={data.announcements}/>
-        <AnomalyTimeline />
+        <AnomalyTimeline data={data.anomalies}/>
     </div>
   )
 }

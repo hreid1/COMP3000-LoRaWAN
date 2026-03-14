@@ -22,7 +22,9 @@ Things to do
 - Add a way to restructure the dashboard
 	- Or choose what to put on dashboard
 - Need to include loading for dashboard -> everything loads at once instead of separate http requests for each 
-- When model is ran, changes packets its detected as anomalous to anomalous and adds entry to Anomalys table
+- When model is ran, it will change the packet column 'is_anomalous' to true for packets which have been detected as anomalous
+	- Right now i have to mannually click on packets to clarify them as anomalous
+		- Add them to DB first then change the status
 - Add logs for actions e.g. running a file against a model, adding a model, removing nodes packets, models etc
 - Fix AI-info page
 - Add scroll wheel functionality to map in mapbox
