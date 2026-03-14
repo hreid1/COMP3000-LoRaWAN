@@ -3,7 +3,7 @@
     grid-template-columns: repeat(1fr 2fr);
     grid-template-rows: auto;
     background-color: #E5ECF4;
-    gap: 8px;
+    gap: 1rem;
     align-items: start;
     padding: 1rem;
     width: 100%;
