@@ -168,7 +168,7 @@ const Graph2 = ({data}) => {
     : []
 
   return(
-        <Card id="graph" title="RSSI over Time">
+        <Card id="graph2" title="RSSI over Time">
       {chartData.length > 0 ? (
         <LineChart
           width={700}
@@ -229,18 +229,12 @@ const MainDashContent = ({data, loading, error, onAlert}) => {
   }
   return (
     <div className='dashContentContainer'>
-      <div className="top">
         <NetworkOverview devices={data.devices} stats={data.packets} anomalies={data.anomalies} />
-      </div>
-      <div className="middle">
         <Graph data={data.packets}/>
         <Graph2 data={data.packets}/>
-      </div>
-      <div className="bottom">
         <RecentActivity />
         <Announcements data={data.announcements}/>
         <AnomalyTimeline />
-      </div>
     </div>
   )
 }
