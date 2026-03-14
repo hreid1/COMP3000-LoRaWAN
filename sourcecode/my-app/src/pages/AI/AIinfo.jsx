@@ -5,6 +5,7 @@ import axios from 'axios'
 import './AIinfo.css'
 import Modal2 from '../../components/Modal/Modal'
 import Example from '../../components/Charts/Graph'
+import Papa from 'papaparse'
 
 import { 
   Box,
@@ -19,7 +20,10 @@ import {
   Stack,
   Alert, 
   Select,
+  FormControl,
+  InputLabel,
   CircularProgress,
+  Snackbar,
 } from "@mui/material"
 
 const Graph = () => {
@@ -121,10 +125,10 @@ const AiModelContainer = ({}) => {
           </Grid>
         </Grid>
       </Box>
-      <Grid container spacing={2} sx={{paddingBottom: '1rem'}}>
+      <Grid container spacing={3} sx={{paddingBottom: '2rem', marginTop: '0.5rem'}}>
         {filteredData && filteredData.map((model) => (
-          <Grid item xs={12} sm={6} md={4} key={model.id}>
-            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <Grid item xs={12} sm={6} lg={4} key={model.id}>
+            <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', minHeight: '280px', boxShadow: 2 }}>
               <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
                 {model.name}
               </Typography>
@@ -187,107 +191,108 @@ const AiModelContainer = ({}) => {
 }
 
 const RunModel = () => {
-    const [file, setFile] = useState(null)
-    const [data, setData] = useState([])
-    const [error, setError]= useState("")
-    const [selectedModel, setSelectedModel] = useState("IsolationForest")
-    const [results, setResults] = useState([])
-    const [alertOpen, setAlertOpen] = useState(false)
-    const [alertMessage, setAlertMessage] = useState("")
-    const [alertSeverity, setAlertSeverity] = useState("success")
+  const [file, setFile] = useState(null);
+  const [data, setData] = useState([]);
+  const [error, setError] = useState("");
+  const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
+  const [results, setResults] = useState([]);
 
-    function handleFileRun(event){
-        if (!file){
-            console.error("No File")
-            return
-        }
-        const formData = new FormData()
-        formData.append("myFile", file, file.name)
-        formData.append("model", selectedModel)
-        axios.post("http://localhost:8000/lorawan/run/", formData)
-        .then (response => {
-            console.log(response.data.performance)
-            setResults(response.data.performance)
-            setAlertMessage("Model ran successfully")
-            setAlertSeverity("success")
-            setAlertOpen(true)
-        })
-        .catch(err => {
-          setAlertMessage("Error running model")
-          setAlertSeverity("error")
-          setAlertOpen(true)
-        })
+  function handleFileRun(event){
+    if (!file) {
+      console.error("No File")
+      return;
+    }
+    const formData = new FormData()
+    formData.append("myFile", file, file.name)
+    formData.append("model", selectedModel) 
+    axios.post("http://127.0.0.1:8000/lorawan/run/", formData)
+    .then (response => {
+      console.log(response.data.performance)
+      setResults(response.data.performance)
+    })
+  }
+
+
+  function handleAddToDB(){
+    if (!file){
+      setError("No file selected")
+      return;
     }
 
-    function handleAddToDB(){
-        if (!file){
-            setError("No file selected")
-            return
-        }
-        const formData = new formData()
-        formData.append("myFile", file, file.name)
-        axios.post("http://localhost:8000/lorawan/addmodel/", formData)
-        .then(response => {
-            console.log("File added to DB")
-            setFile(null)
-            setData([])
-        })
-        .catch(err => {
-            console.error("Database upload failed")
-        })
+    const formData = new FormData();
+    formData.append("myFile", file, file.name)
+
+    axios.post("http://127.0.0.1:8000/lorawan/addmodel/", formData)
+    .then(response => {
+      console.log("File added to DB")
+      setFile(null);
+      setData([]);
+    })
+    .catch(err => {
+      console.error("Database upload failed")
+    })
+  }
+
+  function handleFileChange(event) {
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      setFile(selectedFile);
+    } else {
+      setFile(null);
+    }
+  }
+
+  function handleFileDisplay() {
+    if (!file) {
+      setError("No file selected");
+      return;
     }
 
-    function handleFileChange(e){
-        const selectedFile = e.target.files[0]
-        if (selectedFile) {
-            setFile(selectedFile)
-        } else {
-            setFile(null)
-        }
-    }
+    // Create a clone for display purposes
+    const reader = new FileReader();
+    reader.onload = ({ target }) => {
+      const csv = Papa.parse(target.result, { header: true });
+      const parsedData = csv?.data;
+      if (parsedData?.[0]) {
+        const rows = Object.keys(parsedData[0]);
+        const columns = Object.values(parsedData[0]);
+        const res = rows.reduce((acc, e, i) => [...acc, [[e], columns[i]]], []);
+        setData(res);
+      }
+    };
+    reader.readAsText(file); // This reads a copy, not the original
+  }
 
-    return(
-    <Card title="Run Model" id="runModel">
-      <Box sx={{display: "flex", flexDirection: "column", gap: "16px"}}>
-        {alertOpen && (
-          <Alert 
-            severity={alertSeverity}
-            onClose={() => setAlertOpen(false)}
-            sx={{ mb:2, position: "absolute", top: "50%", left: "50%" }}
-          >
-            {alertMessage}
-          </Alert>
-        )}
-        <Button 
-          variant='contained'
-          component="label"
-        >
-          Choose file
-          <input 
-            hidden
-            accept=".csv"
-            type="file"
-            onChange={handleFileChange}
-          />
-        </Button>
-        { file && (
-          <Typography variant="body2">
-            Selected: {file.name}
-          </Typography>
-        )}
-        <Select
-          value={selectedModel}
-          onChange={(e) => setSelectedModel(e.target.value)}
-        >
-          <MenuItem value="IsolationForest">Isolation Forest</MenuItem>
-          <MenuItem value="LocalOutlierFactor">Local Outlier Factor</MenuItem>
-        </Select>
-        <Button onClick={handleFileRun} variant='contained'>Run File</Button>
-        <Button onClick={handleAddToDB} variant='contained'>Add to DB</Button>
-      </Box>
+
+
+  return(
+    <Card id="networkTraffic" title="Network Traffic">
+      <div className="btn-column">
+        <input type="file" onChange={handleFileChange}/>
+        
+        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
+          <option value="IsolationForest">Isolation Forest</option>
+          <option value="LocalOutlierFactor">Local Outlier Factor</option>
+        </select>
+        
+        <button onClick={handleFileDisplay}>Display File</button>
+        <button onClick={handleFileRun}>Run File</button>
+        <button onClick={handleAddToDB}>Add to DB</button>
+      </div>
+      <div>
+        {error 
+          ? error
+          : data.map((e, i) => (
+            <div key={i} className='item'>
+              {e[0]}:{e[1]}
+            </div>
+          ))
+        }
+      </div>
     </Card>
-    )
+  )
 }
+
 
 const AIinfoContentContainer = ({data, loading, error}) => {
   if (loading) {

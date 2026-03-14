@@ -16,18 +16,6 @@ const Graph = () => {
   )
 }
 
-const DeviceInfo = ({ nodeID, owner, isActive, createdAt, packetCount }) => {
-  return(
-    <DeviceCard 
-      nodeID={nodeID}
-      owner={owner}
-      isActive={isActive}
-      createdAt={createdAt}
-      packetCount={packetCount}
-    />
-  )
-}
-
 const AddDevice = () => {
   const [nodeId, setNodeId] = useState(""); 
   const [mac, setMac] = useState("");
@@ -92,77 +80,49 @@ const AddDevice = () => {
 };
 
 const DeviceStatistics = () => {
-  return(
-    <Card title="Statistics">
-      <ul className="statsList">
-        <li>How many devices are active/offline</li>
-        <li>How many packets total/being read</li>
-        <li>What devices are transmitting anomalies</li>
-      </ul>
-    </Card>
+  return (
+    <div id="deviceStats">
+      <Card title="Statistics">
+        <ul className="statsList">
+          <li>How many devices are active/offline</li>
+          <li>How many packets total/being read</li>
+          <li>What devices are transmitting anomalies</li>
+        </ul>
+      </Card>
+      <Card title="Statistics1">
+        <ul className="statsList">
+          <li>How many devices are active/offline</li>
+          <li>How many packets total/being read</li>
+          <li>What devices are transmitting anomalies</li>
+        </ul>
+      </Card>
+      <Card title="Statistics2">
+        <ul className="statsList">
+          <li>How many devices are active/offline</li>
+          <li>How many packets total/being read</li>
+          <li>What devices are transmitting anomalies</li>
+        </ul>
+      </Card>
+    </div>
   )
 }
 
-const DeviceList = () => {
-  const [data, setData] = useState([])
-  const [search, setSearch] = useState("")
-  const [sortBy, setSortBy] = useState("name")
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/nodes/")
-    .then((response) => {
-      setData(response.data.results || []);
-    })
-    .catch(error => {
-      console.error("Error fetching models: ", error)
-    })
-  }, []);
-
-  const filteredData = data.filter(device =>
-    String(device.node_id).includes(search)
-  );
-
+const DeviceList = ({data}) => {
   return (
     <Card title="Devices" id="deviceContainer">
-      <Box sx={{ mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6}>
-            <TextField
-              select
-              fullWidth
-              label="Sort by"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              size="small"
-            >
-              <MenuItem value="name">Name</MenuItem>
-              <MenuItem value="created_at">Date</MenuItem>
-            </TextField>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              fullWidth
-              label="Search Device Node..."
-              placeholder="Search..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              size="small"
-            />
-          </Grid>
-        </Grid>
-      </Box>
       <div className="deviceGrid">
-        {filteredData &&
-          filteredData.map((device) => (
-            <DeviceInfo
-              key={device.id}
-              nodeID={device.node_id}
-              owner={device.owner}
-              isActive={device.is_active}
-              createdAt={new Date(device.created_at).toLocaleString()}
-              packetCount={device.packets_count}
-            />
-          ))}
+        {data &&
+         data.map((device) => (
+          <div key={device.id}>
+             <DeviceCard
+               nodeID={device.node_id}
+               owner={device.owner}
+               isActive={device.is_active}
+               createdAt={new Date(device.created_at).toLocaleString()}
+               packetCount={device.packets_count}
+             />
+          </div>
+         ))}
       </div>
     </Card>
   );
@@ -197,24 +157,11 @@ const DeviceContent = ({data, loading, error}) => {
 
   return (
     <div className="deviceContentContainer">
-      <div className="top">
-        <DeviceStatistics />
-        <DeviceStatistics />
-        <DeviceStatistics />
-      </div>
-      <div className="middle">
-        <Map2/>
-      </div>
-      <div className="bottom">
-        <div className="bottomLeft">
-          <AddDevice />
-          <Graph />
-        </div>
-        <div className="bottomRight">
-          <DeviceList />
-        </div>
-      </div>
+      <DeviceStatistics />
+      <Map2 />
+      <AddDevice />
       <Graph />
+      <DeviceList data={data.devices} />
     </div>
   );
 };

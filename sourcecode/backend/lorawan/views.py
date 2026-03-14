@@ -100,6 +100,8 @@ class AlertViewSet(viewsets.ModelViewSet):
 
 # Views
 class TestView(APIView):
+    parser_classes = (MultiPartParser,)
+    
     def post(self, request):
         uploaded_file = request.FILES.get("myFile")
         df = pd.read_csv(uploaded_file)
@@ -151,6 +153,8 @@ class TestView(APIView):
         })
     
 class RunModel(APIView):
+    parser_classes = (MultiPartParser)
+    
     def post(self, request):
         uploaded_file = request.FILES.get('myFile')
         model_type = request.POST.get('model', 'IsolationForest') 
