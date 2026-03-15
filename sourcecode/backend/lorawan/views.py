@@ -153,7 +153,7 @@ class TestView(APIView):
         })
     
 class RunModel(APIView):
-    parser_classes = (MultiPartParser)
+    parser_classes = (MultiPartParser,)
     
     def post(self, request):
         uploaded_file = request.FILES.get('myFile')
