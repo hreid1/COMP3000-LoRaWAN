@@ -36,6 +36,10 @@ sourcecode/my-app/venv
 *.db
 db.sqlite3
 
+# ML Models
+sourcecode/backend/lorawan/services/models/
+*.pkl
+
 # Node.js
 node_modules/
 npm-debug.log*
