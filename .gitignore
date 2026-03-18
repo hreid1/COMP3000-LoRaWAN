@@ -80,5 +80,4 @@ Thumbs.db
 
 # Images/pre-loaded files
 sourcecode/backend/profile_images/
-sourcecode/backend/trainedmodels/
-sourcecode/backend/lorawan/trained_models/
+sourcecode/backend/lorawan/trainedmodels/
