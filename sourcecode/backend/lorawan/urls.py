@@ -21,5 +21,6 @@ urlpatterns = [
     path("", include(router.urls)),
 
     path("run/", views.RunModel.as_view(), name='run-model'),
-    path("addmodel/", views.TestView.as_view(), name='add')
+    path("addmodel/", views.TestView.as_view(), name='add'),
+    path("train-models/", views.train_models, name="train-models"),
 ]

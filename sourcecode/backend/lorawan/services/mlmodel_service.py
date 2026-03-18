@@ -17,53 +17,33 @@ import joblib
         # Packet
         # Anomaly
 class MLModelService:
+    # Removed CR, BW, TX, payloadSize, pdrPerNodePerWindow
     anomaly_inputs = [
-        'SF', 'CF', 'TX', 'BW', 'CR', 'SNR', 'RSSI', 'PktSeqNum',
-        'payloadSize', 'numReceivedPerNode[nodeNumber-1]', 'PDRPerNode'
+        'SF', 'CF', 'SNR', 'RSSI', 'PktSeqNum',
+        'numReceivedPerNode[nodeNumber-1]', 'PDRPerNode', 
+        'numReceivedPerNodePerWindow[nodeNumber]', 'currentSeqNum',
+        'lastSeqNumAtWindowStart[nodeNumber]',
+        'interArrivalTime_s', 'interArrivalTimeMin',
     ]
 
     def preprocess(uploaded_file):
-        # Load uploaded file
+        # Load and preprocess uploaded file
         df = pd.read_csv(uploaded_file)
-
-        # Loading training data
-        base_dir = Path(__file__).resolve().parent.parent
-        data_dir = base_dir / "datasets"
-        normal_path = data_dir / "no-jammer.csv"
-        if not normal_path.exists():
-            raise FileNotFoundError(f"Dataset not found: {normal_path}")
-        train_df = pd.read_csv(normal_path)
-        
-        # Preprocessing training and testing data
+        df.columns = df.columns.str.strip()
         df = df.dropna()
+        
+        # Load training data to fit scaler
+        datasets_dir = Path(__file__).resolve().parent / "datasets"
+        train_df = pd.read_csv(datasets_dir / "no-jammer.csv")
+        train_df.columns = train_df.columns.str.strip()
         train_df = train_df.dropna()
+        
+        # Scale data
         scaler = StandardScaler()
-        train_scaled = scaler.fit_transform(train_df[MLModelService.anomaly_inputs])
+        scaler.fit(train_df[MLModelService.anomaly_inputs])
         df_scaled = scaler.transform(df[MLModelService.anomaly_inputs])
-
-        return df_scaled, train_scaled, df
-    
-    def runIsoaltionForest(train_scaled):
-        contamination = 0.01
-        random_state = 42
-        n_estimators = 200
-        model = IsolationForest(contamination=contamination, random_state=random_state, n_estimators=n_estimators, max_samples='auto')
-        model.fit(train_scaled)
-        model_name = "Isolation Forest"
-
-        return model, model_name
-
-    def runLocalOutlierFactor(train_scaled):
-        n_neighbors = 20
-        contamination = 0.01
-        model = LocalOutlierFactor(n_neighbors=n_neighbors, contamination=contamination, novelty=True)
-        model.fit(train_scaled)
-        model_name = "Local Outlier Factor"
-
-        return model, model_name
-
-    def runAutoencoder(processed_file):
-        return 0
+        
+        return df_scaled, df
     
     def predict(model, test_scaled):
         predictions = model.predict(test_scaled)
@@ -104,18 +84,18 @@ class MLModelService:
                 }
         
         return performance 
-
-    # Adding to ModelPredictionsInfo
-    def addResultsToDB():
-        return 0
     
     def run(uploaded_file, model_type='IsolationForest'):
-        df_scaled, train_scaled, df = MLModelService.preprocess(uploaded_file)
+        df_scaled, df = MLModelService.preprocess(uploaded_file)
+        
+        models_dir = Path(__file__).resolve().parent / "models"
         
         if model_type == 'IsolationForest':
-            model, model_name = MLModelService.runIsoaltionForest(train_scaled)
+            model = joblib.load(models_dir / "isolationforest.pkl")
+            model_name = "Isolation Forest"
         else:
-            model, model_name = MLModelService.runLocalOutlierFactor(train_scaled)
+            model = joblib.load(models_dir / "localoutlierfactor.pkl")
+            model_name = "Local Outlier Factor"
         
         predictions, scores = MLModelService.predict(model, df_scaled)
         performance = MLModelService.getPerformance(model, df_scaled, predictions, scores, df)
@@ -127,5 +107,5 @@ class MLModelService:
                 "model": model_name
             },
             "file name": Path(uploaded_file.name).name,
-            "num_packets": len(df)
+            "num_packets": len(df),
         }

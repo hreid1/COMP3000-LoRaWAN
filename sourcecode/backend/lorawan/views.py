@@ -14,6 +14,14 @@ from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLMod
 from .services import mlmodel_service
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt 
+from django.shortcuts import render
+import joblib
+import numpy as np
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .services.mlmodel_service import MLModelService
 
 @api_view(["GET"])
 def api_root(request, format=None):
@@ -30,6 +38,22 @@ def api_root(request, format=None):
             "alerts": reverse("lorawan:alert-list", request=request, format=format),
         }
     )
+
+@api_view(["POST"])
+def train_models(request):
+    """Train and save ML models"""
+    try:
+        isolationforest, localoutlierfactor = MLModelService.trainModels()
+        return Response({
+            "success": True,
+            "message": "Models trained successfully",
+            "models": ["Isolation Forest", "Local Outlier Factor"]
+        })
+    except Exception as e:
+        return Response({
+            "success": False,
+            "error": str(e)
+        }, status=400)
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
@@ -159,6 +183,7 @@ class RunModel(APIView):
         uploaded_file = request.FILES.get('myFile')
         model_type = request.POST.get('model', 'IsolationForest') 
         results = mlmodel_service.MLModelService.run(uploaded_file, model_type)
+        #test = mlmodel_service.MLModelService.trainModels()
 
         # Get or create the MLModel instance
         ml_model, _ = MLModel.objects.get_or_create(
