@@ -77,3 +77,7 @@ Thumbs.db
 # *.pkl
 # *.h5
 # *.pth
+
+# Images/pre-loaded files
+backend/lorawan/profile_images
+backend/lorawan/trainedmodels

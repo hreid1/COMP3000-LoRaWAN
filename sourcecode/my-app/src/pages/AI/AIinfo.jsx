@@ -196,6 +196,7 @@ const RunModel = () => {
   const [error, setError] = useState("");
   const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
   const [results, setResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   function handleFileRun(event){
     if (!file) {
@@ -204,11 +205,18 @@ const RunModel = () => {
     }
     const formData = new FormData()
     formData.append("myFile", file, file.name)
-    formData.append("model", selectedModel) 
+    formData.append("model", selectedModel)
+    
+    setIsLoading(true)
     axios.post("http://127.0.0.1:8000/lorawan/run/", formData)
     .then (response => {
       console.log(response.data.performance)
       setResults(response.data.performance)
+      setIsLoading(false)
+    })
+    .catch(err => {
+      console.error("Error running model:", err)
+      setIsLoading(false)
     })
   }
 
@@ -266,21 +274,31 @@ const RunModel = () => {
   return(
     <Card id="runModel" title="Run Model">
       <div className="btn-column">
-        <input type="file" onChange={handleFileChange}/>
+        <input type="file" onChange={handleFileChange} disabled={isLoading}/>
         
-        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
+        <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)} disabled={isLoading}>
           <option value="IsolationForest">Isolation Forest</option>
           <option value="LocalOutlierFactor">Local Outlier Factor</option>
         </select>
         
-        <button onClick={handleFileDisplay}>Display File</button>
-        <button onClick={handleFileRun}>Run File</button>
-        <button onClick={handleAddToDB}>Add to DB</button>
+        <button onClick={handleFileDisplay} disabled={isLoading}>Display File</button>
+        <button onClick={handleFileRun} disabled={isLoading}>Run File</button>
+        <button onClick={handleAddToDB} disabled={isLoading}>Add to DB</button>
       </div>
+      
+      {isLoading && (
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', my: 3 }}>
+          <CircularProgress size={60} sx={{ mb: 2 }} />
+          <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+            Running model on file...
+          </Typography>
+        </Box>
+      )}
+      
       <div>
         {error 
           ? error
-          : data.map((e, i) => (
+          : !isLoading && data.map((e, i) => (
             <div key={i} className='item'>
               {e[0]}:{e[1]}
             </div>
