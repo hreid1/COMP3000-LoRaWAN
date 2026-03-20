@@ -45,7 +45,7 @@ const Statistics = () => {
 const AiModelContainer = ({}) => {
   const [open, setOpen] = useState(false)
   const [data, setData] = useState([])
-  const [selectedID, setSelectedID] = useState(null)
+  const [selectedModel, setSelectedModel] = useState(null)
   const [historyData, setHistoryData] = useState([])
   const [search, setSearch] = useState("")
   const [sortBy, setSortBy] = useState("name")
@@ -70,12 +70,15 @@ const AiModelContainer = ({}) => {
       })
   }, [])
 
-  const handleModelClick = (modelID) => {
+  const handleModelClick = (model) => {
+    setSelectedModel(model)
     setOpen(true)
-    setSelectedID(selectedID === modelID ? null : modelID)
   }
 
-  const handleClose = () => setOpen(false)
+  const handleClose = () => {
+    setOpen(false)
+    setSelectedModel(null)
+  }
 
   const filteredData = data.filter(model =>
     String(model.name).toLowerCase().includes(search.toLowerCase())
@@ -138,7 +141,7 @@ const AiModelContainer = ({}) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleModelClick(model.id)}
+                onClick={() => handleModelClick(model)}
                 sx={{ mt: 'auto' }}
               >
                 View History
@@ -153,16 +156,16 @@ const AiModelContainer = ({}) => {
       >
         <Box sx={modalStyle}>
           <Typography id="modal-title" variant="h5" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
-            Prediction History
+            {selectedModel?.name || 'Model'} - Prediction History
           </Typography>
-          {selectedID && historyData.filter((item) => item.model_id === selectedID).length === 0 ? (
+          {selectedModel && historyData.filter((item) => item.model_id === selectedModel.id).length === 0 ? (
             <Typography variant="body1" color="textSecondary">
               No predictions found for this model
             </Typography>
           ) : (
             <Box>
               {historyData
-                .filter((item) => item.model_id === selectedID)
+                .filter((item) => item.model_id === selectedModel?.id)
                 .map((item) => (
                   <Paper key={item.id} sx={{ p: 2, mb: 2, backgroundColor: '#f5f5f5' }}>
                     <Typography>File: {item.input_file_name}</Typography>
@@ -197,6 +200,7 @@ const RunModel = () => {
   const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false)
 
   function handleFileRun(event){
     if (!file) {
@@ -270,7 +274,6 @@ const RunModel = () => {
     reader.readAsText(file); // This reads a copy, not the original
   }
 
-
   return(
     <Card id="runModel" title="Run Model">
       <div className="btn-column">
@@ -294,7 +297,6 @@ const RunModel = () => {
           </Typography>
         </Box>
       )}
-      
       <div>
         {error 
           ? error
@@ -305,6 +307,11 @@ const RunModel = () => {
           ))
         }
       </div>
+      {!isLoading && (
+        <Alert severity="success">
+          Model ran successfully
+        </Alert>
+      )}
     </Card>
   )
 }

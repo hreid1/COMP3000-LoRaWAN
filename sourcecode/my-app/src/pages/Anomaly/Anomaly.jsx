@@ -31,17 +31,32 @@ const AnomalyCard = () => {
 const AnomalyList = ({data}) => {
   const [sortBy, setSortBy] = useState("name")
   const [open, setOpen] = useState(false)
-  const [selectedAnomalyID, setSelectedAnomalyID] = useState(null)
+  const [selectedAnomaly, setSelectedAnomaly] = useState(null)
 
-  const handleModalClick = (anomalyID) => {
+  const handleModalClick = (anomaly) => {
+    setSelectedAnomaly(anomaly)
     setOpen(true)
-    setSelectedAnomalyID(selectedAnomalyID === anomalyID ? null: anomalyID)
   }
 
-  const handleClose = () => setOpen(false)
+  const handleClose = () => {
+    setOpen(false)
+    setSelectedAnomaly(null)
+  }
 
-
-  //console.log(data)
+  const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 600,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    borderRadius: 2,
+    boxShadow: 24,
+    p: 4,
+    maxHeight: '80vh',
+    overflowY: 'auto'
+  }
 
   return(
     <Card title="Anomaly List" id="anomalyList">
@@ -75,37 +90,46 @@ const AnomalyList = ({data}) => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => handleModalClick(anomaly.id)}
+                onClick={() => handleModalClick(anomaly)}
               >
                 View
               </Button>
             </Paper>
           </Grid>
         ))}
-
       </Grid>
       <Modal
         open={open}
         onClose={handleClose}
       >
-        <Box>
-          <Typography>
+        <Box sx={modalStyle}>
+          <Typography variant="h6" sx={{mb: 2}}>
             Anomaly Information
           </Typography>
-          <Box>
-          </Box>
-          {selectedAnomalyID && data.filter((item) => item.anomaly_id === selectedAnomalyID).length === 0 ? (
-            <Typography>
-              No data found for this anomaly
-            </Typography>
-          ) : (
+          {selectedAnomaly ? (
             <Box>
+              <Typography>Model: {selectedAnomaly.model_name}</Typography>
+              <Typography>Detected At: {new Date(selectedAnomaly.detected_at).toLocaleString()}</Typography>
+              <Typography variant="h6" sx={{mt: 3, mb: 1}}>Flagged Packet Details</Typography>
+              <Typography>Packet ID: {selectedAnomaly.packet.id}</Typography>
+              <Typography>Time: {new Date(selectedAnomaly.packet.time).toLocaleString()}</Typography>
+              <Typography>MAC: {selectedAnomaly.packet.mac}</Typography>
+              <Typography>Spreading Factor: {selectedAnomaly.packet.spreading_factor}</Typography>
+              <Typography>Channel Frequency: {selectedAnomaly.packet.channel_frequency} Hz</Typography>
+              <Typography>Transmission Power: {selectedAnomaly.packet.transmission_power} dBm</Typography>
+              <Typography>Bandwidth: {selectedAnomaly.packet.bandwidth} Hz</Typography>
+              <Typography>Coding Rate: {selectedAnomaly.packet.coding_rate}</Typography>
+              <Typography>SNR: {selectedAnomaly.packet.snr} dB</Typography>
+              <Typography>RSSI: {selectedAnomaly.packet.rssi} dBm</Typography>
+              <Typography>Sequence Number: {selectedAnomaly.packet.sequence_number}</Typography>
+              <Typography>Payload: {selectedAnomaly.packet.payload}</Typography>
+              <Typography>Payload Size: {selectedAnomaly.packet.payload_size} bytes</Typography>
             </Box>
+          ) : (
+            <Typography>No anomaly selected</Typography>
           )}
         </Box>
-
       </Modal>
-
     </Card>
   )
 }
