@@ -100,6 +100,9 @@ class Anomaly(models.Model):
     packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
     detected_at = models.DateTimeField(auto_now_add=True)
+    created_by = models.ForeignKey(
+        "auth.User", related_name="anomalies", on_delete=models.SET_NULL, null=True
+    )
 
     def __str__(self):
         return f"Packet {self.packet_id} {self.model.name}:"

@@ -17,13 +17,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = "__all__"
 
-class AnomalySerializer(serializers.ModelSerializer):
-    model_name = serializers.ReadOnlyField(source="model.name")
-    packet_sequence = serializers.ReadOnlyField(source='packet_id.sequence_number')
-
-    class Meta:
-        model = Anomaly
-        fields = ["id", "packet_id", "packet_sequence", "model", "model_name", "detected_at"]
 
 
 class PacketSerializer(serializers.ModelSerializer):
@@ -35,6 +28,14 @@ class PacketSerializer(serializers.ModelSerializer):
         model = Packet
         fields = "__all__"
 
+class AnomalySerializer(serializers.ModelSerializer):
+    model_name = serializers.ReadOnlyField(source="model.name")
+    packet = PacketSerializer(read_only=True)
+
+    class Meta:
+        model = Anomaly
+        #fields = "__all__"
+        fields = ["id", "model_name", "detected_at", "packet"]
 
 class NodeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
@@ -73,10 +74,11 @@ class UserSerializer(serializers.ModelSerializer):
     nodes = NodeSerializer(many=True, read_only=True)
     userprofile = UserProfileSerializer(read_only=True)
     alerts = AlertSerializer(many=True, read_only=True)
+    anomalies = AnomalySerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "nodes", "userprofile", "alerts"]
+        fields = ["id", "username", "email", "userprofile", "alerts", "anomalies", "nodes"]
 
 class MLModelSerializer(serializers.ModelSerializer):
     #created_by_username = serializers.CharField(source='created_by.username', read_only=True)

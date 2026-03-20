@@ -44,4 +44,4 @@ localoutlierfactor = LocalOutlierFactor(contamination=0.01, n_neighbors=20)
 localoutlierfactor.fit(df_scaled)
 joblib.dump(localoutlierfactor, models_dir / "localoutlierfactor.pkl")
 
-print("Models trained and saved successfully!")
+print("Models trained and saved successfully")

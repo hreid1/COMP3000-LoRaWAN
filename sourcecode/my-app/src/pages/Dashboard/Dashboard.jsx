@@ -396,14 +396,14 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [user, anomalies, packets] = await Promise.all([
+        const [user, packets] = await Promise.all([
           axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
-          axios.get("http://127.0.0.1:8000/lorawan/anomaly/"),
           axios.get("http://127.0.0.1:8000/lorawan/packets/")
         ])
+        console.log(user)
         setData({
           devices: user.data.nodes || [],
-          anomalies: anomalies.data.results || [],
+          anomalies: user.data.anomalies || [],
           announcements: user.data.alerts || [],
           packets: packets.data.results || [],
           loading: false,
