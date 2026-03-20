@@ -1,0 +1,36 @@
+Things to do
+- Add functionality to profile, settings and logout
+- Add login page
+	- Configure code so that it fetches information regarding the user who logged in
+	- Modifies page
+- Finish shift to materialUI
+- Clean up UI/UX structure
+	- AI Models
+	- Devices display -> Devices page
+	- Device list display -> dashboard
+- Add customisation for graphs (e.g. a user can pick if they want to see num of packets per node against time)
+- Finish off pages
+	- Admin
+	- Anomaly
+	- Profile
+	- Settings -> change password, email, username
+- Encryption/secure stuff -> salted passwords
+- Add functionality to statistics for AI-info page
+- Add marker on side nav bar to tell the user what page they are on
+- Add functionality to page
+- Convert devices information to fetch from a dataset not just changing a few
+- Add a way to restructure the dashboard
+	- Or choose what to put on dashboard
+- Need to include loading for dashboard -> everything loads at once instead of separate http requests for each 
+- When model is ran, it will change the packet column 'is_anomalous' to true for packets which have been detected as anomalous
+	- Right now i have to mannually click on packets to clarify them as anomalous
+		- Add them to DB first then change the status
+- Add logs for actions e.g. running a file against a model, adding a model, removing nodes packets, models etc
+- Fix AI-info page
+- Add scroll wheel functionality to map in mapbox
+- Add functionality so when a packet is flagged as anomalous it flags the node as ananomalous and a 'Seek assistance/view it' is shown
+- Tests
+	- Unit Tests
+	- Integration Tests
+	- Canary Tests
+- After running a model, a popup should appear telling the user the summary of the ran e.g. a modal menu, including name of file, performance metrics,

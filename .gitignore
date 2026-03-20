@@ -36,6 +36,10 @@ sourcecode/my-app/venv
 *.db
 db.sqlite3
 
+# ML Models
+sourcecode/backend/lorawan/services/models/
+*.pkl
+
 # Node.js
 node_modules/
 npm-debug.log*
@@ -77,3 +81,7 @@ Thumbs.db
 # *.pkl
 # *.h5
 # *.pth
+
+# Images/pre-loaded files
+sourcecode/backend/profile_images/
+sourcecode/backend/lorawan/services/models/

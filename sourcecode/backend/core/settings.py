@@ -63,7 +63,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": 20,
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
-    ]
+    ],
 }
 
 CORS_ALLOWED_ORIGINS = [

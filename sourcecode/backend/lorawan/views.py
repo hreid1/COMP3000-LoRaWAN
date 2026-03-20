@@ -8,11 +8,20 @@ from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo
+from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo, Alert
 from .permissions import IsOwnerOrReadOnly
-from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer
+from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer, AlertSerializer
 from .services import mlmodel_service
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import AllowAny
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt 
+from django.shortcuts import render
+import joblib
+import numpy as np
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .services.mlmodel_service import MLModelService
 
 @api_view(["GET"])
 def api_root(request, format=None):
@@ -25,9 +34,26 @@ def api_root(request, format=None):
             "anomalies": reverse("lorawan:anomaly-list", request=request, format=format),
             "userprofiles": reverse("lorawan:userprofile-list", request=request, format=format),
             "modeltraininginfos": reverse("lorawan:modeltraininginfo-list", request=request, format=format),
-            "modelpredictioninfos": reverse("lorawan:modelpredictioninfo-list", request=request, format=format)
+            "modelpredictioninfos": reverse("lorawan:modelpredictioninfo-list", request=request, format=format),
+            "alerts": reverse("lorawan:alert-list", request=request, format=format),
         }
     )
+
+@api_view(["POST"])
+def train_models(request):
+    """Train and save ML models"""
+    try:
+        isolationforest, localoutlierfactor = MLModelService.trainModels()
+        return Response({
+            "success": True,
+            "message": "Models trained successfully",
+            "models": ["Isolation Forest", "Local Outlier Factor"]
+        })
+    except Exception as e:
+        return Response({
+            "success": False,
+            "error": str(e)
+        }, status=400)
 
 class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
@@ -84,8 +110,22 @@ class ModelPredictionInfoViewSet(viewsets.ModelViewSet):
     queryset = ModelPredictionInfo.objects.all()
     serializer_class = ModelPredictionInfoSerailizer
 
+class AlertViewSet(viewsets.ModelViewSet):
+    serializer_class = AlertSerializer
+    permission_classes = [permissions.AllowAny]
+
+    
+    def get_queryset(self):
+        return Alert.objects.all()
+    
+    def perform_create(self, serializer):
+        owner = User.objects.get(id=1)
+        serializer.save(owner=owner)
+
 # Views
 class TestView(APIView):
+    parser_classes = (MultiPartParser,)
+    
     def post(self, request):
         uploaded_file = request.FILES.get("myFile")
         df = pd.read_csv(uploaded_file)
@@ -137,10 +177,13 @@ class TestView(APIView):
         })
     
 class RunModel(APIView):
+    parser_classes = (MultiPartParser,)
+    
     def post(self, request):
         uploaded_file = request.FILES.get('myFile')
         model_type = request.POST.get('model', 'IsolationForest') 
         results = mlmodel_service.MLModelService.run(uploaded_file, model_type)
+        #test = mlmodel_service.MLModelService.trainModels()
 
         # Get or create the MLModel instance
         ml_model, _ = MLModel.objects.get_or_create(

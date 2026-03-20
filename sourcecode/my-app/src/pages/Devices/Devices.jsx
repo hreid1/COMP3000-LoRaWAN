@@ -5,24 +5,14 @@ import './Devices.css'
 import Card from '../../components/Card/Card';
 import DeviceCard from '../../components/Card/DeviceCard';
 import Example from '../../components/Charts/Graph';
+import Map from '../../components/Map/Map';
+import { Box, Alert, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem, CircularProgress } from '@mui/material';
 
 const Graph = () => {
   return (
     <Card id="deviceGraph" title="Graph">
       <Example />
     </Card>
-  )
-}
-
-const DeviceInfo = ({ nodeID, owner, isActive, createdAt, packetCount }) => {
-  return(
-    <DeviceCard 
-      nodeID={nodeID}
-      owner={owner}
-      isActive={isActive}
-      createdAt={createdAt}
-      packetCount={packetCount}
-    />
   )
 }
 
@@ -46,154 +36,167 @@ const AddDevice = () => {
 
   return (
     <Card id="addDevice" title="Add Device Form">
-      <form onSubmit={handleAddDevice} className="addDeviceForm">
-        <div className="formRow">
-          <label htmlFor="nodeId">Node ID</label>
-          <input
-            id="nodeId"
-            type="number"
-            value={nodeId}
-            onChange={e => setNodeId(e.target.value)}
-            required
-          />
-        </div>
-        <div className="formRow">
-          <label htmlFor="mac">MAC</label>
-          <input
-            id="mac"
-            type="text"
-            value={mac}
-            onChange={e => setMac(e.target.value)}
-          />
-        </div>
-        <div className="formRow">
-          <label htmlFor="location">Location</label>
-          <input
-            id="location"
-            type="text"
-            value={location}
-            onChange={e => setLocation(e.target.value)}
-          />
-        </div>
-        <div className="formRow">
-          <label htmlFor="isActive">Is Active</label>
-          <input
-            id="isActive"
-            type="checkbox"
-            checked={isActive}
-            onChange={e => setIsActive(e.target.checked)}
-          />
-        </div>
-        <button type="submit" className="addDeviceBtn">Add</button>
-      </form>
+      <Box component="form" onSubmit={handleAddDevice} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <TextField
+          label="Node ID"
+          type="number"
+          value={nodeId}
+          onChange={e => setNodeId(e.target.value)}
+          required
+          fullWidth
+          variant="outlined"
+        />
+        <TextField
+          label="MAC"
+          type="text"
+          value={mac}
+          onChange={e => setMac(e.target.value)}
+          fullWidth
+          variant="outlined"
+        />
+        <TextField
+          label="Location"
+          type="text"
+          value={location}
+          onChange={e => setLocation(e.target.value)}
+          fullWidth
+          variant="outlined"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={isActive}
+              onChange={e => setIsActive(e.target.checked)}
+            />
+          }
+          label="Is Active"
+        />
+        <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
+          Add Device
+        </Button>
+      </Box>
     </Card>
   );
 };
 
 const DeviceStatistics = () => {
-  return(
-    <Card title="Statistics">
-      <ul className="statsList">
-        <li>How many devices are active/offline</li>
-        <li>How many packets total/being read</li>
-        <li>What devices are transmitting anomalies</li>
-      </ul>
-    </Card>
-  )
-}
-
-const DeviceList = () => {
-  const [data, setData] = useState([])
-  const [search, setSearch] = useState("")
-  const [sortBy, setSortBy] = useState("node_id")
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/nodes/")
-    .then((response) => {
-      setData(response.data.results || []);
-    })
-    .catch(error => {
-      console.error("Error fetching models: ", error)
-    })
-  }, []);
-
-  const filteredData = data.filter(device =>
-    String(device.node_id).includes(search)
-  );
-
   return (
-    <Card title="Devices">
-      <div className="deviceListControls">
-        <select
-          className="deviceSort"
-          value={sortBy}
-          onChange={e => setSortBy(e.target.value)}
-        >
-          <option value="node_id">Sort by: Node ID</option>
-          <option value="created_at">Sort by: Date</option>
-          <option value="is_active">Sort by: Status</option>
-        </select>
-        <input
-          className="deviceSearch"
-          type="text"
-          placeholder="Search..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-        />
-      </div>
+    <div id="deviceStats">
+      <Card title="Statistics">
+        <ul className="statsList">
+          <li>How many devices are active/offline</li>
+          <li>How many packets total/being read</li>
+          <li>What devices are transmitting anomalies</li>
+        </ul>
+      </Card>
+      <Card title="Statistics1">
+        <ul className="statsList">
+          <li>How many devices are active/offline</li>
+          <li>How many packets total/being read</li>
+          <li>What devices are transmitting anomalies</li>
+        </ul>
+      </Card>
+      <Card title="Statistics2">
+        <ul className="statsList">
+          <li>How many devices are active/offline</li>
+          <li>How many packets total/being read</li>
+          <li>What devices are transmitting anomalies</li>
+        </ul>
+      </Card>
+    </div>
+  )
+}
+
+const DeviceList = ({data}) => {
+  return (
+    <Card title="Devices" id="deviceContainer">
       <div className="deviceGrid">
-        {filteredData &&
-          filteredData.map((device) => (
-            <DeviceInfo
-              key={device.id}
-              nodeID={device.node_id}
-              owner={device.owner}
-              isActive={device.is_active}
-              createdAt={new Date(device.created_at).toLocaleString()}
-              packetCount={device.packets_count}
-            />
-          ))}
+        {data &&
+         data.map((device) => (
+          <div key={device.id}>
+             <DeviceCard
+               nodeID={device.node_id}
+               owner={device.owner}
+               isActive={device.is_active}
+               createdAt={new Date(device.created_at).toLocaleString()}
+               packetCount={device.packets_count}
+             />
+          </div>
+         ))}
       </div>
     </Card>
   );
 }
 
-const Map = () => {
+const Map2 = () => {
   return(
-    <Card title="Map">
+    <Card title="Map" id="mapBox" >
+      <Map />
     </Card>
   )
 }
 
-const DeviceContent = () => {
+const DeviceContent = ({data, loading, error}) => {
+  if (loading) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (error) {
+    return (
+      <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
+        <Alert severity='error' sx={{fontWeight: 'bold'}}>
+          Error: {error}
+        </Alert>
+      </Box>
+    )
+  }
+
   return (
     <div className="deviceContentContainer">
-      <div className="deviceContainerTop">
-        <DeviceStatistics />
-        <DeviceStatistics />
-        <DeviceStatistics />
-      </div>
-      <div className="deviceContainerMiddle">
-        <Map />
-      </div>
-      <div className="deviceContainerBottom">
-        <div className="deviceContainerLeft">
-          <AddDevice />
-          <Graph />
-        </div>
-        <div className="deviceContainerRight">
-          <DeviceList />
-        </div>
-      </div>
+      <DeviceStatistics />
+      <Map2 />
+      <AddDevice />
+      <Graph />
+      <DeviceList data={data.devices} />
     </div>
   );
 };
 
 const Devices = () => {
+  const [data, setData] = useState({
+    devices: [],
+    loading: true,
+    error: null,
+  })
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [devices] = await Promise.all([
+          axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
+        ])
+        setData({
+          devices: devices.data.nodes || [],
+          loading: false,
+          error: null
+        })
+
+      } catch (err) {
+        setData(prev => ({ ...prev, loading: false, error: err.message}))
+      }
+    }
+    fetchData()
+  }, []);
+
+  
   return(
-    <div>
-      <DeviceContent />
-    </div>
+    <>
+      <DeviceContent data={data} loading={data.loading} error={data.error}/>
+    </>
   )
 };
 
