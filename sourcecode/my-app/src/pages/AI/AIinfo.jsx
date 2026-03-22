@@ -200,7 +200,10 @@ const RunModel = () => {
   const [selectedModel, setSelectedModel] = useState("IsolationForest"); 
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState("");
+  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
 
   function handleFileRun(event){
     if (!file) {
@@ -217,10 +220,16 @@ const RunModel = () => {
       console.log(response.data.performance)
       setResults(response.data.performance)
       setIsLoading(false)
+      setSnackbarMessage("Model ran successfully!")
+      setSnackbarSeverity("success")
+      setSnackbarOpen(true)
     })
     .catch(err => {
       console.error("Error running model:", err)
       setIsLoading(false)
+      setSnackbarMessage("Failed to run model. Please try again.")
+      setSnackbarSeverity("error")
+      setSnackbarOpen(true)
     })
   }
 
@@ -308,9 +317,19 @@ const RunModel = () => {
         }
       </div>
       {!isLoading && (
-        <Alert severity="success">
-          Model ran successfully
-        </Alert>
+        <Snackbar
+          open={snackbarOpen}
+          onClose={() => setSnackbarOpen(false)}
+          anchorOrigin={{ vertical: "top", horizontal: "center", marginTop: "2rem" }}
+        >
+          <Alert
+            onClose={() => setSnackbarOpen(false)}
+            severity={snackbarSeverity}
+            sx={{ width: "100%" }}
+          >
+            {snackbarMessage}
+          </Alert>
+        </Snackbar>
       )}
     </Card>
   )

@@ -30,9 +30,9 @@
     max-height: 900px;
 }
 
-.deviceGrid  {
+.deviceGrid {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     grid-template-rows: auto;
     padding: 1rem;
     gap: 8px;

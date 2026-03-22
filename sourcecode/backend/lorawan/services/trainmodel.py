@@ -6,6 +6,7 @@ import numpy as np
 from pathlib import Path
 from sklearn.preprocessing import StandardScaler
 import os
+from sklearn.feature_selection import SelectKBest, f_classif
 
 anomaly_inputs = [
     'SF', 'CF', 'SNR', 'RSSI', 'PktSeqNum',
@@ -36,12 +37,17 @@ df = df.dropna()
 scaler = StandardScaler()
 df_scaled = scaler.fit_transform(df[anomaly_inputs])
 
+selector = SelectKBest(f_classif, k=8)
+df_selected = selector.fit_transform(df_scaled, anomaly_inputs)
+
 isolationforest = IsolationForest(contamination=0.01, random_state=42, n_estimators=500, max_samples=128, max_features=0.8)
 isolationforest.fit(df_scaled)
 joblib.dump(isolationforest, models_dir / "isolationforest.pkl")
 
-localoutlierfactor = LocalOutlierFactor(contamination=0.01, n_neighbors=20)
+localoutlierfactor = LocalOutlierFactor(contamination=0.01, n_neighbors=30, algorithm='auto', leaf_size=30)
 localoutlierfactor.fit(df_scaled)
 joblib.dump(localoutlierfactor, models_dir / "localoutlierfactor.pkl")
 
 print("Models trained and saved successfully")
+
+# Add to DB

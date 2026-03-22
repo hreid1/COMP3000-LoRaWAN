@@ -17,11 +17,9 @@ Things to do
 - Encryption/secure stuff -> salted passwords
 - Add functionality to statistics for AI-info page
 - Add marker on side nav bar to tell the user what page they are on
-- Add functionality to page
 - Convert devices information to fetch from a dataset not just changing a few
 - Add a way to restructure the dashboard
 	- Or choose what to put on dashboard
-- Need to include loading for dashboard -> everything loads at once instead of separate http requests for each 
 - When model is ran, it will change the packet column 'is_anomalous' to true for packets which have been detected as anomalous
 	- Right now i have to mannually click on packets to clarify them as anomalous
 		- Add them to DB first then change the status
@@ -37,3 +35,6 @@ Things to do
 - For explaining why a packet was flagged either use:
 	- SHAP (Shapley Additive Explanations) -> values for tree-based machine learning models
 	- Z-scores calculates how deviant a value is from normal 
+- Add a load more button option which loads more devices, anomalies, packets from the dataset
+	- Devices
+- Add options to run packets against a combination of models (e.g. isolation forest and local outlier factor) as well as being able to individually run specific ai models

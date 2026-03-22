@@ -20,7 +20,7 @@ import {
   Paper,
   Alert
 } from '@mui/material'
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar, ScatterChart, Scatter } from 'recharts';
+import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const AnomalyTimeline = ({ data }) => {
   const chartData = data && data.length > 0
@@ -171,25 +171,18 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
   return(
     <div id="networkOverview">
       <Card title="Total Devices">
-        <span>Total number of devices: {totalDevices}</span>
-        <p></p>
-        <span>Display total of offline/online devices</span>
+        <span>Total devices: {totalDevices}</span>
       </Card>
       <Card title="Active Anomalies">
-        <span>Total number of Anomalies: {totalAnomalies}</span>
-        <p></p>
-        <span>Should give over timeframe</span>
+        <span>Total Anomalies in last 24 hours: {totalAnomalies}</span>
+      </Card>
+      <Card title="Traffic Score">
+        <span style={{ color: trafficColour, fontWeight: 'bold' }}>
+          {trafficStatus}
+        </span>
       </Card>
       <Card title="Average RSSI">
         <span>{averageRSSI}</span>
-      </Card>
-      <Card title="Average SNR">
-        <span>{averageSNR}</span>
-      </Card>
-      <Card title="Traffic Score">
-        <span style={{ color: trafficColour, fontWeight: 'bold'}}>
-          {trafficStatus}
-        </span>
       </Card>
     </div>
   )
@@ -257,38 +250,33 @@ const Graph = ({ data }) => {
   return (
     <Card id="graph" title="SNR over Time">
       {chartData.length > 0 ? (
-        <LineChart
-          width={700}
-          height={300}
-          data={chartData}
-          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="time" 
-            angle={-45}
-            textAnchor="end"
-            height={80}
-            label={{ value: 'Time', position: 'insideBottomRight', offset: -10}}
-          />
-          <YAxis 
-            label={{ value: 'SNR (dB)', angle: -90, position: 'insideLeft' }}
-          />
-          <Tooltip 
-            formatter={(value) => value.toFixed(2)}
-            labelStyle={{ color: '#000' }}
-          />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="snr"
-            stroke="#0097a7"
-            dot={false}
-            strokeWidth={2}
-            name="SNR (dB)"
-            isAnimationActive={true}
-          />
-        </LineChart>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            data={chartData}
+            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="time" 
+              angle={-45}
+              textAnchor="end"
+              height={80}
+            />
+            <YAxis 
+              label={{ value: 'SNR (dB)', angle: -90, position: 'insideLeft' }}
+            />
+            <Tooltip formatter={(value) => value.toFixed(2)} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="snr"
+              stroke="#0097a7"
+              dot={false}
+              strokeWidth={2}
+              name="SNR (dB)"
+            />
+          </LineChart>
+        </ResponsiveContainer>
       ) : (
         <p>No data available</p>
       )}
@@ -309,38 +297,33 @@ const Graph2 = ({data}) => {
   return(
         <Card id="graph2" title="RSSI over Time">
       {chartData.length > 0 ? (
-        <LineChart
-          width={700}
-          height={300}
-          data={chartData}
-          margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis 
-            dataKey="time" 
-            angle={-45}
-            textAnchor="end"
-            height={80}
-            label={{ value: 'Time', position: 'insideBottomRight', offset: -10 }}
-          />
-          <YAxis 
-            label={{ value: 'RSSI (dB)', angle: -90, position: 'insideLeft' }}
-          />
-          <Tooltip 
-            formatter={(value) => value.toFixed(2)}
-            labelStyle={{ color: '#000' }}
-          />
-          <Legend />
-          <Line
-            type="monotone"
-            dataKey="rssi"
-            stroke="#0097a7"
-            dot={false}
-            strokeWidth={2}
-            name="RSSI (dB)"
-            isAnimationActive={true}
-          />
-        </LineChart>
+        <ResponsiveContainer width="100%" height={300}>
+          <LineChart
+            data={chartData}
+            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis 
+              dataKey="time" 
+              angle={-45}
+              textAnchor="end"
+              height={80}
+            />
+            <YAxis 
+              label={{ value: 'RSSI (dB)', angle: -90, position: 'insideLeft' }}
+            />
+            <Tooltip formatter={(value) => value.toFixed(2)} />
+            <Legend />
+            <Line
+              type="monotone"
+              dataKey="rssi"
+              stroke="#0097a7"
+              dot={false}
+              strokeWidth={2}
+              name="RSSI (dB)"
+            />
+          </LineChart>
+        </ResponsiveContainer>
       ) : (
         <p>No data available</p>
       )}
