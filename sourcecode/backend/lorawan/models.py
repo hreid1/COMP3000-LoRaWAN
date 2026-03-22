@@ -179,3 +179,30 @@ class Alert(models.Model):
     def __str__(self):
         return f"Alert: {self.title} ({self.severity})"
 
+class Logs(models.Model):
+    LOG_TYPE_CHOICES = [
+        ("model_run", "Model Run"),
+        ("anomaly_detected", "Anomaly Detected"),
+        ("device_added", "Device Added"),
+        ("device_removed", "Device Removed"),
+        ("device_status_change", "Device Status Change"),
+    ]
+
+    SEVERITY_CHOICES = [
+        ("info", "Info"),
+        ("warning", "Warning"),
+        ("error", "Error"),
+        ("debug", "Debug")
+    ]
+    owner = models.ForeignKey(
+        "auth.User", related_name="logs", on_delete=models.CASCADE
+    )
+    title = models.CharField(max_length=200)
+    description = models.TextField(blank=True, null=True)
+    log_type = models.CharField(max_length=20, choices=LOG_TYPE_CHOICES)
+    severity = models.CharField(max_length=20, choices=SEVERITY_CHOICES, default="info")
+
+    node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True, blank=True)
+    packet = models.ForeignKey(Packet, on_delete=models.SET_NULL, null=True, blank=True)
+    anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True)
+

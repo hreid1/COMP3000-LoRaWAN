@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { Link } from "react-router-dom"
 import './Dropdown.css'
-import Profile from '../../pages/Profile/Profile.jsx'
-import Settings from '../../pages/Settings/Settings.jsx'
+import Profile from '../../../pages/Profile/Profile.jsx'
+import Settings from '../../../pages/Settings/Settings.jsx'
 import Modal from '../Modal/Modal.jsx'
 
 const Dropdown = ({ userData }) => {

@@ -10,6 +10,10 @@ import DeviceCard from '../../components/Card/DeviceCard'
 import Modal from '../../components/Modal/Modal'
 import Step1 from '../../components/Charts/Graph'
 import AlertMessage from '../../components/Alert/Alert'
+
+import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
+import DevicesIcon from '@mui/icons-material/Devices';
+import ErrorIcon from "@mui/icons-material/Error"
 import { 
   Container, 
   Grid, 
@@ -171,9 +175,11 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
   return(
     <div id="networkOverview">
       <Card title="Total Devices">
+        <DevicesIcon />
         <span>Total devices: {totalDevices}</span>
       </Card>
       <Card title="Active Anomalies">
+        <ErrorIcon />
         <span>Total Anomalies in last 24 hours: {totalAnomalies}</span>
       </Card>
       <Card title="Traffic Score">
@@ -182,6 +188,7 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
         </span>
       </Card>
       <Card title="Average RSSI">
+        <NetworkCheckIcon />
         <span>{averageRSSI}</span>
       </Card>
     </div>

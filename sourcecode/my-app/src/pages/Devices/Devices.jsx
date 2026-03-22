@@ -4,12 +4,11 @@ import axios from 'axios'
 import './Devices.css'
 import Card from '../../components/Card/Card';
 import DeviceCard from '../../components/Card/DeviceCard';
-import Example from '../../components/Charts/Graph';
+import Example from '../../components/unusedcomponents/Charts/Graph';
 import Map from '../../components/Map/Map';
 import { Box, Alert, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem, CircularProgress, Typography } from '@mui/material';
 import ErrorIcon from "@mui/icons-material/Error"
 import DevicesIcon from '@mui/icons-material/Devices';
-import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const Graph = ({data}) => {
@@ -137,10 +136,10 @@ const DeviceStatistics = ({data, anomalies}) => {
   return (
     <div id="deviceStats">
       <Card title="Devices">
-          <Box sx={{display: 'flex', flexDirection: 'row', gap: 8}}>
+          <Box sx={{display: 'flex', gap: 2}}>
             <DevicesIcon sx={{ fontSize: 40}}/>
-            <Typography variant="h5">{onlineDevices}</Typography>
-            <Typography variant="body2">{offlineDevices}</Typography>
+            <Typography variant="h5">Online: {onlineDevices}</Typography>
+            <Typography variant="body2">Offline: {offlineDevices}</Typography>
           </Box>
       </Card>
       <Card title="Total Anomalies">
@@ -152,7 +151,6 @@ const DeviceStatistics = ({data, anomalies}) => {
       </Card>
       <Card title="Affected Nodes">
         <Box>
-          <NetworkCheckIcon sx={{ fontSize: 40 }}/>
           <Typography>{nodesWithAnomalies}</Typography>
           <Typography>Most attacked: Node {nodeID}</Typography>
         </Box>

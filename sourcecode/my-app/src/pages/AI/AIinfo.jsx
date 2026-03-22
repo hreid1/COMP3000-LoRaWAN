@@ -3,8 +3,8 @@ import { createPortal } from 'react-dom'
 import Card from '../../components/Card/Card'
 import axios from 'axios'
 import './AIinfo.css'
-import Modal2 from '../../components/Modal/Modal'
-import Example from '../../components/Charts/Graph'
+import Modal2 from '../../components/unusedcomponents/Modal/Modal'
+import Example from '../../components/unusedcomponents/Charts/Graph'
 import Papa from 'papaparse'
 
 import { 

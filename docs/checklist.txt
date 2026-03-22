@@ -3,7 +3,6 @@ Things to do
 - Add login page
 	- Configure code so that it fetches information regarding the user who logged in
 	- Modifies page
-- Finish shift to materialUI
 - Clean up UI/UX structure
 	- AI Models
 	- Devices display -> Devices page
@@ -16,7 +15,6 @@ Things to do
 	- Settings -> change password, email, username
 - Encryption/secure stuff -> salted passwords
 - Add functionality to statistics for AI-info page
-- Add marker on side nav bar to tell the user what page they are on
 - Convert devices information to fetch from a dataset not just changing a few
 - Add a way to restructure the dashboard
 	- Or choose what to put on dashboard
@@ -38,3 +36,15 @@ Things to do
 - Add a load more button option which loads more devices, anomalies, packets from the dataset
 	- Devices
 - Add options to run packets against a combination of models (e.g. isolation forest and local outlier factor) as well as being able to individually run specific ai models
+- Deployment checklist
+	- Authorisation
+	- Validating and sanitising all user inputs
+	- CORS policy 
+	- Rate limiting
+	- Password reset links expire
+	- Unexpected error handling frontend
+	- Indexing on common DB queries
+	- Logging
+	- Alerts 
+	- Rollback deployment if it goes wrong
+		- blue green deployment strategy

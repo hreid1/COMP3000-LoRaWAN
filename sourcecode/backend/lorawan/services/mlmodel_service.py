@@ -6,6 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from pathlib import Path
 from sklearn.metrics import silhouette_score, accuracy_score, precision_score, recall_score, f1_score
 import joblib
+import shap
 
 # Running each of the models
     # Runng the model on the processed input file
@@ -84,6 +85,16 @@ class MLModelService:
                 }
         
         return performance 
+
+    def explainModel(model, test_scaled):
+        explainer = shap.TreeExplainer(model)
+        start_index = 1
+        end_index = 2
+        shap_values = explainer.shap_values(test_scaled[start_index:end_index])
+        print(shap_values[0].shape)
+
+        return shap_values
+        
     
     def run(uploaded_file, model_type='IsolationForest'):
         df_scaled, df = MLModelService.preprocess(uploaded_file)
@@ -93,6 +104,7 @@ class MLModelService:
         if model_type == 'IsolationForest':
             model = joblib.load(models_dir / "isolationforest.pkl")
             model_name = "Isolation Forest"
+            
         else:
             model = joblib.load(models_dir / "localoutlierfactor.pkl")
             model_name = "Local Outlier Factor"
