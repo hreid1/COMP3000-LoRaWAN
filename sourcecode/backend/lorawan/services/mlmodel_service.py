@@ -94,6 +94,12 @@ class MLModelService:
         print(shap_values[0].shape)
 
         return shap_values
+    
+    def getZscores(test_scaled, aomaly_inputs, threshold=2.5):
+        mean = test_scaled.mean()
+        std = test_scaled.std()
+
+        z_scores = np.abs((test_scaled - mean) / (std + 1e-8))
         
     
     def run(uploaded_file, model_type='IsolationForest'):

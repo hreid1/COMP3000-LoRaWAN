@@ -2,7 +2,6 @@ Things to do
 - Add functionality to profile, settings and logout
 - Add login page
 	- Configure code so that it fetches information regarding the user who logged in
-	- Modifies page
 - Clean up UI/UX structure
 	- AI Models
 	- Devices display -> Devices page
@@ -15,17 +14,12 @@ Things to do
 	- Settings -> change password, email, username
 - Encryption/secure stuff -> salted passwords
 - Add functionality to statistics for AI-info page
-- Convert devices information to fetch from a dataset not just changing a few
+- Convert devices information to fetch from a dataset not using an artificial dataset
 - Add a way to restructure the dashboard
-	- Or choose what to put on dashboard
-- When model is ran, it will change the packet column 'is_anomalous' to true for packets which have been detected as anomalous
-	- Right now i have to mannually click on packets to clarify them as anomalous
-		- Add them to DB first then change the status
+- When model is ran -> packet column 'is_anomalous' is changed to true for packets which are flagged to be anomalous, alongside entry inside Anomaly table 
 - Add logs for actions e.g. running a file against a model, adding a model, removing nodes packets, models etc
-- Fix AI-info page
 - Add scroll wheel functionality to map in mapbox
-- Add functionality so when a packet is flagged as anomalous it flags the node as ananomalous and a 'Seek assistance/view it' is shown
-- Tests
+- Include tests
 	- Unit Tests
 	- Integration Tests
 	- Canary Tests
@@ -34,7 +28,7 @@ Things to do
 	- SHAP (Shapley Additive Explanations) -> values for tree-based machine learning models
 	- Z-scores calculates how deviant a value is from normal 
 - Add a load more button option which loads more devices, anomalies, packets from the dataset
-	- Devices
+	- Devices, Anomalies, 
 - Add options to run packets against a combination of models (e.g. isolation forest and local outlier factor) as well as being able to individually run specific ai models
 - Deployment checklist
 	- Authorisation
@@ -48,3 +42,39 @@ Things to do
 	- Alerts 
 	- Rollback deployment if it goes wrong
 		- blue green deployment strategy
+- UI/UX improvements
+	- Home dashboard
+		- Jammer confidence score not just 'healthy'
+			- Replace with jammer probability score
+		- Fix SNR char x-axis
+			- SNR displays everything at 01:00, should be last 1hr, 2hrs etc
+		- Annotate anomaly events on time-series charts
+			- Correlate the two graphs
+	- Anomaly 
+		- Replace placeholders with real panels
+			- Severity
+			- Anomaly frequency over time
+			- Top affected device list
+		- Severity classification on each anomaly card
+			- Use the anomaly score
+		- Filters: date range, model, severity, device
+		- Dismiss, acknowledge action with aduit trail
+			- Dismissed anomalies get moved to a separate tab
+	- AI-info page
+		- Show model performance metrics, not just run history
+		- Feature importance visualisation
+			- Showing which features contribute mostly to anomaly detection
+		- Threshold tuning UI in model management
+			- Slider for contamination factor for isolation forest or n_neighbors for LOF
+	- Devices page
+		- Map should show anomaly markers and device pins
+			- Different colours to show where jammer attacks are generalising
+		- Device detail drawer with signal history
+			- Clicking on a device on the map should open a side drawer showing the device's RSSI'SNR trends, anomaly trends, last seen time
+	- Logs page
+		- Structured log viewer with filtering and severity
+			- Timestamp, log level (INFO/WARN/ERROR), source (deviceID, model name, system) and message
+			- Add text search and level filters
+- The network-level score should be `max()` of per-device scores, not the mean
+- Consider adding disagreements between models (e.g. this packet has been flagged by IF, but not by LOF, why?)
+- add @media to css files for different screen shapes (e.g. mobile, laptop)

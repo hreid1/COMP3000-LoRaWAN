@@ -12,7 +12,96 @@ import {
   Paper,
   Grid,
   CircularProgress,
+  Container,
 } from "@mui/material"
+import ErrorIcon from "@mui/icons-material/Error"
+
+const AnomalyFilter = ({ anomalies = [] }) => {
+  const [filters, setFilters] = useState({
+    dateRange: "",
+    model: "",
+    severity: "",
+    device: ""
+  })
+
+  const models = [...new Set(anomalies.map(a => a.model_name))].filter(Boolean)
+  const devices = [...new Set(anomalies.map(a => a.packet?.nodeID?.node_id))].filter(Boolean)
+
+  const handleReset = () => {
+    setFilters({
+      dateRange: "",
+      model: "",
+      severity: "",
+      device: ""
+    })
+  }
+
+  return(
+    <Card id="anomalyFilter" title="Filter Anomalies">
+      <Box className="anomalyFilterContent">
+        <TextField
+          select
+          label="Date Range"
+          value={filters.dateRange}
+          onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
+          size="small"
+        >
+          <MenuItem value="">All Time</MenuItem>
+          <MenuItem value="today">Today</MenuItem>
+          <MenuItem value="week">Last 7 Days</MenuItem>
+          <MenuItem value="month">Last 30 Days</MenuItem>
+        </TextField>
+
+        <TextField
+          select
+          label="Model"
+          value={filters.model}
+          onChange={(e) => setFilters({...filters, model: e.target.value})}
+          size="small"
+        >
+          <MenuItem value="">All Models</MenuItem>
+          {models.map(model => (
+            <MenuItem key={model} value={model}>{model}</MenuItem>
+          ))}
+        </TextField>
+
+        <TextField
+          select
+          label="Severity"
+          value={filters.severity}
+          onChange={(e) => setFilters({...filters, severity: e.target.value})}
+          size="small"
+        >
+          <MenuItem value="">All Severities</MenuItem>
+          <MenuItem value="critical">Critical</MenuItem>
+          <MenuItem value="warning">Warning</MenuItem>
+          <MenuItem value="info">Info</MenuItem>
+        </TextField>
+
+        <TextField
+          select
+          label="Device"
+          value={filters.device}
+          onChange={(e) => setFilters({...filters, device: e.target.value})}
+          size="small"
+        >
+          <MenuItem value="">All Devices</MenuItem>
+          {devices.map(device => (
+            <MenuItem key={device} value={device}>Node {device}</MenuItem>
+          ))}
+        </TextField>
+
+        <Button
+          variant="outlined"
+          size="small"
+          onClick={handleReset}
+        >
+          Reset
+        </Button>
+      </Box>
+    </Card>
+  )
+}
 
 const AnomalyCard = () => {
   return(
@@ -24,7 +113,6 @@ const AnomalyCard = () => {
       <ul>Actions on those anomalies - dismiss</ul>
       <ul>Graphs to show recent trends/historical data</ul>
     </Card>
-    
   )
 }
 
@@ -61,7 +149,6 @@ const AnomalyList = ({data}) => {
   return(
     <Card title="Anomaly List" id="anomalyList">
       <Box>
-        <Grid>
           <Grid>
             <TextField
               select
@@ -78,7 +165,6 @@ const AnomalyList = ({data}) => {
               <MenuItem value="node">Node</MenuItem>
             </TextField>
           </Grid>
-        </Grid>
       </Box>
       <Grid container spacing={3} sx={{paddingBottom: '2rem', marginTop: '0.5rem'}}>
         {data.map((anomaly) => (
@@ -124,6 +210,7 @@ const AnomalyList = ({data}) => {
               <Typography>Sequence Number: {selectedAnomaly.packet.sequence_number}</Typography>
               <Typography>Payload: {selectedAnomaly.packet.payload}</Typography>
               <Typography>Payload Size: {selectedAnomaly.packet.payload_size} bytes</Typography>
+              <Button sx={{color: 'red', boxShadow: "2px"}}>Dismiss</Button>
             </Box>
           ) : (
             <Typography>No anomaly selected</Typography>
@@ -134,17 +221,23 @@ const AnomalyList = ({data}) => {
   )
 }
 
-const AnomalyStatistics = () => {
+const AnomalyStatistics = ({data}) => {
+
+  const totalAnomalies = data?.length || 0 ;
+
   return(
     <div className="anomalyStats">
-      <Card title="Hello World">
-
+      <Card title="Anomalies">
+        <Box sx={{display: 'flex', flexDirection: 'row'}}>
+          <ErrorIcon />
+          <Typography>{totalAnomalies} in last 24hrs</Typography>
+        </Box>
       </Card>
-      <Card title="Hello World">
-
+      <Card>
+        <Typography>Severity</Typography>
       </Card>
-      <Card title="Hello World">
-
+      <Card>
+        <Typography>Top detectors along with most affected node</Typography>
       </Card>
     </div>
   )
@@ -171,9 +264,12 @@ const AnomalyContent = ({data, loading, error}) => {
 
   return(
     <div className='anomalyContentContainer'>
-      <AnomalyStatistics data={data.anomalies}/>
-      <AnomalyList data={data.anomalies} />
-      <AnomalyCard />
+      <AnomalyFilter anomalies={data.anomalies}/>
+      <div className="anomalyContent">
+        <AnomalyStatistics data={data.anomalies}/>
+        <AnomalyList data={data.anomalies} />
+        <AnomalyCard />
+      </div>
     </div>
   )
 }

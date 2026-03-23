@@ -7,8 +7,6 @@ import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
 import Card from '../../components/Card/Card'
 import DeviceCard from '../../components/Card/DeviceCard'
-import Modal from '../../components/Modal/Modal'
-import Step1 from '../../components/Charts/Graph'
 import AlertMessage from '../../components/Alert/Alert'
 
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';

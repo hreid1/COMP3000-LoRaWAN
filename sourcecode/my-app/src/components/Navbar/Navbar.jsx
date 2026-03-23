@@ -4,10 +4,8 @@ import notificationImg from '../../assets/notification.svg'
 import helpImg from '../../assets/help.svg'
 import searchImg from '../../assets/search.svg'
 import networkImg from '../../assets/network.svg'
-import Dropdown from '../Dropdown/Dropdown'
 import { Link } from "react-router-dom"
 import Settings from '../../pages/Settings/Settings.jsx'
-import Modal from '../Modal/Modal.jsx'
 
 import Box from '@mui/material/Box'
 import AppBar from '@mui/material/AppBar'
