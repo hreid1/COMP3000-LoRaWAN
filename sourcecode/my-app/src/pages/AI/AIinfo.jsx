@@ -6,6 +6,7 @@ import './AIinfo.css'
 import Modal2 from '../../components/unusedcomponents/Modal/Modal'
 import Example from '../../components/unusedcomponents/Charts/Graph'
 import Papa from 'papaparse'
+import RefreshIcon from '@mui/icons-material/Refresh'
 
 import { 
   Box,
@@ -201,11 +202,15 @@ const RunModel = () => {
   const [results, setResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState("success");
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success"
+  });
+  const [resultsOpen, setResultsOpen] = useState(false)
+  const [currentResults, setCurrentResults] = useState([])
 
-  function handleFileRun(event){
+  function handleFileRun(event) {
     if (!file) {
       console.error("No File")
       return;
@@ -216,21 +221,52 @@ const RunModel = () => {
     
     setIsLoading(true)
     axios.post("http://127.0.0.1:8000/lorawan/run/", formData)
-    .then (response => {
+    .then(response => {
       console.log(response.data.performance)
       setResults(response.data.performance)
       setIsLoading(false)
-      setSnackbarMessage("Model ran successfully!")
-      setSnackbarSeverity("success")
-      setSnackbarOpen(true)
+      
+      // Create success log
+      //createLog(true, file.name, selectedModel);
+      
+      setSnackbar({
+        open: true,
+        message: "Model ran successfully!",
+        severity: "success"
+      })
     })
     .catch(err => {
       console.error("Error running model:", err)
       setIsLoading(false)
-      setSnackbarMessage("Failed to run model. Please try again.")
-      setSnackbarSeverity("error")
-      setSnackbarOpen(true)
+      
+      // Create error log
+      createLog(false, file.name, selectedModel, err.message);
+      
+      setSnackbar({
+        open: true,
+        message: "Failed to run model. Please try again.",
+        severity: "error"
+      })
     })
+  }
+
+  function createLog(success, fileName, modelName, errorMessage = null) {
+    const logData = {
+      title: `Model Run - ${modelName}`,
+      description: success 
+        ? `Successfully ran model "${modelName}" on file "${fileName}"`
+        : `Failed to run model "${modelName}" on file "${fileName}". Error: ${errorMessage}`,
+      log_type: "model_run",
+      severity: success ? "info" : "error"
+    };
+
+    axios.post("http://127.0.0.1:8000/lorawan/logs/", logData)
+      .then(response => {
+        console.log("Log created:", response.data);
+      })
+      .catch(error => {
+        console.error("Failed to create log:", error);
+      });
   }
 
   function handleAddToDB(){
@@ -318,16 +354,16 @@ const RunModel = () => {
       </div>
       {!isLoading && (
         <Snackbar
-          open={snackbarOpen}
-          onClose={() => setSnackbarOpen(false)}
+          open={snackbar.open}
+          onClose={() => setSnackbar({ ...snackbar, open: false })}
           anchorOrigin={{ vertical: "top", horizontal: "center", marginTop: "2rem" }}
         >
           <Alert
-            onClose={() => setSnackbarOpen(false)}
-            severity={snackbarSeverity}
+            onClose={() => setSnackbar({ ...snackbar, open: false })}
+            severity={snackbar.severity}
             sx={{ width: "100%" }}
           >
-            {snackbarMessage}
+            {snackbar.message}
           </Alert>
         </Snackbar>
       )}

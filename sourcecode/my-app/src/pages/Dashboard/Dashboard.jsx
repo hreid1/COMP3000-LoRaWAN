@@ -22,7 +22,7 @@ import {
   Paper,
   Alert
 } from '@mui/material'
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const AnomalyTimeline = ({ data }) => {
   const chartData = data && data.length > 0
@@ -57,8 +57,9 @@ const AnomalyTimeline = ({ data }) => {
           angle={-45}
           textAnchor="end"
           height={100}
+          label={{ value: 'Date & Time', position: 'insideBottomRight', offset: -5 }}
         />
-        <YAxis />
+        <YAxis label={{ value: 'Anomaly Count', angle: -90, position: 'insideLeft' }} />
         <Tooltip 
           content={({ payload }) => {
             if (payload && payload.length) {
@@ -223,111 +224,74 @@ const Announcements = ({data}) => {
 }
 
 const Graph = ({ data }) => {
-  const HOURS_TO_SHOW = 5000;
-  
-  const chartData = data && data.length > 0
+
+  const packetData = data && data.length > 0
     ? data
-        .filter(packet => {
-          const packetTime = new Date(packet.time);
-          const now = new Date();
-          const hoursDiff = (now - packetTime) / (1000 * 60 * 60);
-          return hoursDiff <= HOURS_TO_SHOW;
-        })
-        .sort((a, b) => new Date(a.time) - new Date(b.time))
-        .map(packet => ({
-          time: new Date(packet.time).toLocaleTimeString('en-UK', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-          snr: parseFloat(packet.snr),
+        .map(node => ({
+          name: node.node_id,
+          packets: node.packets_count
         }))
+        .sort((a, b) => b.packets - a.packets)
+        .slice(0, 10)
     : []
 
   return (
-    <Card id="graph" title={`SNR over Time (Last ${HOURS_TO_SHOW}h)`}>
-      {chartData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={chartData}
-            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="time" 
-              angle={-45}
-              textAnchor="end"
-              height={80}
-            />
-            <YAxis 
-              label={{ value: 'SNR (dB)', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip formatter={(value) => value.toFixed(2)} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="snr"
-              stroke="#0097a7"
-              dot={false}
-              strokeWidth={2}
-              name="SNR (dB)"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      ) : (
-        <p>No data available</p>
-      )}
+    <Card id="graph" title="Packets by Node">
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={packetData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis 
+            dataKey="name"
+            label={{ value: 'Node ID', position: 'insideBottomRight', offset: -5 }}
+          />
+          <YAxis label={{ value: 'Packet Count', angle: -90, position: 'insideLeft' }} />
+          <Tooltip 
+            content={({ payload }) => {
+              if (payload && payload.length) {
+                const data = payload[0].payload
+                return (
+                  <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ margin: '0 0 4px 0' }}><strong>Node: {data.name}</strong></p>
+                    <p style={{ margin: 0 }}>Packets: {data.packets}</p>
+                  </div>
+                )
+              }
+              return null
+            }}
+          />
+          <Bar dataKey="packets" fill="#1976d2" name="Packet Count" />
+        </BarChart>
+      </ResponsiveContainer>
     </Card>
   )
 }
 
-const Graph2 = ({data}) => {
-  const HOURS_TO_SHOW = 5000; 
-  
-  const chartData = data && data.length > 0
-    ? data
-      .filter(packet => {
-        const packetTime = new Date(packet.time);
-        const now = new Date();
-        const hoursDiff = (now - packetTime) / (1000 * 60 * 60);
-        return hoursDiff <= HOURS_TO_SHOW;
-      })
-      .sort((a, b) => new Date(a.time) - new Date(b.time))
-      .map(packet => ({
-        time: new Date(packet.time).toLocaleTimeString('en-UK', { hour: '2-digit', minute: '2-digit', second: '2-digit' }),
-        rssi: parseFloat(packet.rssi)
+const Graph2 = ({ data }) => {
+  const trendData = data && data.length > 0
+    ? data.map((packet, idx) => ({
+        index: idx + 1,
+        rssi: packet.rssi,
+        spreading_factor: packet.spreading_factor,
       }))
     : []
 
-  return(
-        <Card id="graph2" title={`RSSI over Time (Last ${HOURS_TO_SHOW}h)`}>
-      {chartData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={300}>
-          <LineChart
-            data={chartData}
-            margin={{ top: 5, right: 30, left: 0, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="time" 
-              angle={-45}
-              textAnchor="end"
-              height={80}
-            />
-            <YAxis 
-              label={{ value: 'RSSI (dB)', angle: -90, position: 'insideLeft' }}
-            />
-            <Tooltip formatter={(value) => value.toFixed(2)} />
-            <Legend />
-            <Line
-              type="monotone"
-              dataKey="rssi"
-              stroke="#0097a7"
-              dot={false}
-              strokeWidth={2}
-              name="RSSI (dB)"
-            />
-          </LineChart>
-        </ResponsiveContainer>
-      ) : (
-        <p>No data available</p>
-      )}
+  return (
+    <Card id="graph2" title={`Signal Quality Trend (${trendData.length} Packets)`}>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={trendData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis 
+            dataKey="index"
+            label={{ value: 'Packet Index', position: 'insideBottomRight', offset: -5 }}
+          />
+          <YAxis yAxisId="left" label={{ value: 'RSSI (dBm)', angle: -90, position: 'insideLeft' }} />
+          <YAxis yAxisId="right" orientation="right" label={{ value: 'Spreading Factor', angle: 90, position: 'insideRight' }} />
+          <Tooltip formatter={(value) => value.toFixed(2)} />
+          <Legend />
+          <Line type="monotone" dataKey="rssi" stroke="#ff7300" name="RSSI" yAxisId="left" />
+          <Line type="monotone" dataKey="spreading_factor" stroke="#1976d2" name="Spreading Factor" yAxisId="right" />
+        </LineChart>
+      </ResponsiveContainer>
     </Card>
   )
 }
@@ -353,7 +317,7 @@ const MainDashContent = ({data, loading, error, onAlert}) => {
   return (
     <div className='dashContentContainer'>
         <NetworkOverview devices={data.devices} stats={data.packets} anomalies={data.anomalies} />
-        <Graph data={data.packets}/>
+        <Graph data={data.devices}/>
         <Graph2 data={data.packets}/>
         <RecentActivity data={data.anomalies}/>
         <Announcements data={data.announcements}/>
@@ -382,7 +346,7 @@ const Dashboard = () => {
       try {
         const [user, packets] = await Promise.all([
           axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
-          axios.get("http://127.0.0.1:8000/lorawan/packets/")
+          axios.get("http://127.0.0.1:8000/lorawan/packets/?page_size=1000")
         ])
         console.log(user)
         setData({

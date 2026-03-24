@@ -10,7 +10,7 @@ from rest_framework.response import Response
 # Anomaly Detection
 
 class PacketPagination(PageNumberPagination):
-    page_size = 10
+    page_size = 100
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:

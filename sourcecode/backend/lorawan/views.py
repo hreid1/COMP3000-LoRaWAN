@@ -11,7 +11,7 @@ from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo, Alert, Log
 from .permissions import IsOwnerOrReadOnly
-from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer, AlertSerializer, LogSerializer
+from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer, AlertSerializer, LogSerializer, PacketPagination
 from .services import mlmodel_service
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
@@ -62,6 +62,7 @@ class NodeViewSet(viewsets.ModelViewSet):
     queryset = Node.objects.all()
     serializer_class = NodeSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    pagination_class = PacketPagination
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
@@ -78,6 +79,7 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
 class PacketViewSet(viewsets.ModelViewSet):
     queryset = Packet.objects.all()
     serializer_class = PacketSerializer
+    pagination_class = PacketPagination
 
 class MLModelViewSet(viewsets.ModelViewSet):
     queryset = MLModel.objects.all()
@@ -100,6 +102,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 class NodePacketsViewSet(viewsets.ModelViewSet):
     serializer_class = PacketSerializer
+    pagination_class = PacketPagination
     
     def get_queryset(self):
         node_id = self.kwargs['node_id']
@@ -127,6 +130,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 class LogViewSet(viewsets.ModelViewSet):
     queryset = Log.objects.all()
     serializer_class = LogSerializer
+    pagination_class = PacketPagination
 
 # Views
 class TestView(APIView):
