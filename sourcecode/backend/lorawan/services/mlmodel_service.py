@@ -5,8 +5,11 @@ import numpy as np
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
 from sklearn.metrics import silhouette_score, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.feature_selection import SelectKBest, f_classif
 import joblib
 import shap
+import os
+import joblib
 
 # Running each of the models
     # Runng the model on the processed input file
@@ -27,6 +30,45 @@ class MLModelService:
         'interArrivalTime_s', 'interArrivalTimeMin',
     ]
 
+    @staticmethod
+    def creatingModels():
+        # check if models exist before
+        # loading training data
+        # preprocess: scaling, dropping rows
+        # select parameters for isolation forest and local outlier factor
+        # create using joblib
+        anomaly_inputs = MLModelService.anomaly_inputs
+        
+        datasets_dir = Path(__file__).resolve().parent / "datasets"
+        models_dir = Path(__file__).resolve().parent / "models"
+
+        models = [
+            models_dir / "isolationforest.pkl",
+            models_dir / "localoutlierfactor.pkl"
+        ]
+
+        for model_file in models:
+            if model_file.exists():
+                os.remove(model_file)
+        models_dir.mkdir(exist_ok=True)
+
+        df = pd.read_csv(datasets_dir / "no-jammer.csv")
+        df.columns = df.columns.str.strip()
+        df = df.dropna()
+        scaler = StandardScaler()
+        df_scaled = scaler.fit_transform(df[anomaly_inputs])
+        
+        contamination = 0.01
+
+        isolationforest = IsolationForest(contamination=contamination, random_state=42, n_estimators=500, max_samples=128, max_features=0.8)
+        isolationforest.fit(df_scaled)
+        joblib.dump(isolationforest, models_dir / "isolationforest.pkl")
+
+        localoutlierfactor = LocalOutlierFactor(contamination=contamination, n_neighbors=30, algorithm="auto", leaf_size=30)
+        localoutlierfactor.fit(df_scaled)
+        joblib.dump(localoutlierfactor, models_dir / "localoutlierfactor.pkl")
+        
+    @staticmethod
     def preprocess(uploaded_file):
         # Load and preprocess uploaded file
         df = pd.read_csv(uploaded_file)
@@ -46,12 +88,14 @@ class MLModelService:
         
         return df_scaled, df
     
+    @staticmethod
     def predict(model, test_scaled):
         predictions = model.predict(test_scaled)
         scores = model.decision_function(test_scaled)
         
         return predictions, scores
     
+    @staticmethod
     def getPerformance(model, test_scaled, predictions, scores, df_original):
         # unsupervised performance evaluation
         predictions_binary = (predictions == -1).astype(int)
@@ -86,6 +130,7 @@ class MLModelService:
         
         return performance 
 
+    @staticmethod
     def explainModel(model, test_scaled):
         explainer = shap.TreeExplainer(model)
         start_index = 1
@@ -95,6 +140,7 @@ class MLModelService:
 
         return shap_values
     
+    @staticmethod
     def getZscores(test_scaled, aomaly_inputs, threshold=2.5):
         mean = test_scaled.mean()
         std = test_scaled.std()
@@ -102,17 +148,25 @@ class MLModelService:
         z_scores = np.abs((test_scaled - mean) / (std + 1e-8))
         
     
+    @staticmethod
     def run(uploaded_file, model_type='IsolationForest'):
         df_scaled, df = MLModelService.preprocess(uploaded_file)
         
+        # Check if models exist, if not create them
         models_dir = Path(__file__).resolve().parent / "models"
+        isolationforest_path = models_dir / "isolationforest.pkl"
+        localoutlierfactor_path = models_dir / "localoutlierfactor.pkl"
+        
+        # Create models if they don't exist
+        if not isolationforest_path.exists() or not localoutlierfactor_path.exists():
+            MLModelService.creatingModels()
         
         if model_type == 'IsolationForest':
-            model = joblib.load(models_dir / "isolationforest.pkl")
+            model = joblib.load(isolationforest_path)
             model_name = "Isolation Forest"
             
         else:
-            model = joblib.load(models_dir / "localoutlierfactor.pkl")
+            model = joblib.load(localoutlierfactor_path)
             model_name = "Local Outlier Factor"
         
         predictions, scores = MLModelService.predict(model, df_scaled)

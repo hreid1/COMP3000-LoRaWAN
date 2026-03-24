@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelTrainingInfo, ModelPredictionInfo, Alert
+from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelTrainingInfo, ModelPredictionInfo, Alert, Log
 
 # Register your models here.
 admin.site.register(UserProfile)
@@ -10,3 +10,4 @@ admin.site.register(Anomaly)
 admin.site.register(ModelTrainingInfo)
 admin.site.register(ModelPredictionInfo)
 admin.site.register(Alert)
+admin.site.register(Log)

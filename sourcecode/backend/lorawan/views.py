@@ -2,15 +2,16 @@ import pandas as pd
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.views import generic
+from django.utils import timezone
 from rest_framework import permissions, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.parsers import MultiPartParser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
-from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo, Alert
+from .models import Node, Packet, MLModel, Anomaly, UserProfile, ModelPredictionInfo, ModelTrainingInfo, Alert, Log
 from .permissions import IsOwnerOrReadOnly
-from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer, AlertSerializer
+from .serializers import NodeSerializer, UserSerializer, PacketSerializer, MLModelSerializer, AnomalySerializer, UserProfileSerializer, ModelPredictionInfoSerailizer, ModelTrainingInfoSerializer, AlertSerializer, LogSerializer
 from .services import mlmodel_service
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import AllowAny
@@ -36,6 +37,8 @@ def api_root(request, format=None):
             "modeltraininginfos": reverse("lorawan:modeltraininginfo-list", request=request, format=format),
             "modelpredictioninfos": reverse("lorawan:modelpredictioninfo-list", request=request, format=format),
             "alerts": reverse("lorawan:alert-list", request=request, format=format),
+            "logs": reverse("lorawan:log-list", request=request, format=format)
+
         }
     )
 
@@ -114,13 +117,16 @@ class AlertViewSet(viewsets.ModelViewSet):
     serializer_class = AlertSerializer
     permission_classes = [permissions.AllowAny]
 
-    
     def get_queryset(self):
         return Alert.objects.all()
     
     def perform_create(self, serializer):
         owner = User.objects.get(id=1)
         serializer.save(owner=owner)
+
+class LogViewSet(viewsets.ModelViewSet):
+    queryset = Log.objects.all()
+    serializer_class = LogSerializer
 
 # Views
 class TestView(APIView):
@@ -133,7 +139,7 @@ class TestView(APIView):
         owner = request.user if request.user.is_authenticated else User.objects.first()
         created_packets = []
 
-        for idx, row in df.head(1000).iterrows():
+        for idx, row in df.iterrows():
         #for idx, row in df.iterrows():
             try:
                 node_id = int(row.iloc[1])  # NodeID column
@@ -144,7 +150,7 @@ class TestView(APIView):
                 )
 
                 packet = Packet(
-                    time=pd.to_datetime(row.iloc[0]),
+                    time=timezone.make_aware(pd.to_datetime(row.iloc[0])),
                     nodeID=node,
                     mac=row.iloc[2],
                     spreading_factor=int(row.iloc[3]),

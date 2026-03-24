@@ -15,11 +15,11 @@ router.register(r"userprofiles", views.UserProfileViewSet, basename="userprofile
 router.register(r"modeltraininginfos", views.ModelTrainingInfoViewSet, basename="modeltraininginfo")
 router.register(r"modelpredictioninfos", views.ModelPredictionInfoViewSet, basename="modelpredictioninfo")
 router.register(r"alerts", views.AlertViewSet, basename="alert")
+router.register(r"logs", views.LogViewSet, basename="log")
 
 app_name = "lorawan"
 urlpatterns = [
     path("", include(router.urls)),
-
     path("run/", views.RunModel.as_view(), name='run-model'),
     path("addmodel/", views.TestView.as_view(), name='add'),
     path("train-models/", views.train_models, name="train-models"),

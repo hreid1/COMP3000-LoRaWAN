@@ -1,6 +1,6 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
-from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelPredictionInfo, ModelTrainingInfo, Alert
+from .models import UserProfile, Node, Packet, MLModel, Anomaly, ModelPredictionInfo, ModelTrainingInfo, Alert, Log
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
@@ -16,8 +16,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = "__all__"
-
-
 
 class PacketSerializer(serializers.ModelSerializer):
     time = serializers.DateTimeField(
@@ -35,7 +33,7 @@ class AnomalySerializer(serializers.ModelSerializer):
     class Meta:
         model = Anomaly
         #fields = "__all__"
-        fields = ["id", "model_name", "detected_at", "packet"]
+        fields = ["id", "model_name", "detected_at", "packet", "anomaly_score"]
 
 class NodeSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
@@ -95,4 +93,9 @@ class ModelTrainingInfoSerializer(serializers.ModelSerializer):
 class ModelPredictionInfoSerailizer(serializers.ModelSerializer):
     class Meta:
         model = ModelPredictionInfo
+        fields = "__all__"
+
+class LogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Log
         fields = "__all__"

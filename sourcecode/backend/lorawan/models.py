@@ -100,6 +100,7 @@ class Anomaly(models.Model):
     packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
     detected_at = models.DateTimeField(auto_now_add=True)
+    anomaly_score = models.FloatField(null=True, blank=True)
     created_by = models.ForeignKey(
         "auth.User", related_name="anomalies", on_delete=models.SET_NULL, null=True
     )
@@ -179,7 +180,7 @@ class Alert(models.Model):
     def __str__(self):
         return f"Alert: {self.title} ({self.severity})"
 
-class Logs(models.Model):
+class Log(models.Model):
     LOG_TYPE_CHOICES = [
         ("model_run", "Model Run"),
         ("anomaly_detected", "Anomaly Detected"),
@@ -205,4 +206,9 @@ class Logs(models.Model):
     node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True, blank=True)
     packet = models.ForeignKey(Packet, on_delete=models.SET_NULL, null=True, blank=True)
     anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True)
+
+class Announcement(models.Model):
+    MODEL_TYPE_CHOICES = [
+        ("system", "System")
+    ]
 
