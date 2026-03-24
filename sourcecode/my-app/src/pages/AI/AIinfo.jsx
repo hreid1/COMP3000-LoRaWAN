@@ -227,7 +227,7 @@ const RunModel = () => {
       setIsLoading(false)
       
       // Create success log
-      //createLog(true, file.name, selectedModel);
+      createLog(true, file.name, selectedModel);
       
       setSnackbar({
         open: true,
@@ -252,6 +252,7 @@ const RunModel = () => {
 
   function createLog(success, fileName, modelName, errorMessage = null) {
     const logData = {
+      owner: 1, // change later
       title: `Model Run - ${modelName}`,
       description: success 
         ? `Successfully ran model "${modelName}" on file "${fileName}"`
@@ -262,7 +263,7 @@ const RunModel = () => {
 
     axios.post("http://127.0.0.1:8000/lorawan/logs/", logData)
       .then(response => {
-        console.log("Log created:", response.data);
+        //console.log("Log created:", response.data);
       })
       .catch(error => {
         console.error("Failed to create log:", error);

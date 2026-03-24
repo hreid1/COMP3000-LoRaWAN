@@ -128,9 +128,15 @@ class AlertViewSet(viewsets.ModelViewSet):
         serializer.save(owner=owner)
 
 class LogViewSet(viewsets.ModelViewSet):
-    queryset = Log.objects.all()
     serializer_class = LogSerializer
     pagination_class = PacketPagination
+
+    def get_queryset(self):
+        return Log.objects.all()
+    
+    def perform_create(self, serializer):
+        owner = User.objects.get(id=1)
+        serializer.save(owner=owner)
 
 # Views
 class TestView(APIView):
