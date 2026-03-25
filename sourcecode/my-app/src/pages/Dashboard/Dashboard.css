@@ -41,6 +41,7 @@
 #announcements {
     grid-column: 4 / 5;
     grid-row: 3 / 4;
+    width: 400px;
 }
 
 

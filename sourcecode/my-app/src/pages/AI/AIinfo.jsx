@@ -396,8 +396,6 @@ const AIinfoContentContainer = ({data, loading, error}) => {
     <div id="aiInfoContentContainer">
       <AiModelContainer data={data}/>
       <RunModel />
-      <Graph />
-      <Statistics />
     </div>
   )
 }

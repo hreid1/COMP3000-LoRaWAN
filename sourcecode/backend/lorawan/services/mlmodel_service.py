@@ -171,6 +171,10 @@ class MLModelService:
         
         predictions, scores = MLModelService.predict(model, df_scaled)
         performance = MLModelService.getPerformance(model, df_scaled, predictions, scores, df)
+
+        # Get anomaly indices (where predictions == -1 for Isolation Forest/LOF)
+        anomaly_indices = np.where(predictions == -1)[0].tolist()
+        anomaly_scores = scores[predictions == -1].tolist()
         
         return {
             "success": "success",
@@ -180,4 +184,7 @@ class MLModelService:
             },
             "file name": Path(uploaded_file.name).name,
             "num_packets": len(df),
+            "predictions": predictions.tolist(),  # Add predictions
+            "anomaly_indices": anomaly_indices,   # Add anomaly indices
+            "anomaly_scores": anomaly_scores,     # Add anomaly scores
         }

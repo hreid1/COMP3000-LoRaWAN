@@ -151,7 +151,7 @@ const DeviceStatistics = ({data, anomalies}) => {
       </Card>
       <Card title="Affected Nodes">
         <Box>
-          <Typography>{nodesWithAnomalies}</Typography>
+          <Typography>Number of nodes with anomalies: {nodesWithAnomalies}</Typography>
           <Typography>Most attacked: Node {nodeID}</Typography>
         </Box>
       </Card>
@@ -160,21 +160,78 @@ const DeviceStatistics = ({data, anomalies}) => {
 }
 
 const DeviceList = ({data}) => {
+  const [sortBy, setSortBy] = useState("id")
+  const [searchTerm, setSearchTerm] = useState("")
+  const [filterActive, setFilterActive] = useState("all")
+
+  // Filter and sort devices
+  const filteredAndSortedDevices = React.useMemo(() => {
+    let result = [...(data || [])];
+
+    // Apply search filter
+    if (searchTerm) {
+      result = result.filter(device =>
+        device.node_id.toString().includes(searchTerm) ||
+        device.id.toString().includes(searchTerm)
+      );
+    }
+
+    // Apply active filter
+    if (filterActive === "active") {
+      result = result.filter(device => device.is_active);
+    } else if (filterActive === "inactive") {
+      result = result.filter(device => !device.is_active);
+    }
+
+    // Apply sorting
+    if (sortBy === "id") {
+      result.sort((a, b) => a.node_id - b.node_id);
+    } else if (sortBy === "is_active") {
+      result.sort((a, b) => (b.is_active ? 1 : 0) - (a.is_active ? 1 : 0));
+    }
+
+    return result;
+  }, [data, sortBy, searchTerm, filterActive]);
+
   return (
     <Card title="Devices" id="deviceContainer">
+      <Box sx={{ display: 'flex', gap: 2, marginBottom: 2, flexWrap: 'wrap' }}>
+        <TextField
+          label="Search by Node ID"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          size="small"
+          sx={{ flex: 1, minWidth: 200 }}
+        />
+        <TextField
+          select
+          label="Filter Status"
+          value={filterActive}
+          onChange={(e) => setFilterActive(e.target.value)}
+          size="small"
+          sx={{ minWidth: 150 }}
+        >
+          <MenuItem value="all">All Devices</MenuItem>
+          <MenuItem value="active">Active Only</MenuItem>
+          <MenuItem value="inactive">Offline Only</MenuItem>
+        </TextField>
+      </Box>
       <div className="deviceGrid">
-        {data &&
-         data.map((device) => (
-          <div key={device.id}>
-             <DeviceCard
-               nodeID={device.node_id}
-               owner={device.owner}
-               isActive={device.is_active}
-               createdAt={new Date(device.created_at).toLocaleString()}
-               packetCount={device.packets_count}
-             />
-          </div>
-         ))}
+        {filteredAndSortedDevices.length > 0 ? (
+          filteredAndSortedDevices.map((device) => (
+            <div key={device.id}>
+              <DeviceCard
+                nodeID={device.node_id}
+                owner={device.owner}
+                isActive={device.is_active}
+                createdAt={new Date(device.created_at).toLocaleString()}
+                packetCount={device.packets_count}
+              />
+            </div>
+          ))
+        ) : (
+          <p>No devices found</p>
+        )}
       </div>
     </Card>
   );

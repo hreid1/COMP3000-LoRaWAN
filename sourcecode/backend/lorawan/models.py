@@ -206,7 +206,6 @@ class Log(models.Model):
     node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True, blank=True)
     packet = models.ForeignKey(Packet, on_delete=models.SET_NULL, null=True, blank=True)
     anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True)
-
 class Announcement(models.Model):
     MODEL_TYPE_CHOICES = [
         ("system", "System")

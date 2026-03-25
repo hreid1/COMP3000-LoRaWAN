@@ -196,7 +196,7 @@ const Announcements = ({data}) => {
     {
       id: 2,
       title: "New version of Isolation Forest has been deployed",
-      message: "Use this model now",
+      message: "Use this model now on the AI-info page",
       date: "16/03/2026",
       priority: "info",
     },
@@ -212,10 +212,17 @@ const Announcements = ({data}) => {
   return(
     <Card id="announcements" title="Announcements">
       {alerts.map(alert => (
-        <div key={alert.id} style={{padding: 4, margin: "2px"}}>
-          <Alert severity={alert.priority} style={{display: 'flex', flexDirection: 'column'}}>
-            <span><strong>{alert.title}</strong></span>
-            <span>{alert.message}</span>
+        <div key={alert.id} style={{marginBottom: "16px"}}>
+          <Alert severity={alert.priority} sx={{display: 'flex', flexDirection: 'column', gap: '8px', '& .MuiAlert-message': { width: '100%' }}}>
+            <div style={{ fontWeight: 'bold', fontSize: '15px', lineHeight: '1.4', width: '100%' }}>
+              {alert.title}
+            </div>
+            <div style={{ fontSize: '14px', color: '#333', lineHeight: '1.5', width: '100%' }}>
+              {alert.message}
+            </div>
+            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px', width: '100%' }}>
+              {alert.date}
+            </div>
           </Alert>
         </div>
       ))}

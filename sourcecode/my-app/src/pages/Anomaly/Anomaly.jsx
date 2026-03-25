@@ -13,6 +13,7 @@ import {
   Grid,
   CircularProgress,
   Container,
+  Alert,
 } from "@mui/material"
 import ErrorIcon from "@mui/icons-material/Error"
 
@@ -172,6 +173,7 @@ const AnomalyList = ({data}) => {
             <Paper sx={{p: 2, display: 'flex', flexDirection: 'column', boxShadow: 2}}>
               <Typography>Packet ID: {anomaly.packet.id}</Typography>
               <Typography>Model: {anomaly.model_name}</Typography>
+              <Typography>Node: {anomaly.packet.nodeID}</Typography>
               <Typography>Detected At: {new Date(anomaly.detected_at).toLocaleString()}</Typography>
               <Button
                 variant="contained"
@@ -198,6 +200,7 @@ const AnomalyList = ({data}) => {
               <Typography>Detected At: {new Date(selectedAnomaly.detected_at).toLocaleString()}</Typography>
               <Typography variant="h6" sx={{mt: 3, mb: 1}}>Flagged Packet Details</Typography>
               <Typography>Packet ID: {selectedAnomaly.packet.id}</Typography>
+              <Typography>Node ID: {selectedAnomaly.packet.nodeID}</Typography>
               <Typography>Time: {new Date(selectedAnomaly.packet.time).toLocaleString()}</Typography>
               <Typography>MAC: {selectedAnomaly.packet.mac}</Typography>
               <Typography>Spreading Factor: {selectedAnomaly.packet.spreading_factor}</Typography>

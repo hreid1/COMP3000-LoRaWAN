@@ -149,7 +149,7 @@ class TestView(APIView):
         owner = request.user if request.user.is_authenticated else User.objects.first()
         created_packets = []
 
-        for idx, row in df.iterrows():
+        for idx, row in df.head(1000).iterrows():
         #for idx, row in df.iterrows():
             try:
                 node_id = int(row.iloc[1])  # NodeID column
@@ -243,5 +243,35 @@ class RunModel(APIView):
 
         # Add prediction info ID to results
         results['prediction_id'] = prediction_info.id
+
+        # Create anomaly records for flagged packets
+        if 'anomaly_indices' in results and results['anomaly_indices']:
+            # Get packet IDs from the latest packets (assuming uploaded file packets were just created)
+            # Order by most recent first
+            recent_packets = list(Packet.objects.all().order_by('-created_at')[:results['num_packets']].values_list('id', flat=True))
+            recent_packets.reverse()  # Reverse to match original order
+            
+            anomaly_count = 0
+            for idx, anomaly_score in zip(results['anomaly_indices'], results['anomaly_scores']):
+                try:
+                    if idx < len(recent_packets):
+                        packet_id = recent_packets[idx]
+                        Anomaly.objects.create(
+                            packet_id=packet_id,
+                            model=ml_model,
+                            anomaly_score=float(anomaly_score),
+                            created_by=request.user if request.user.is_authenticated else User.objects.first()
+                        )
+                        anomaly_count += 1
+                except Exception as e:
+                    print(f"Error creating anomaly record: {str(e)}")
+            
+            results['anomalies_created'] = anomaly_count
+            # Also mark packets as anomalous in the Packet model
+            Packet.objects.filter(id__in=[recent_packets[i] for i in results['anomaly_indices'] if i < len(recent_packets)]).update(is_anomalous=True)
+
+        # Create alerts
+
+        # Create log
 
         return Response(results)

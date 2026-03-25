@@ -101,10 +101,6 @@ const AdminContent = () => {
     return(
         <div id="adminContentContainer">
             <AddModel />
-            <ModelRetraining />
-            <ManageUsers />
-            <ManageModels />
-            <ManageSystem />
         </div>
     )
 }
