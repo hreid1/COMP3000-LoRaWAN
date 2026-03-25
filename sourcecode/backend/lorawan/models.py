@@ -149,12 +149,10 @@ class ModelPredictionInfo(models.Model):
 
 class Alert(models.Model):
     SEVERITY_CHOICES = [
-        ('low', 'Low'),
-        ('medium', 'Medium'),
-        ('high', 'High'),
-        ('warning', 'Warning'),
-        ('error', 'Error'),
-        ('success', 'Success'),
+        ("success", "Success"),
+        ("info", "Info"),
+        ("warning", "Warning"),
+        ("error", "Error"),
     ]
     
     ALERT_TYPE_CHOICES = [
@@ -190,10 +188,10 @@ class Log(models.Model):
     ]
 
     SEVERITY_CHOICES = [
+        ("success", "Success"),
         ("info", "Info"),
         ("warning", "Warning"),
         ("error", "Error"),
-        ("debug", "Debug")
     ]
     owner = models.ForeignKey(
         "auth.User", related_name="logs", on_delete=models.CASCADE

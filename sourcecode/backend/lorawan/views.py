@@ -249,7 +249,7 @@ class RunModel(APIView):
             # Get packet IDs from the latest packets (assuming uploaded file packets were just created)
             # Order by most recent first
             recent_packets = list(Packet.objects.all().order_by('-created_at')[:results['num_packets']].values_list('id', flat=True))
-            recent_packets.reverse()  # Reverse to match original order
+            recent_packets.reverse()  
             
             anomaly_count = 0
             for idx, anomaly_score in zip(results['anomaly_indices'], results['anomaly_scores']):
@@ -273,5 +273,6 @@ class RunModel(APIView):
         # Create alerts
 
         # Create log
+        
 
         return Response(results)

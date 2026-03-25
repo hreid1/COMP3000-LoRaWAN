@@ -185,35 +185,13 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
-  const alerts = [
-    {
-      id: 1,
-      title: "System Maintenance",
-      message: "Scheduled Maintenance on March 15th, 2026 from 12-1AM",
-      date: "15/03/2026",
-      priority: "info",
-    },
-    {
-      id: 2,
-      title: "New version of Isolation Forest has been deployed",
-      message: "Use this model now on the AI-info page",
-      date: "16/03/2026",
-      priority: "info",
-    },
-    {
-      id: 3,
-      title: "Network Expansion",
-      message: "5 new gateway nodes have been added for extra network coverage",
-      date: "16/03/2026",
-      priority: "info",
-    },
-  ]
+  console.log(data)
 
   return(
     <Card id="announcements" title="Announcements">
-      {alerts.map(alert => (
+      {data.map(alert => (
         <div key={alert.id} style={{marginBottom: "16px"}}>
-          <Alert severity={alert.priority} sx={{display: 'flex', flexDirection: 'column', gap: '8px', '& .MuiAlert-message': { width: '100%' }}}>
+          <Alert severity={alert.severity} sx={{display: 'flex', flexDirection: 'column', gap: '8px', '& .MuiAlert-message': { width: '100%' }}}>
             <div style={{ fontWeight: 'bold', fontSize: '15px', lineHeight: '1.4', width: '100%' }}>
               {alert.title}
             </div>
@@ -231,7 +209,6 @@ const Announcements = ({data}) => {
 }
 
 const Graph = ({ data }) => {
-
   const packetData = data && data.length > 0
     ? data
         .map(node => ({
@@ -243,7 +220,7 @@ const Graph = ({ data }) => {
     : []
 
   return (
-    <Card id="graph" title="Packets by Node">
+    <Card id="graph" title="Packets per Node">
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={packetData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -355,7 +332,7 @@ const Dashboard = () => {
           axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
           axios.get("http://127.0.0.1:8000/lorawan/packets/?page_size=1000")
         ])
-        console.log(user)
+        //console.log(user)
         setData({
           devices: user.data.nodes || [],
           anomalies: user.data.anomalies || [],

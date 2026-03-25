@@ -78,3 +78,12 @@ Things to do
 - The network-level score should be `max()` of per-device scores, not the mean
 - Consider adding disagreements between models (e.g. this packet has been flagged by IF, but not by LOF, why?)
 - add @media to css files for different screen shapes (e.g. mobile, laptop)
+- Sort some of the UI/UX components 
+	- Pop up after model has ran
+	- For view anomaly function, add close marker top right and clarify dismiss as I ACKNOWLEDGE ANOMALY
+- Add pagination for device list and anomaly list
+- Filter list for logs 
+- Recent activity + Announcements need doing
+- Add button for dismissing announcements/recent-activity
+- Rename AI-info
+- A lot of repeating
