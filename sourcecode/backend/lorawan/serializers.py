@@ -17,6 +17,12 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
         model = Group
         fields = "__all__"
 
+class LogSerializer(serializers.ModelSerializer):
+    owner = serializers.ReadOnlyField(source="owner.username")
+    class Meta:
+        model = Log
+        fields = "__all__"
+
 class PacketSerializer(serializers.ModelSerializer):
     time = serializers.DateTimeField(
         input_formats=['%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M:%S', 'iso-8601']
@@ -73,10 +79,11 @@ class UserSerializer(serializers.ModelSerializer):
     userprofile = UserProfileSerializer(read_only=True)
     alerts = AlertSerializer(many=True, read_only=True)
     anomalies = AnomalySerializer(many=True, read_only=True)
+    logs = LogSerializer(many=True, read_only=True)
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "userprofile", "alerts", "anomalies", "nodes"]
+        fields = ["id", "username", "email", "userprofile", "alerts", "anomalies", "nodes", "logs"]
 
 class MLModelSerializer(serializers.ModelSerializer):
     #created_by_username = serializers.CharField(source='created_by.username', read_only=True)

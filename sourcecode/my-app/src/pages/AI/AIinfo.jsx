@@ -156,9 +156,17 @@ const AiModelContainer = ({}) => {
         onClose={handleClose}
       >
         <Box sx={modalStyle}>
-          <Typography id="modal-title" variant="h5" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
-            {selectedModel?.name || 'Model'} - Prediction History
-          </Typography>
+          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start'}}>
+            <Typography id="modal-title" variant="h5" component="h2" sx={{ mb: 2, fontWeight: 'bold' }}>
+              {selectedModel?.name || 'Model'} - Prediction History
+            </Typography>
+            <Button
+              variant='outlined'
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+          </Box>
           {selectedModel && historyData.filter((item) => item.model_id === selectedModel.id).length === 0 ? (
             <Typography variant="body1" color="textSecondary">
               No predictions found for this model

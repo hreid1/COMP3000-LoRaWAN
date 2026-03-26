@@ -203,7 +203,12 @@ class Log(models.Model):
 
     node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True, blank=True)
     packet = models.ForeignKey(Packet, on_delete=models.SET_NULL, null=True, blank=True)
-    anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True)
+    anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+
+    def __str__(self):
+        return f"Log: {self.title}"
+
 class Announcement(models.Model):
     MODEL_TYPE_CHOICES = [
         ("system", "System")

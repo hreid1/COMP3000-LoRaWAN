@@ -191,9 +191,17 @@ const AnomalyList = ({data}) => {
         onClose={handleClose}
       >
         <Box sx={modalStyle}>
-          <Typography variant="h6" sx={{mb: 2}}>
-            Anomaly Information
-          </Typography>
+          <Box sx={{display: 'flex', flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2}}>
+            <Typography variant="h6">
+              Anomaly Information
+            </Typography>
+            <Button
+              variant='outlined'
+              onClick={handleClose}
+            >
+              Close
+            </Button>
+          </Box>
           {selectedAnomaly ? (
             <Box>
               <Typography>Model: {selectedAnomaly.model_name}</Typography>
@@ -258,7 +266,7 @@ const AnomalyContent = ({data, loading, error}) => {
   if (error) {
     return(
       <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
-        <Alert>
+        <Alert severity='error'>
           Error: {error}
         </Alert>
       </Box>

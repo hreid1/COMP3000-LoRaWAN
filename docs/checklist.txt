@@ -11,9 +11,8 @@ Things to do
 	- Admin
 	- Anomaly
 	- Profile
-	- Settings -> change password, email, username
+	- Settings -> change password, email, username, has to get verified before change is made to backend
 - Encryption/secure stuff -> salted passwords
-- Add functionality to statistics for AI-info page
 - Convert devices information to fetch from a dataset not using an artificial dataset
 - Add a way to restructure the dashboard
 - When model is ran -> packet column 'is_anomalous' is changed to true for packets which are flagged to be anomalous, alongside entry inside Anomaly table 
@@ -83,7 +82,21 @@ Things to do
 	- For view anomaly function, add close marker top right and clarify dismiss as I ACKNOWLEDGE ANOMALY
 - Add pagination for device list and anomaly list
 - Filter list for logs 
+	- Date range
+	- Log type
+		- model being ran
+			- User ID, datetime, 
+		- File being uploaded
+		- Devices/Nodes being added
+		- Logging in, logging out
+		- Changing details about profile
+		- Errors
+			- What type of error (e.g 404, 400, 500?) 
+		- 
+	- Severity
+		- success, info, warning, error
+		- OR critical, high, medium, low
 - Recent activity + Announcements need doing
 - Add button for dismissing announcements/recent-activity
-- Rename AI-info
-- A lot of repeating
+- Rename AI-info to something else
+- Use a blue-green deployment
