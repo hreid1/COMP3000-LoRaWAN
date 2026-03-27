@@ -11,46 +11,48 @@ import ErrorIcon from "@mui/icons-material/Error"
 import DevicesIcon from '@mui/icons-material/Devices';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
-const Graph = ({data}) => {
-  // Get top 5 devices transmitting the most packets
-  const chartData = data && data.devices && data.devices.length > 0
-    ? data.devices
-        .sort((a, b) => (b.packets_count || 0) - (a.packets_count || 0))
-        .slice(0, 5)
-        .map(device => ({
-          nodeID: `Node ${device.node_id}`,
-          packets: device.packets_count || 0,
-          active: device.is_active ? 'Active' : 'Offline'
+const Graph = ({ data }) => {
+  console.log(data)
+  const packetData = data && data.length > 0
+    ? data
+        .map(node => ({
+          name: node.node_id,
+          packets: node.packets_count
         }))
+        .sort((a, b) => b.packets - a.packets)
+        .slice(0, 10)
     : []
 
   return (
-    <Card id="deviceGraph" title="Top 5 Devices by Packet Count">
-      {chartData.length > 0 ? (
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={chartData} margin={{ top: 20, right: 30, left: 0, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis 
-              dataKey="nodeID" 
-              angle={-45}
-              textAnchor="end"
-              height={80}
-            />
-            <YAxis label={{ value: 'Packet Count', angle: -90, position: 'insideLeft' }} />
-            <Tooltip formatter={(value) => value} />
-            <Legend />
-            <Bar 
-              dataKey="packets" 
-              fill="#0097a7" 
-              name="Packets Transmitted"
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      ) : (
-        <p>No device data available</p>
-      )}
+    <Card id="graphDevices" title="Packets per Node">
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={packetData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis 
+            dataKey="name"
+            label={{ value: 'Node ID', position: 'insideBottomRight', offset: -5 }}
+          />
+          <YAxis label={{ value: 'Packet Count', angle: -90, position: 'insideLeft' }} />
+          <Tooltip 
+            content={({ payload }) => {
+              if (payload && payload.length) {
+                const data = payload[0].payload
+                return (
+                  <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}>
+                    <p style={{ margin: '0 0 4px 0' }}><strong>Node: {data.name}</strong></p>
+                    <p style={{ margin: 0 }}>Packets: {data.packets}</p>
+                  </div>
+                )
+              }
+              return null
+            }}
+          />
+          <Bar dataKey="packets" fill="#1976d2" name="Packet Count" />
+        </BarChart>
+      </ResponsiveContainer>
     </Card>
   )
+
 }
 
 const AddDevice = () => {
@@ -168,7 +170,7 @@ const DeviceList = ({data}) => {
   const filteredAndSortedDevices = React.useMemo(() => {
     let result = [...(data || [])];
 
-    // Apply search filter
+    // Not really sure how these 
     if (searchTerm) {
       result = result.filter(device =>
         device.node_id.toString().includes(searchTerm) ||
@@ -176,14 +178,12 @@ const DeviceList = ({data}) => {
       );
     }
 
-    // Apply active filter
     if (filterActive === "active") {
       result = result.filter(device => device.is_active);
     } else if (filterActive === "inactive") {
       result = result.filter(device => !device.is_active);
     }
 
-    // Apply sorting
     if (sortBy === "id") {
       result.sort((a, b) => a.node_id - b.node_id);
     } else if (sortBy === "is_active") {
@@ -197,13 +197,6 @@ const DeviceList = ({data}) => {
     <Card title="Devices" id="deviceContainer">
       <Box sx={{ display: 'flex', gap: 2, marginBottom: 2, flexWrap: 'wrap' }}>
         <TextField
-          label="Search by Node ID"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          size="small"
-          sx={{ flex: 1, minWidth: 200 }}
-        />
-        <TextField
           select
           label="Filter Status"
           value={filterActive}
@@ -215,6 +208,13 @@ const DeviceList = ({data}) => {
           <MenuItem value="active">Active Only</MenuItem>
           <MenuItem value="inactive">Offline Only</MenuItem>
         </TextField>
+        <TextField
+          label="Search by Node ID"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          size="small"
+          sx={{ flex: 1, minWidth: 200 }}
+        />
       </Box>
       <div className="deviceGrid">
         {filteredAndSortedDevices.length > 0 ? (
@@ -269,7 +269,7 @@ const DeviceContent = ({data, loading, error}) => {
       <DeviceStatistics data={data.devices} anomalies={data.anomalies}/>
       <Map2 />
       <AddDevice />
-      <Graph data={data}/>
+      <Graph data={data.devices}/>
       <DeviceList data={data.devices} />
     </div>
   );

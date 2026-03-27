@@ -100,3 +100,6 @@ Things to do
 - Add button for dismissing announcements/recent-activity
 - Rename AI-info to something else
 - Use a blue-green deployment
+- Different fonts within the page
+- Need to figure out how the device list filtering works
+- Fix graph on devices page

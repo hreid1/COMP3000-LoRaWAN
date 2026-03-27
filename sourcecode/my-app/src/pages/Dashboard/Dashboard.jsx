@@ -185,7 +185,6 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
-  console.log(data)
 
   return(
     <Card id="announcements" title="Announcements">
@@ -209,6 +208,7 @@ const Announcements = ({data}) => {
 }
 
 const Graph = ({ data }) => {
+  console.log(data)
   const packetData = data && data.length > 0
     ? data
         .map(node => ({
