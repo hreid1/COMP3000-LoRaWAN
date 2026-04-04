@@ -44,7 +44,8 @@ class MLModelService:
 
         models = [
             models_dir / "isolationforest.pkl",
-            models_dir / "localoutlierfactor.pkl"
+            models_dir / "localoutlierfactor.pkl",
+            models_dir / "scaler.pkl"
         ]
 
         for model_file in models:
@@ -57,14 +58,15 @@ class MLModelService:
         df = df.dropna()
         scaler = StandardScaler()
         df_scaled = scaler.fit_transform(df[anomaly_inputs])
+        joblib.dump(scaler, models_dir / "scaler.pkl")
         
-        contamination = 0.01
+        contamination = 0.05
 
         isolationforest = IsolationForest(contamination=contamination, random_state=42, n_estimators=500, max_samples=128, max_features=0.8)
         isolationforest.fit(df_scaled)
         joblib.dump(isolationforest, models_dir / "isolationforest.pkl")
 
-        localoutlierfactor = LocalOutlierFactor(contamination=contamination, n_neighbors=30, algorithm="auto", leaf_size=30)
+        localoutlierfactor = LocalOutlierFactor(contamination=contamination, n_neighbors=20, algorithm="auto", leaf_size=30, novelty=True)
         localoutlierfactor.fit(df_scaled)
         joblib.dump(localoutlierfactor, models_dir / "localoutlierfactor.pkl")
         
@@ -75,15 +77,14 @@ class MLModelService:
         df.columns = df.columns.str.strip()
         df = df.dropna()
         
-        # Load training data to fit scaler
-        datasets_dir = Path(__file__).resolve().parent / "datasets"
-        train_df = pd.read_csv(datasets_dir / "no-jammer.csv")
-        train_df.columns = train_df.columns.str.strip()
-        train_df = train_df.dropna()
+        # Load fitted scaler
+        models_dir = Path(__file__).resolve().parent / "models"
+        scaler_path = models_dir / "scaler.pkl"
         
-        # Scale data
-        scaler = StandardScaler()
-        scaler.fit(train_df[MLModelService.anomaly_inputs])
+        if not scaler_path.exists():
+             MLModelService.creatingModels()
+             
+        scaler = joblib.load(scaler_path)
         df_scaled = scaler.transform(df[MLModelService.anomaly_inputs])
         
         return df_scaled, df
@@ -142,10 +143,7 @@ class MLModelService:
     
     @staticmethod
     def getZscores(test_scaled, aomaly_inputs, threshold=2.5):
-        mean = test_scaled.mean()
-        std = test_scaled.std()
-
-        z_scores = np.abs((test_scaled - mean) / (std + 1e-8))
+        return 0
         
     
     @staticmethod

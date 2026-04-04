@@ -166,59 +166,14 @@ const DeviceList = ({data}) => {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterActive, setFilterActive] = useState("all")
 
-  // Filter and sort devices
-  const filteredAndSortedDevices = React.useMemo(() => {
-    let result = [...(data || [])];
-
-    // Not really sure how these 
-    if (searchTerm) {
-      result = result.filter(device =>
-        device.node_id.toString().includes(searchTerm) ||
-        device.id.toString().includes(searchTerm)
-      );
-    }
-
-    if (filterActive === "active") {
-      result = result.filter(device => device.is_active);
-    } else if (filterActive === "inactive") {
-      result = result.filter(device => !device.is_active);
-    }
-
-    if (sortBy === "id") {
-      result.sort((a, b) => a.node_id - b.node_id);
-    } else if (sortBy === "is_active") {
-      result.sort((a, b) => (b.is_active ? 1 : 0) - (a.is_active ? 1 : 0));
-    }
-
-    return result;
-  }, [data, sortBy, searchTerm, filterActive]);
-
   return (
     <Card title="Devices" id="deviceContainer">
       <Box sx={{ display: 'flex', gap: 2, marginBottom: 2, flexWrap: 'wrap' }}>
-        <TextField
-          select
-          label="Filter Status"
-          value={filterActive}
-          onChange={(e) => setFilterActive(e.target.value)}
-          size="small"
-          sx={{ minWidth: 150 }}
-        >
-          <MenuItem value="all">All Devices</MenuItem>
-          <MenuItem value="active">Active Only</MenuItem>
-          <MenuItem value="inactive">Offline Only</MenuItem>
-        </TextField>
-        <TextField
-          label="Search by Node ID"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          size="small"
-          sx={{ flex: 1, minWidth: 200 }}
-        />
+
       </Box>
       <div className="deviceGrid">
-        {filteredAndSortedDevices.length > 0 ? (
-          filteredAndSortedDevices.map((device) => (
+        {data && data.length > 0 ? (
+          data.map((device) => (
             <div key={device.id}>
               <DeviceCard
                 nodeID={device.node_id}
