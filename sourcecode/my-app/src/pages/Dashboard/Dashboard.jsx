@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import axios from 'axios'
 import { useState, useEffect, useMemo } from 'react'
 import Papa from 'papaparse'
@@ -8,6 +8,8 @@ import { CategoryScale } from 'chart.js/auto'
 import Card from '../../components/Card/Card'
 import DeviceCard from '../../components/Card/DeviceCard'
 import AlertMessage from '../../components/Alert/Alert'
+import api from '../../utils/api'
+import AuthContext from '../../../context/AuthContext'
 
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import DevicesIcon from '@mui/icons-material/Devices';
@@ -311,6 +313,7 @@ const MainDashContent = ({data, loading, error, onAlert}) => {
 }
 
 const Dashboard = () => {
+  const { user } = useContext(AuthContext)
   const [data, setData] = useState({
     devices: [],
     anomalies: [],
@@ -319,31 +322,31 @@ const Dashboard = () => {
     loading: true,
     error: null,
   })
-
   const [alertOpen, setAlertOpen] = useState(false)
   const [alertMessage, setAlertMessage] = useState('')
   const [alertSeverity, setAlertSeverity] = useState('info')
 
-  // GET request to backend for user 1
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [user, packets] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
-          axios.get("http://127.0.0.1:8000/lorawan/packets/?page_size=1000")
-        ])
-        //console.log(user)
+        const [user, packet] = await Promise.all([
+          api.get("/users/me/"),
+          api.get("/packets/?page_size=1000")
+        ]) 
+        console.log(user)
+
         setData({
           devices: user.data.nodes || [],
           anomalies: user.data.anomalies || [],
           announcements: user.data.alerts || [],
-          packets: packets.data.results || [],
+          packets: packet.data.results || [],
           loading: false,
           error: null
         })
-      } catch (err){
-        setData(prev => ({ ...prev, loading: false, error: err.message}))
-      }
+
+     } catch (err){
+      setData(prev => ({ ...prev, loading: false, error: err.message}))
+     }
     }
     fetchData()
   }, []);

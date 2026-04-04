@@ -21,9 +21,10 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-const NavbarV2 = ({name}) => {
+const NavbarV2 = ({username}) => {
   const [navOpen, setNavOpen] = useState(null)
   const [NotiOpen, setNotiOpen] = useState(null)
+
 
   const handleNavOpen = (event) => {
     setNavOpen(event.currentTarget);
@@ -48,9 +49,7 @@ const NavbarV2 = ({name}) => {
           <AdbIcon />
         </Box>
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'center' }}>
-          <Typography>
-            Hi, Admin
-          </Typography>
+          <Typography>Hi, {username}</Typography>
         </Box>
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
           <Tooltip>
@@ -64,7 +63,6 @@ const NavbarV2 = ({name}) => {
             anchorEl={NotiOpen}
           >
             <MenuItem></MenuItem>
-
           </Menu>
           <Tooltip sx={{}}>
             <IconButton onClick={handleNavOpen}>
@@ -113,10 +111,10 @@ const NavbarV1 = ({name, data}) => {
 }
 
 
-const Navbar = () => {
+const Navbar = ({username}) => {
 
   return (
-    <NavbarV2 />
+    <NavbarV2 username={username}/>
   )
 }
 

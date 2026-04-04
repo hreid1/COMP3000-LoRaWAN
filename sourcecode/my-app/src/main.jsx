@@ -24,9 +24,13 @@ import AIinfo from './pages/AI/AIinfo';
 import Anomaly from './pages/Anomaly/Anomaly';
 import Admin from './pages/Admin/Admin';
 import MainLayout from './layouts/MainLayout';
+import Login from './pages/Login/Login';
+
+import { AuthProvider } from '../context/AuthContext'
 
 const router = createBrowserRouter([
     { path: "/", element: <App /> },
+    { path: "/login", element: <Login />},
     {
         element: <MainLayout />,
         children: [
@@ -35,7 +39,7 @@ const router = createBrowserRouter([
             { path: "/logs", element: <Logs /> },
             { path: "/aiinfo", element: <AIinfo /> },
             { path: "/anomaly", element: <Anomaly /> },
-            { path: "/admin", element: <Admin /> }
+            { path: "/admin", element: <Admin /> },
         ]
     }
 ]);
@@ -43,7 +47,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
     <StrictMode>
         <ThemeProvider theme={theme}>
-            <RouterProvider router={router} />
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
         </ThemeProvider>
     </StrictMode>
 );

@@ -20,7 +20,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render
 import joblib
 import numpy as np
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from .services.mlmodel_service import MLModelService
 
@@ -75,6 +75,13 @@ class NodeViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+    @action(detail=False, methods=['get'])
+    def me(self, request):
+        if request.user.is_authenticated:
+            serializer = self.get_serializer(request.user)
+            return Response(serializer.data)
+        return Response({"detail": "Not authenticated"}, status=401)
 
 class PacketViewSet(viewsets.ModelViewSet):
     queryset = Packet.objects.all()

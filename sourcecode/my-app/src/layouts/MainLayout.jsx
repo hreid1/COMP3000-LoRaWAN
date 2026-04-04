@@ -1,26 +1,22 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import axios from 'axios'
 import Navbar from '../components/Navbar/Navbar'
 import SideNavbar from '../components/Navbar/SideNavbar'
 import './MainLayout.css'
-import { Outlet } from 'react-router-dom'
+import { Outlet, Navigate } from 'react-router-dom'
+import AuthContext from '../../context/AuthContext'
 
 const MainLayout = () => {
-  const [data, setData] = useState([])
+  const { user, logoutUser } = useContext(AuthContext)
 
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/users/1/")
-    .then((response) => {
-      setData(response.data || [])
-    })
-  }, []);
-
-  const username = data.username
+  if (!user) {
+    return <Navigate to="/login" />
+  }
 
   return (
     <div id="mainLayoutContainer">
       <div id="navbarWrapper">
-        <Navbar name={username}/>
+        <Navbar username={user.username} logout={logoutUser}/>
       </div>
       <div id="sidenavbarWrapper">
         <SideNavbar />

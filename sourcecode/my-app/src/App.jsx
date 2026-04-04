@@ -17,16 +17,23 @@ Main content
   - Device List
 
 */
-import { useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import AuthContext from '../context/AuthContext'
 
 const App = () => {
+  const { user } = useContext(AuthContext)
   const navigate = useNavigate()
 
   useEffect(() => {
     // Redirect to dashboard on page load
-    navigate('/dashboard')
-  }, [navigate])
+    if (user) {
+      navigate("/dashboard")
+    } else {
+      navigate("/login")
+    }
+    navigate('/login')
+  }, [user, navigate])
 
   return null
 }
