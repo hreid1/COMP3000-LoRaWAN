@@ -5,6 +5,7 @@ import SideNavbar from '../components/Navbar/SideNavbar'
 import './MainLayout.css'
 import { Outlet, Navigate } from 'react-router-dom'
 import AuthContext from '../../context/AuthContext'
+import api from '../utils/api'
 
 const MainLayout = () => {
   const { user, logoutUser } = useContext(AuthContext)

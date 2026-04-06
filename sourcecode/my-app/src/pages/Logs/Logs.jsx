@@ -5,6 +5,8 @@ import Card from '../../components/Card/Card';
 import axios from "axios";
 import { Box, TextField, MenuItem } from "@mui/material"
 
+// Need to log specific stuff not the entire DB response
+
 const LogFilter = () => {
   const [filters, setFilters] = useState({
     dateRange: "",

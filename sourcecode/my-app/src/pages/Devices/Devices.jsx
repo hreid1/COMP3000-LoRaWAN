@@ -9,10 +9,10 @@ import Map from '../../components/Map/Map';
 import { Box, Alert, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem, CircularProgress, Typography } from '@mui/material';
 import ErrorIcon from "@mui/icons-material/Error"
 import DevicesIcon from '@mui/icons-material/Devices';
+import api from '../../utils/api';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
 const Graph = ({ data }) => {
-  console.log(data)
   const packetData = data && data.length > 0
     ? data
         .map(node => ({
@@ -56,56 +56,82 @@ const Graph = ({ data }) => {
 }
 
 const AddDevice = () => {
-  const [nodeId, setNodeId] = useState(""); 
-  const [mac, setMac] = useState("");
-  const [location, setLocation] = useState("");
-  const [isActive, setIsActive] = useState(true);
+  const [device, setDevice] = useState({
+    nodeId: "",
+    mac: "",
+    location: "",
+    isActive: true, // Fix 1: Define the initial value here
+  })
+  const [submit, setSubmit] = useState(false)
 
-  function handleAddDevice(e) {
-    e.preventDefault(); 
-    axios.post("http://localhost:8000/lorawan/nodes/", {
-      node_id: parseInt(nodeId, 10), 
-      is_active: isActive
-    });
-    setNodeId("");
-    setMac("");
-    setLocation("");
-    setIsActive(true);
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setDevice(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value
+    }))
+  }
+
+  const addDevice = (e) => {
+    e.preventDefault()
+    setSubmit(true)
+
+    try {
+      api.post("/nodes/", {
+        node_id: parseInt(device.nodeId, 10),
+        is_active: device.isActive
+      })
+      setDevice({
+        nodeId: "",
+        mac: "",
+        location: "",
+        isActive: true,
+      })
+
+    } catch(err){
+      console.error(err)
+    } finally {
+      setSubmit(false)
+    }
   }
 
   return (
     <Card id="addDevice" title="Add Device Form">
-      <Box component="form" onSubmit={handleAddDevice} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Box component="form" onSubmit={addDevice} sx={{ display: 'flex', flexDirection: 'column', gap: 2, backgroundColor: "red" }}>
         <TextField
           label="Node ID"
+          name="nodeId"
           type="number"
-          value={nodeId}
-          onChange={e => setNodeId(e.target.value)}
+          value={device.nodeId}
+          onChange={handleChange}
           required
           fullWidth
           variant="outlined"
         />
         <TextField
           label="MAC"
+          name="mac"
           type="text"
-          value={mac}
-          onChange={e => setMac(e.target.value)}
+          value={device.mac}
+          onChange={handleChange}
           fullWidth
           variant="outlined"
         />
         <TextField
           label="Location"
+          name="location"
           type="text"
-          value={location}
-          onChange={e => setLocation(e.target.value)}
+          value={device.location}
+          onChange={handleChange}
           fullWidth
           variant="outlined"
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={isActive}
-              onChange={e => setIsActive(e.target.checked)}
+              name="isActive" 
+              checked={device.isActive}
+              onChange={handleChange}
             />
           }
           label="Is Active"
@@ -113,6 +139,7 @@ const AddDevice = () => {
         <Button type="submit" variant="contained" color="primary" sx={{ mt: 1 }}>
           Add Device
         </Button>
+        {submit ? "Adding Device" : "Add Device"}
       </Box>
     </Card>
   );
@@ -162,14 +189,47 @@ const DeviceStatistics = ({data, anomalies}) => {
 }
 
 const DeviceList = ({data}) => {
-  const [sortBy, setSortBy] = useState("id")
+  const [sortBy, setSortBy] = useState("")
   const [searchTerm, setSearchTerm] = useState("")
-  const [filterActive, setFilterActive] = useState("all")
+  const [status, setStatus] = useState("")
 
   return (
     <Card title="Devices" id="deviceContainer">
-      <Box sx={{ display: 'flex', gap: 2, marginBottom: 2, flexWrap: 'wrap' }}>
+      <Box sx={{display: 'flex', gap: 2}}>
+        <TextField
+          label="Search Node ID/MAC"
+          variant="outlined"
+          size="small"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          sx={{ flexGrow: 1}}
+        />
+        <TextField
+          select
+          label="Status"
+          size="small"
+          value={status}
+          onChange={(e) => setStatus(e.target.value)}
+          sx={{ flexGrow: 1}}
+        >
+          <MenuItem value="online">Online</MenuItem>
+          <MenuItem value="offline">Offline</MenuItem>
+        </TextField>
+        <TextField
+          select
+          label="Sort By"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          size="small"
+          sx={{ minWidth: 120}}
+        >
+          <MenuItem value="id">Node ID</MenuItem>
+          <MenuItem value="date">Date Added</MenuItem>
+          <MenuItem value="packets">Packet Count</MenuItem>
 
+
+        </TextField>
+        
       </Box>
       <div className="deviceGrid">
         {data && data.length > 0 ? (
@@ -242,7 +302,7 @@ const Devices = () => {
     const fetchData = async () => {
       try {
         const [user] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/lorawan/users/1/"),
+          api.get("/users/me/")
         ])
         setData({
           devices: user.data.nodes || [],

@@ -42,7 +42,7 @@ class AnomalySerializer(serializers.ModelSerializer):
         fields = ["id", "model_name", "detected_at", "packet", "anomaly_score"]
 
 class NodeSerializer(serializers.ModelSerializer):
-    owner = serializers.ReadOnlyField(source="owner.username")
+    #owner = serializers.ReadOnlyField(source="owner.username")
     packets_count = serializers.SerializerMethodField()
 
     class Meta:
@@ -74,23 +74,10 @@ class AlertSerializer(serializers.ModelSerializer):
         fields = ['id', 'title', 'message', 'alert_type', 'severity', 'created_at']
         read_only_fields = ['id', 'created_at', 'owner']
 
-class UserSerializer(serializers.ModelSerializer):
-    nodes = NodeSerializer(many=True, read_only=True)
-    userprofile = UserProfileSerializer(read_only=True)
-    alerts = AlertSerializer(many=True, read_only=True)
-    anomalies = AnomalySerializer(many=True, read_only=True)
-    logs = LogSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = User
-        fields = ["id", "username", "email", "userprofile", "alerts", "anomalies", "nodes", "logs"]
-
 class MLModelSerializer(serializers.ModelSerializer):
-    #created_by_username = serializers.CharField(source='created_by.username', read_only=True)
-    
     class Meta:
         model = MLModel
-        fields = ['id', 'name', 'version', 'algorithm_type', 'created_by', 'created_at']
+        fields = ['id', 'name', 'version', 'algorithm_type', 'owner', 'created_at']
 
 class ModelTrainingInfoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -102,7 +89,26 @@ class ModelPredictionInfoSerailizer(serializers.ModelSerializer):
         model = ModelPredictionInfo
         fields = "__all__"
 
-class LogSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
+    nodes = NodeSerializer(many=True, read_only=True)
+    userprofile = UserProfileSerializer(read_only=True)
+    alerts = AlertSerializer(many=True, read_only=True)
+    anomalies = AnomalySerializer(many=True, read_only=True)
+    logs = LogSerializer(many=True, read_only=True)
+    modeltraininginfos = ModelTrainingInfoSerializer(many=True, read_only=True)
+    modelpredictioninfos = ModelPredictionInfoSerailizer(many=True, read_only=True) 
+
     class Meta:
-        model = Log
-        fields = "__all__"
+        model = User
+        fields = [
+            "id", 
+            "username",
+            "email", 
+            "userprofile", 
+            "alerts", 
+            "anomalies", 
+            "modeltraininginfos", 
+            "modelpredictioninfos",
+            "logs",
+            "nodes", 
+        ]

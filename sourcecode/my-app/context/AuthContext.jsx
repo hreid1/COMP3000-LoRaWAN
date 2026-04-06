@@ -6,43 +6,59 @@ const AuthContext = createContext()
 
 export default AuthContext
 
-export const AuthProvider = ({children}) => {
-    let [authTokens, setAuthTokens] = useState(() => localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null)
-    let [user, setUser]= useState(() => localStorage.getItem('authTokens') ? jwtDecode(localStorage.getItem('authTokens')): null)
+export const Authorisation = ({children}) => {
     const baseURL = import.meta.env.VITE_API_BASE_URL
+    const [authToken, setAuthToken] = useState(() => 
+        localStorage.getItem('authTokens') ? JSON.parse(localStorage.getItem('authTokens')) : null
+    )
+    const [user, setUser] = useState(() =>
+        localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null
+    )
 
-    let loginUser = async (e) => {
+    const loginUser = async (e) => {
         e.preventDefault()
         try {
             const response = await axios.post(`${baseURL}token/`, {
                 username: e.target.username.value,
                 password: e.target.password.value
             }, {
-                headers: { "Content-Type": "application/json" }
-            });
+                headers: { "Content-Type": "application/json"}
+            })
+            // If a token is returned add that token to local storage
+            if(response.status === 200){
+                const tokens = response.data
+                setAuthToken(tokens)
+                localStorage.setItem("authTokens", JSON.stringify(tokens))
 
-            if (response.status === 200) {
-                setAuthTokens(response.data);
-                setUser(jwtDecode(response.data.access));
-                localStorage.setItem("authTokens", JSON.stringify(response.data));
-                return true;
+                // Fetch users details
+                const userDetailsResponse = await axios.get(`${baseURL}lorawan/users/me/`, {
+                    headers: { 'Authorization': `Bearer ${tokens.access}`}
+                })
+
+                // Add user's details to context window
+                if (userDetailsResponse.status === 200){
+                    setUser(userDetailsResponse.data)
+                    localStorage.setItem("user", JSON.stringify(userDetailsResponse.data))
+                    return true
+                }
             }
-        } catch (error) {
-            console.error(error.response?.data);
-            alert("Invalid credentials");
-            return false;
+        } catch(err){
+            console.error(err)
+            return false
         }
     }
 
-    let logoutUser = () => {
-        setAuthTokens(null)
-        setUser(null)
+    const logoutUser = async (e) => {
+        setAuthToken(null)
         localStorage.removeItem("authTokens")
+        setUser(null)
+        localStorage.removeItem("user")
+
     }
 
-    let contextData = {
+    const contextData = {
         user: user,
-        authTokens: authTokens,
+        authToken: authToken,
         loginUser: loginUser,
         logoutUser: logoutUser,
     }
@@ -52,5 +68,4 @@ export const AuthProvider = ({children}) => {
             {children}
         </AuthContext.Provider>
     )
-
 }

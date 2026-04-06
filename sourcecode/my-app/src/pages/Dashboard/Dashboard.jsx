@@ -27,66 +27,9 @@ import {
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 const AnomalyTimeline = ({ data }) => {
-  const chartData = data && data.length > 0
-    ? data
-      .reduce((acc, anomaly) => {
-        const date = new Date(anomaly.detected_at)
-        const dateString = date.toLocaleDateString()
-        const hour = date.getHours()
-        const timeLabel = `${dateString} ${hour}:00`
-        
-        const existing = acc.find(item => item.timeLabel === timeLabel)
-        if (existing) {
-          existing.count += 1
-        } else {
-          acc.push({ 
-            timeLabel, 
-            count: 1,
-            date: dateString,
-            hour: hour
-          })
-        }
-        return acc
-      }, [])
-    : []
-
+  // For each point inside data add a +1 to index with time of detected_at
   return (
     <Card title="Anomalies Over Time" id="anomalyTimeline">
-      <LineChart width={'95%'} height={300} data={chartData} style={{alignItems: "center", padding: "1rem"}}>
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis 
-          dataKey="timeLabel" 
-          angle={-45}
-          textAnchor="end"
-          height={100}
-          label={{ value: 'Date & Time', position: 'insideBottomRight', offset: -5 }}
-        />
-        <YAxis label={{ value: 'Anomaly Count', angle: -90, position: 'insideLeft' }} />
-        <Tooltip 
-          content={({ payload }) => {
-            if (payload && payload.length) {
-              const data = payload[0].payload
-              return (
-                <div style={{ backgroundColor: '#fff', border: '1px solid #ccc', padding: '8px', borderRadius: '4px' }}>
-                  <p style={{ margin: '0 0 4px 0' }}><strong>Date: {data.date}</strong></p>
-                  <p style={{ margin: '0 0 4px 0' }}>Hour: {data.hour}:00</p>
-                  <p style={{ margin: 0 }}>Count: {data.count}</p>
-                </div>
-              )
-            }
-            return null
-          }}
-        />
-        <Legend />
-        <Line 
-          type="monotone" 
-          dataKey="count" 
-          stroke="#d32f2f" 
-          name="Anomaly Count"
-          dot={{ fill: '#d32f2f', r: 5 }}
-          strokeWidth={2}
-        />
-      </LineChart>
     </Card>
   )
 }
@@ -187,7 +130,6 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
-
   return(
     <Card id="announcements" title="Announcements">
       {data.map(alert => (
@@ -210,7 +152,6 @@ const Announcements = ({data}) => {
 }
 
 const Graph = ({ data }) => {
-  console.log(data)
   const packetData = data && data.length > 0
     ? data
         .map(node => ({
@@ -313,7 +254,7 @@ const MainDashContent = ({data, loading, error, onAlert}) => {
 }
 
 const Dashboard = () => {
-  const { user } = useContext(AuthContext)
+  //const { user } = useContext(AuthContext)
   const [data, setData] = useState({
     devices: [],
     anomalies: [],
@@ -333,8 +274,6 @@ const Dashboard = () => {
           api.get("/users/me/"),
           api.get("/packets/?page_size=1000")
         ]) 
-        console.log(user)
-
         setData({
           devices: user.data.nodes || [],
           anomalies: user.data.anomalies || [],

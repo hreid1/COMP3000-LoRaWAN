@@ -21,7 +21,7 @@ import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
-const NavbarV2 = ({username}) => {
+const NavbarV2 = ({username, logout}) => {
   const [navOpen, setNavOpen] = useState(null)
   const [NotiOpen, setNotiOpen] = useState(null)
 
@@ -86,7 +86,7 @@ const NavbarV2 = ({username}) => {
           >
             <MenuItem>Profile</MenuItem>
             <MenuItem>Settings</MenuItem>
-            <MenuItem>Logout</MenuItem>
+            <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </Box>
       </Toolbar>
@@ -111,10 +111,10 @@ const NavbarV1 = ({name, data}) => {
 }
 
 
-const Navbar = ({username}) => {
+const Navbar = ({username, logout}) => {
 
   return (
-    <NavbarV2 username={username}/>
+    <NavbarV2 username={username} logout={logout}/>
   )
 }
 

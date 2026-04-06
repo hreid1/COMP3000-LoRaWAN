@@ -70,7 +70,7 @@ class NodeViewSet(viewsets.ModelViewSet):
         return context
 
     def perform_create(self, serializer):
-        serializer.save(created_by=self.request.user)
+        serializer.save(owner=self.request.user)
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -91,13 +91,10 @@ class PacketViewSet(viewsets.ModelViewSet):
 class MLModelViewSet(viewsets.ModelViewSet):
     queryset = MLModel.objects.all()
     serializer_class = MLModelSerializer
-    #permission_classes = [permissions.IsAuthenticatedOrReadOnly]
-    permission_classes = [permissions.AllowAny]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def perform_create(self, serializer):
-        owner = User.objects.get(id=1)
-        serializer.save(created_by=owner)
-        #serializer.save(created_by=self.request.user)
+        serializer.save(owner=self.request.user)
 
 class AnomalyViewSet(viewsets.ModelViewSet):
     queryset = Anomaly.objects.all().order_by("-detected_at")
@@ -119,9 +116,15 @@ class ModelTrainingInfoViewSet(viewsets.ModelViewSet):
     queryset = ModelTrainingInfo.objects.all() 
     serializer_class = ModelTrainingInfoSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
 class ModelPredictionInfoViewSet(viewsets.ModelViewSet):
     queryset = ModelPredictionInfo.objects.all()
     serializer_class = ModelPredictionInfoSerailizer
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
 
 class AlertViewSet(viewsets.ModelViewSet):
     serializer_class = AlertSerializer
@@ -131,8 +134,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         return Alert.objects.all()
     
     def perform_create(self, serializer):
-        owner = User.objects.get(id=1)
-        serializer.save(owner=owner)
+        serializer.save(owner=self.request.user)
 
 class LogViewSet(viewsets.ModelViewSet):
     serializer_class = LogSerializer
@@ -142,8 +144,7 @@ class LogViewSet(viewsets.ModelViewSet):
         return Log.objects.all()
     
     def perform_create(self, serializer):
-        owner = User.objects.get(id=1)
-        serializer.save(owner=owner)
+        serializer.save(owner=self.request.user)
 
 # Views
 class TestView(APIView):
@@ -201,6 +202,7 @@ class TestView(APIView):
     
 class RunModel(APIView):
     parser_classes = (MultiPartParser,)
+    permission_classes = [permissions.IsAuthenticated]
     
     def post(self, request):
         uploaded_file = request.FILES.get('myFile')
@@ -214,7 +216,7 @@ class RunModel(APIView):
             defaults={
                 'name': results['model info']['model'],
                 'version': 1.0,
-                'created_by': request.user if request.user.is_authenticated else User.objects.first()
+                'owner': request.user
             }
         )
 
@@ -245,7 +247,8 @@ class RunModel(APIView):
             accuracy=supervised.get('accuracy'),
             precision=supervised.get('precision'),
             recall=supervised.get('recall'),
-            f1_score=supervised.get('f1_score')
+            f1_score=supervised.get('f1_score'),
+            owner=request.user
         )
 
         # Add prediction info ID to results
@@ -267,7 +270,7 @@ class RunModel(APIView):
                             packet_id=packet_id,
                             model=ml_model,
                             anomaly_score=float(anomaly_score),
-                            created_by=request.user if request.user.is_authenticated else User.objects.first()
+                            owner=request.user
                         )
                         anomaly_count += 1
                 except Exception as e:

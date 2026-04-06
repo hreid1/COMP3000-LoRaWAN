@@ -103,3 +103,5 @@ Things to do
 - Different fonts within the page
 - Need to figure out how the device list filtering works
 - Fix graph on devices page
+- For logs, only need to store essential information not entire response
+- Implement rate limiting

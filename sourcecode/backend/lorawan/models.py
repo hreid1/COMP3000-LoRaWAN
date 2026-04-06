@@ -79,6 +79,9 @@ class Packet(models.Model):
     inter_arrival_time_m = models.FloatField()
 
     is_anomalous = models.BooleanField(default=False)
+    owner = models.ForeignKey(
+        "auth.User", related_name="packets", on_delete=models.SET_NULL, null=True
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -88,7 +91,7 @@ class MLModel(models.Model):
     name = models.CharField(max_length=200)
     version = models.FloatField()
     algorithm_type = models.CharField(max_length=100)
-    created_by = models.ForeignKey(
+    owner = models.ForeignKey(
         "auth.User", related_name="ml_models", on_delete=models.SET_NULL, null=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
@@ -99,9 +102,10 @@ class MLModel(models.Model):
 class Anomaly(models.Model):
     packet = models.ForeignKey(Packet, on_delete=models.CASCADE)
     model = models.ForeignKey(MLModel, on_delete=models.CASCADE)
-    detected_at = models.DateTimeField(auto_now_add=True)
+    #detected_at = models.DateTimeField(auto_now_add=True)
+    detected_at = models.DateTimeField(default=timezone.now)
     anomaly_score = models.FloatField(null=True, blank=True)
-    created_by = models.ForeignKey(
+    owner = models.ForeignKey(
         "auth.User", related_name="anomalies", on_delete=models.SET_NULL, null=True
     )
 
@@ -110,7 +114,6 @@ class Anomaly(models.Model):
 
 class ModelTrainingInfo(models.Model):
     model_id = models.ForeignKey(MLModel, on_delete=models.CASCADE)
-    trained_by_id = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True)
     trained_at = models.DateTimeField(null=True)
     training_data_file = models.CharField(max_length=100)
     num_training_samples = models.IntegerField()
@@ -119,6 +122,10 @@ class ModelTrainingInfo(models.Model):
     contamination = models.FloatField()
 
     is_active = models.BooleanField(default=False)
+
+    owner = models.ForeignKey(
+        "auth.User", related_name="modeltraininginfos", on_delete=models.SET_NULL, null=True
+    )
 
     def __str__(self):
         return f"Model: {self.model_id.name} was trained at {self.trained_at}"
@@ -142,6 +149,10 @@ class ModelPredictionInfo(models.Model):
     precision = models.FloatField(null=True, blank=True)
     recall = models.FloatField(null=True, blank=True)
     f1_score = models.FloatField(null=True, blank=True)
+
+    owner = models.ForeignKey(
+    "auth.User", related_name="modelpredictioninfos", on_delete=models.SET_NULL, null=True
+    )
 
     def __str__(self):
         return f"Model: {self.model_id.name} was ran on file {self.input_file_name} at {self.predicted_at}"

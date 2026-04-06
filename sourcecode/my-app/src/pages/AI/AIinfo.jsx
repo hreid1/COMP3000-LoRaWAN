@@ -7,6 +7,7 @@ import Modal2 from '../../components/unusedcomponents/Modal/Modal'
 import Example from '../../components/unusedcomponents/Charts/Graph'
 import Papa from 'papaparse'
 import RefreshIcon from '@mui/icons-material/Refresh'
+import api from '../../utils/api'
 
 import { 
   Box,
@@ -43,33 +44,11 @@ const Statistics = () => {
     )
 }
 
-const AiModelContainer = ({}) => {
+const AiModelContainer = ({data}) => {
   const [open, setOpen] = useState(false)
-  const [data, setData] = useState([])
   const [selectedModel, setSelectedModel] = useState(null)
-  const [historyData, setHistoryData] = useState([])
   const [search, setSearch] = useState("")
   const [sortBy, setSortBy] = useState("name")
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/mlmodels/")
-      .then((response) => {
-        setData(response.data.results || [])
-      })
-      .catch((error) => {
-        console.error("Error fetching models:", error)
-      })
-  }, [])
-
-  useEffect(() => {
-    axios.get("http://127.0.0.1:8000/lorawan/modelpredictioninfos/")
-      .then((response) => {
-        setHistoryData(response.data.results || [])
-      })
-      .catch((error) => {
-        console.error("Error fetching history:", error)
-      })
-  }, [])
 
   const handleModelClick = (model) => {
     setSelectedModel(model)
@@ -81,7 +60,7 @@ const AiModelContainer = ({}) => {
     setSelectedModel(null)
   }
 
-  const filteredData = data.filter(model =>
+  const filteredData = data.models.filter(model =>
     String(model.name).toLowerCase().includes(search.toLowerCase())
   )
 
@@ -167,13 +146,13 @@ const AiModelContainer = ({}) => {
               Close
             </Button>
           </Box>
-          {selectedModel && historyData.filter((item) => item.model_id === selectedModel.id).length === 0 ? (
+          {selectedModel && data.modelpredictions.filter((item) => item.model_id === selectedModel.id).length === 0 ? (
             <Typography variant="body1" color="textSecondary">
               No predictions found for this model
             </Typography>
           ) : (
             <Box>
-              {historyData
+              {data.modelpredictions
                 .filter((item) => item.model_id === selectedModel?.id)
                 .map((item) => (
                   <Paper key={item.id} sx={{ p: 2, mb: 2, backgroundColor: '#f5f5f5' }}>
@@ -190,12 +169,6 @@ const AiModelContainer = ({}) => {
                 ))}
             </Box>
           )}
-          <Button
-            variant="outlined"
-            onClick={handleClose}
-          >
-            Close
-          </Button>
         </Box>
       </Modal>
     </Card>
@@ -228,7 +201,11 @@ const RunModel = () => {
     formData.append("model", selectedModel)
     
     setIsLoading(true)
-    axios.post("http://127.0.0.1:8000/lorawan/run/", formData)
+    api.post("run/",formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })
     .then(response => {
       console.log(response.data.performance)
       setResults(response.data.performance)
@@ -380,7 +357,6 @@ const RunModel = () => {
   )
 }
 
-
 const AIinfoContentContainer = ({data, loading, error}) => {
   if (loading) {
     return(
@@ -411,6 +387,7 @@ const AIinfoContentContainer = ({data, loading, error}) => {
 const AIinfo = () => {
   const [data, setData] = useState({
     models: [],
+    modelpredictioninfos: [],
     loading: true,
     error: null,
   })
@@ -418,20 +395,20 @@ const AIinfo = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [aimodels] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/lorawan/mlmodels/")
+        const [mlmodels, modelpredictions] = await Promise.all([
+          api.get("/mlmodels/"),
+          api.get("/users/me/")
         ])
         setData({
-          models: aimodels.data.results,
-          loading: false,
-          error: null
+          models: mlmodels.data.results,
+          modelpredictions: modelpredictions.data.modelpredictioninfos,
         })
       } catch (err) {
-        setData(prev => ({ ...prev, loading:false, error: err.message}))
+        setData(prev => ({ ...prev, loading: false, error: err.message}))
       }
     }
     fetchData()
-  }, []);
+  }, [])
 
   return (
     <>

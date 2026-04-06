@@ -16,6 +16,7 @@ import {
   Alert,
 } from "@mui/material"
 import ErrorIcon from "@mui/icons-material/Error"
+import api from '../../utils/api'
 
 const AnomalyFilter = ({ anomalies = [] }) => {
   const [filters, setFilters] = useState({
@@ -296,7 +297,7 @@ const Anomaly = () => {
     const fetchData = async () => {
       try {
         const [user] = await Promise.all([
-          axios.get("http://127.0.0.1:8000/lorawan/users/1/")
+          api.get("/users/me/")
         ])
         setData({
           anomalies: user.data.anomalies || [],

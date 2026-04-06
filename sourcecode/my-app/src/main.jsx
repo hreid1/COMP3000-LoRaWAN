@@ -26,7 +26,7 @@ import Admin from './pages/Admin/Admin';
 import MainLayout from './layouts/MainLayout';
 import Login from './pages/Login/Login';
 
-import { AuthProvider } from '../context/AuthContext'
+import { Authorisation } from '../context/AuthContext'
 
 const router = createBrowserRouter([
     { path: "/", element: <App /> },
@@ -47,9 +47,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')).render(
     <StrictMode>
         <ThemeProvider theme={theme}>
-            <AuthProvider>
+            <Authorisation>
                 <RouterProvider router={router} />
-            </AuthProvider>
+            </Authorisation>
         </ThemeProvider>
     </StrictMode>
 );
