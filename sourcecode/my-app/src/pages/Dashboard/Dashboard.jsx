@@ -7,7 +7,7 @@ import Chart from 'chart.js/auto'
 import { CategoryScale } from 'chart.js/auto'
 import Card from '../../components/Card/Card'
 import DeviceCard from '../../components/Card/DeviceCard'
-import AlertMessage from '../../components/Alert/Alert'
+import AlertMessage from '../../components/Alert/AlertMessage'
 import api from '../../utils/api'
 import AuthContext from '../../../context/AuthContext'
 
@@ -22,7 +22,10 @@ import {
   CircularProgress,
   Typography,
   Paper,
-  Alert
+  Alert,
+  AlertTitle,
+  TextField,
+  MenuItem,
 } from '@mui/material'
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -34,48 +37,40 @@ const AnomalyTimeline = ({ data }) => {
   )
 }
 
-const RecentActivity = () => {
-  const activityData = [
-    {
-      id: 1,
-      type: "device_added",
-      message: "Node ID 1005 has been added",
-      user: "Admin",
-      severity: "success",
-      created_at: "17:35 14/03/2026",
-    },
-    {
-      id: 2,
-      type: "anomaly_detected",
-      message: "An Anomaly has been detected at node 42 by Model: Isolation Forest",
-      severity: "warning",
-      created_at: "17:55 14/03/2026",
-    },
-    {
-      id: 3,
-      type: "model_ran",
-      message: "The isolation forest model was ran on dataset jammer.csv",
-      severity: "warning",
-      created_at: "17:56 14/03/2026",
-    },
-    {
-      id: 4,
-      type: "device_offline",
-      message: "Node 42 is offline",
-      severity: "error",
-      created_at: "17:57 14/03/2026",
-    },
-  ]
+const RecentActivity = ({data}) => {
+  const [sortBy, setSortBy] = useState("")
 
   return(
     <Card title="Recent Activity" id="recentActivity">
-      {activityData.map(activity => (
-        <div key={activity.id} style={{padding: 4, gap: 1}}>
-          <Alert severity={activity.severity}>
-            <span>{activity.message}</span>
-          </Alert>
-        </div>
-      ))}
+      <Box sx={{paddingBottom: 1}}>
+        <TextField 
+          select
+          fullWidth
+          label="Sort By"
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value)}
+          size="small"
+        >
+          <MenuItem value="anomaly">Anomalies</MenuItem>
+          <MenuItem value="system">System</MenuItem>
+        </TextField>
+      </Box>
+      <div id="recentActContainer">
+        {data.map(alert => (
+          <div key={alert.id} style={{padding: 2, margin: 8, gap: 2}}>
+            <Alert severity={alert.severity} sx={{display: 'flex'}}
+              action={
+                <Button size='small' color='inherit'> 
+                  View
+                </Button>
+              }
+            >
+              <AlertTitle>{alert.title} at {new Date(alert.created_at).toLocaleDateString()}</AlertTitle>
+              {alert.message}
+            </Alert>
+          </div>
+        ))}
+      </div>
     </Card>
   )
 }
@@ -130,23 +125,10 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
+  // Filter system announcements from data
+
   return(
     <Card id="announcements" title="Announcements">
-      {data.map(alert => (
-        <div key={alert.id} style={{marginBottom: "16px"}}>
-          <Alert severity={alert.severity} sx={{display: 'flex', flexDirection: 'column', gap: '8px', '& .MuiAlert-message': { width: '100%' }}}>
-            <div style={{ fontWeight: 'bold', fontSize: '15px', lineHeight: '1.4', width: '100%' }}>
-              {alert.title}
-            </div>
-            <div style={{ fontSize: '14px', color: '#333', lineHeight: '1.5', width: '100%' }}>
-              {alert.message}
-            </div>
-            <div style={{ fontSize: '12px', color: '#666', marginTop: '4px', width: '100%' }}>
-              {alert.date}
-            </div>
-          </Alert>
-        </div>
-      ))}
     </Card>
   )
 }
@@ -246,7 +228,7 @@ const MainDashContent = ({data, loading, error, onAlert}) => {
         <NetworkOverview devices={data.devices} stats={data.packets} anomalies={data.anomalies} />
         <Graph data={data.devices}/>
         <Graph2 data={data.packets}/>
-        <RecentActivity data={data.anomalies}/>
+        <RecentActivity data={data.announcements}/>
         <Announcements data={data.announcements}/>
         <AnomalyTimeline data={data.anomalies}/>
     </div>

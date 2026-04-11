@@ -191,9 +191,13 @@ const RunModel = () => {
   const [resultsOpen, setResultsOpen] = useState(false)
   const [currentResults, setCurrentResults] = useState([])
 
-  function handleFileRun(event) {
+  async function handleFileRun(event) {
     if (!file) {
-      console.error("No File")
+      setSnackbar({
+        open: true,
+        message: "No file selected",
+        severity: "error"
+      })
       return;
     }
     const formData = new FormData()
@@ -201,78 +205,66 @@ const RunModel = () => {
     formData.append("model", selectedModel)
     
     setIsLoading(true)
-    api.post("run/",formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    })
-    .then(response => {
-      console.log(response.data.performance)
+    try {
+      const response = await api.post("run/", formData)
+      console.log("Response:", response.data)
       setResults(response.data.performance)
-      setIsLoading(false)
-      
-      // Create success log
-      createLog(true, file.name, selectedModel);
       
       setSnackbar({
         open: true,
         message: "Model ran successfully!",
         severity: "success"
       })
-    })
-    .catch(err => {
-      console.error("Error running model:", err)
-      setIsLoading(false)
-      
-      // Create error log
-      createLog(false, file.name, selectedModel, err.message);
+    } catch (err) {
+      console.error("Error running model:", err.response?.data || err.message)
       
       setSnackbar({
         open: true,
-        message: "Failed to run model. Please try again.",
+        message: err.response?.data?.detail || "Failed to run model. Please try again.",
         severity: "error"
       })
-    })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
-  function createLog(success, fileName, modelName, errorMessage = null) {
-    const logData = {
-      owner: 1, // change later
-      title: `Model Run - ${modelName}`,
-      description: success 
-        ? `Successfully ran model "${modelName}" on file "${fileName}"`
-        : `Failed to run model "${modelName}" on file "${fileName}". Error: ${errorMessage}`,
-      log_type: "model_run",
-      severity: success ? "info" : "error"
-    };
-
-    axios.post("http://127.0.0.1:8000/lorawan/logs/", logData)
-      .then(response => {
-        //console.log("Log created:", response.data);
-      })
-      .catch(error => {
-        console.error("Failed to create log:", error);
-      });
-  }
-
-  function handleAddToDB(){
+  async function handleAddToDB(){
     if (!file){
-      setError("No file selected")
+      setSnackbar({
+        open: true,
+        message: "No file selected",
+        severity: "error"
+      })
       return;
     }
 
     const formData = new FormData();
     formData.append("myFile", file, file.name)
-
-    axios.post("http://127.0.0.1:8000/lorawan/addmodel/", formData)
-    .then(response => {
-      console.log("File added to DB")
+    
+    setIsLoading(true)
+    try {
+      const response = await api.post("addmodel/", formData)
+      console.log("Packets added:", response.data)
+      
+      setSnackbar({
+        open: true,
+        message: `Successfully added ${response.data.packet_ids?.length || 0} packets to database!`,
+        severity: "success"
+      })
+      
       setFile(null);
-      setData([]);
-    })
-    .catch(err => {
-      console.error("Database upload failed")
-    })
+      setData([])
+    } catch (err){
+      console.error("Error adding to DB:", err.response?.data || err.message)
+      
+      setSnackbar({
+        open: true,
+        message: err.response?.data?.error || "Failed to add packets to database",
+        severity: "error"
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   function handleFileChange(event) {

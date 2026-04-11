@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import Card from '../../components/Card/Card'
 import './Anomaly.css'
 import axios from 'axios'
@@ -18,16 +18,8 @@ import {
 import ErrorIcon from "@mui/icons-material/Error"
 import api from '../../utils/api'
 
-const AnomalyFilter = ({ anomalies = [] }) => {
-  const [filters, setFilters] = useState({
-    dateRange: "",
-    model: "",
-    severity: "",
-    device: ""
-  })
-
+const AnomalyFilter = ({ anomalies = [], filters, setFilters }) => {
   const models = [...new Set(anomalies.map(a => a.model_name))].filter(Boolean)
-  const devices = [...new Set(anomalies.map(a => a.packet?.nodeID?.node_id))].filter(Boolean)
 
   const handleReset = () => {
     setFilters({
@@ -48,12 +40,11 @@ const AnomalyFilter = ({ anomalies = [] }) => {
           onChange={(e) => setFilters({...filters, dateRange: e.target.value})}
           size="small"
         >
-          <MenuItem value="">All Time</MenuItem>
+          <MenuItem value="allTime">All Time</MenuItem>
           <MenuItem value="today">Today</MenuItem>
           <MenuItem value="week">Last 7 Days</MenuItem>
           <MenuItem value="month">Last 30 Days</MenuItem>
         </TextField>
-
         <TextField
           select
           label="Model"
@@ -66,7 +57,6 @@ const AnomalyFilter = ({ anomalies = [] }) => {
             <MenuItem key={model} value={model}>{model}</MenuItem>
           ))}
         </TextField>
-
         <TextField
           select
           label="Severity"
@@ -79,20 +69,6 @@ const AnomalyFilter = ({ anomalies = [] }) => {
           <MenuItem value="warning">Warning</MenuItem>
           <MenuItem value="info">Info</MenuItem>
         </TextField>
-
-        <TextField
-          select
-          label="Device"
-          value={filters.device}
-          onChange={(e) => setFilters({...filters, device: e.target.value})}
-          size="small"
-        >
-          <MenuItem value="">All Devices</MenuItem>
-          {devices.map(device => (
-            <MenuItem key={device} value={device}>Node {device}</MenuItem>
-          ))}
-        </TextField>
-
         <Button
           variant="outlined"
           size="small"
@@ -105,21 +81,7 @@ const AnomalyFilter = ({ anomalies = [] }) => {
   )
 }
 
-const AnomalyCard = () => {
-  return(
-    <Card id="anomalyCard" title="What should be included">
-      <ul>List of anomalies</ul>
-      <ul>Anomaly Details</ul>
-      <ul>Filter by: Date, Model, device</ul>
-      <ul>Severity indicators - is an anomaly a critical, moderate or low intensity anomaly</ul>
-      <ul>Actions on those anomalies - dismiss</ul>
-      <ul>Graphs to show recent trends/historical data</ul>
-    </Card>
-  )
-}
-
 const AnomalyList = ({data}) => {
-  const [sortBy, setSortBy] = useState("name")
   const [open, setOpen] = useState(false)
   const [selectedAnomaly, setSelectedAnomaly] = useState(null)
 
@@ -150,24 +112,6 @@ const AnomalyList = ({data}) => {
 
   return(
     <Card title="Anomaly List" id="anomalyList">
-      <Box>
-          <Grid>
-            <TextField
-              select
-              fullWidth
-              label="Sort By"
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              size="small"
-              sx={{width: "25%"}}
-            >
-              <MenuItem value="name">Name</MenuItem>
-              <MenuItem value="detected_at">Date</MenuItem>
-              <MenuItem value="model">Model</MenuItem>
-              <MenuItem value="node">Node</MenuItem>
-            </TextField>
-          </Grid>
-      </Box>
       <Grid container spacing={3} sx={{paddingBottom: '2rem', marginTop: '0.5rem'}}>
         {data.map((anomaly) => (
           <Grid container spacing={{ xs: 3, md: 3}} columns={{ sx: 4, sm: 8, md: 12}} key={anomaly.id}>
@@ -234,7 +178,6 @@ const AnomalyList = ({data}) => {
 }
 
 const AnomalyStatistics = ({data}) => {
-
   const totalAnomalies = data?.length || 0 ;
 
   return(
@@ -255,7 +198,47 @@ const AnomalyStatistics = ({data}) => {
   )
 }
 
+const AnomalyGraph = ({data}) => {
+  return(
+    <Card id="anomalyGraph" title="Histogram for anomaly score">
+
+    </Card>
+  )
+}
+
 const AnomalyContent = ({data, loading, error}) => {
+  const [filters, setFilters] = useState({
+    dateRange: "",
+    model: "",
+    severity: "",
+  })
+
+  const filteredData = useMemo(() => {
+    const list = data.anomalies || [];
+    
+    return list.filter(anomaly => {
+      const matchesModel = !filters.model || anomaly.model_name === filters.model;
+      
+      let matchesDate = true;
+      if (filters.dateRange) {
+        const detectedAt = new Date(anomaly.detected_at);
+        const now = new Date();
+        if (filters.dateRange === 'today') {
+          matchesDate = detectedAt.toDateString() === now.toDateString();
+        } else if (filters.dateRange === 'week') {
+          const sevenDaysAgo = new Date().setDate(now.getDate() - 7);
+          matchesDate = detectedAt >= sevenDaysAgo;
+        } else if (filters.dateRange === 'month') {
+          const thirtyDaysAgo = new Date().setMonth(now.getMonth() - 1);
+          matchesDate = detectedAt >= thirtyDaysAgo;
+        }
+      }
+
+      return matchesModel && matchesDate;
+    });
+  }, [data.anomalies, filters]);
+
+
   if (loading){
     return(
       <Box sx={{display: 'grid', placeItems: 'center', height: '100vh'}}>
@@ -276,11 +259,11 @@ const AnomalyContent = ({data, loading, error}) => {
 
   return(
     <div className='anomalyContentContainer'>
-      <AnomalyFilter anomalies={data.anomalies}/>
+      <AnomalyFilter anomalies={data.anomalies} filters={filters} setFilters={setFilters}/>
       <div className="anomalyContent">
-        <AnomalyStatistics data={data.anomalies}/>
-        <AnomalyList data={data.anomalies} />
-        <AnomalyCard />
+        <AnomalyStatistics data={filteredData}/>
+        <AnomalyList data={filteredData} />
+        <AnomalyGraph />
       </div>
     </div>
   )

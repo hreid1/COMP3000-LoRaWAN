@@ -60,7 +60,7 @@ const AddDevice = () => {
     nodeId: "",
     mac: "",
     location: "",
-    isActive: true, // Fix 1: Define the initial value here
+    isActive: true, 
   })
   const [submit, setSubmit] = useState(false)
 

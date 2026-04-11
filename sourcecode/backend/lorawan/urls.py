@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework import renderers
-from lorawan.views import api_root, NodeViewSet, UserViewSet, PacketViewSet, MLModelViewSet, AnomalyViewSet, TestView, AlertViewSet
+from lorawan.views import api_root, NodeViewSet, UserViewSet, PacketViewSet, MLModelViewSet, AnomalyViewSet, AlertViewSet
 from . import views
 
 router = DefaultRouter()
@@ -21,6 +21,5 @@ app_name = "lorawan"
 urlpatterns = [
     path("", include(router.urls)),
     path("run/", views.RunModel.as_view(), name='run-model'),
-    path("addmodel/", views.TestView.as_view(), name='add'),
     path("train-models/", views.train_models, name="train-models"),
 ]

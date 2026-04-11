@@ -42,8 +42,12 @@
     grid-column: 4 / 5;
     grid-row: 3 / 4;
     width: 400px;
+    overflow-y: auto;
 }
 
+#recentActContainer{
+    height: 400px;
+}
 
 #anomalyTimeline {
     grid-column: 1 / 5;

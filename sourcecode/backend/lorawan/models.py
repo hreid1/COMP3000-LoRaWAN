@@ -184,6 +184,11 @@ class Alert(models.Model):
     anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
+
+    is_resolved = models.BooleanField(default=False)
+    resolved_by = models.ForeignKey(
+        "auth.User", related_name='resolved_alerts', on_delete=models.SET_NULL, null=True, blank=True
+    )
     resolved_at = models.DateField(null=True, blank=True)
 
     def __str__(self):

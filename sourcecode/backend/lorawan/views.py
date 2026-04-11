@@ -23,6 +23,7 @@ import numpy as np
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
 from .services.mlmodel_service import MLModelService
+from django_filters.rest_framework import DjangoFilterBackend
 
 @api_view(["GET"])
 def api_root(request, format=None):
@@ -97,8 +98,10 @@ class MLModelViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 class AnomalyViewSet(viewsets.ModelViewSet):
-    queryset = Anomaly.objects.all().order_by("-detected_at")
+    queryset = Anomaly.objects.all()
     serializer_class = AnomalySerializer
+    filter_backends = [DjangoFilterBackend]
+    filtersetFields = ['model_name']
 
 class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -147,18 +150,14 @@ class LogViewSet(viewsets.ModelViewSet):
         serializer.save(owner=self.request.user)
 
 # Views
-class TestView(APIView):
+class RunModel(APIView):
     parser_classes = (MultiPartParser,)
+    permission_classes = [permissions.IsAuthenticated]
     
-    def post(self, request):
-        uploaded_file = request.FILES.get("myFile")
-        df = pd.read_csv(uploaded_file)
-
-        owner = request.user if request.user.is_authenticated else User.objects.first()
+    def createPacketsFromDataframe(self, df, owner):
         created_packets = []
-
+        
         for idx, row in df.head(1000).iterrows():
-        #for idx, row in df.iterrows():
             try:
                 node_id = int(row.iloc[1])  # NodeID column
 
@@ -193,22 +192,35 @@ class TestView(APIView):
                 packet.save()
                 created_packets.append(packet.id)
             except Exception as e:
-                return Response({"error": f"Row {idx}: {str(e)}"}, status=400)
-
-        return Response({
-            "message": f"Successfully created {len(created_packets)} packets",
-            "packet_ids": created_packets
-        })
-    
-class RunModel(APIView):
-    parser_classes = (MultiPartParser,)
-    permission_classes = [permissions.IsAuthenticated]
+                raise Exception(f"Row {idx}: {str(e)}")
+        
+        return created_packets
     
     def post(self, request):
         uploaded_file = request.FILES.get('myFile')
-        model_type = request.POST.get('model', 'IsolationForest') 
-        results = mlmodel_service.MLModelService.run(uploaded_file, model_type)
-        #test = mlmodel_service.MLModelService.trainModels()
+        model_type = request.POST.get('model', 'IsolationForest')
+        
+        if not uploaded_file:
+            return Response({"error": "No file provided"}, status=400)
+        
+        # Run model to get predictions and performance metrics
+        try:
+            results = mlmodel_service.MLModelService.run(uploaded_file, model_type)
+        except Exception as e:
+            return Response({"error": f"Model execution failed: {str(e)}"}, status=400)
+        
+        # Re-read file to create packets (necessary because file pointer was consumed)
+        uploaded_file.seek(0)
+        try:
+            df = pd.read_csv(uploaded_file)
+        except Exception as e:
+            return Response({"error": f"Invalid CSV file: {str(e)}"}, status=400)
+        
+        # Create packet records
+        try:
+            created_packets = self.createPacketsFromDataframe(df, request.user)
+        except Exception as e:
+            return Response({"error": str(e)}, status=400)
 
         # Get or create the MLModel instance
         ml_model, _ = MLModel.objects.get_or_create(
@@ -255,23 +267,23 @@ class RunModel(APIView):
         results['prediction_id'] = prediction_info.id
 
         # Create anomaly records for flagged packets
+        created_anomalies = []  # Track created anomalies for alert creation -> used because multiple models can pick a singular packet to be anomalous so get doesnt work
         if 'anomaly_indices' in results and results['anomaly_indices']:
             # Get packet IDs from the latest packets (assuming uploaded file packets were just created)
-            # Order by most recent first
-            recent_packets = list(Packet.objects.all().order_by('-created_at')[:results['num_packets']].values_list('id', flat=True))
-            recent_packets.reverse()  
+            recent_packets = list(Packet.objects.filter(id__in=created_packets).order_by('created_at').values_list('id', flat=True))
             
             anomaly_count = 0
             for idx, anomaly_score in zip(results['anomaly_indices'], results['anomaly_scores']):
                 try:
                     if idx < len(recent_packets):
                         packet_id = recent_packets[idx]
-                        Anomaly.objects.create(
+                        anomaly = Anomaly.objects.create(
                             packet_id=packet_id,
                             model=ml_model,
                             anomaly_score=float(anomaly_score),
                             owner=request.user
                         )
+                        created_anomalies.append(anomaly)
                         anomaly_count += 1
                 except Exception as e:
                     print(f"Error creating anomaly record: {str(e)}")
@@ -280,9 +292,26 @@ class RunModel(APIView):
             # Also mark packets as anomalous in the Packet model
             Packet.objects.filter(id__in=[recent_packets[i] for i in results['anomaly_indices'] if i < len(recent_packets)]).update(is_anomalous=True)
 
-        # Create alerts
+        # Create alerts for each anomaly
+        for anomaly in created_anomalies:
+            try:
+                packet = anomaly.packet
+
+                Alert.objects.create(
+                    owner=request.user,
+                    title=f"Anomaly Detected at {packet.nodeID}",
+                    message=f"Anomaly packet {packet.id} flagged by Model: {ml_model.name}",
+                    alert_type='anomaly',
+                    node=packet.nodeID,
+                    packet=packet,
+                    anomaly=anomaly,
+                    severity='warning'
+                )
+                    
+            except Exception as e:
+                print(f"Error creating alert record: {str(e)}") 
 
         # Create log
-        
+
 
         return Response(results)

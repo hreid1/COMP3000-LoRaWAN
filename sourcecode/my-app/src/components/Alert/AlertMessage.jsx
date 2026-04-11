@@ -8,7 +8,7 @@ const AlertMessage = ({ open, message, severity = "info", onClose }) => {
         onClose={onClose}
         anchorOrigin={{ vertical: 'top', horizontal: 'right'}}
     >
-        <Alert onClose={onClose} severity={severity} sx={{ width: '100%'}}>
+        <Alert onClose={onClose} severity={severity} sx={{ width: '100%', display: 'flex', flexDirection: 'row'}}>
             {message}
         </Alert>
     </Snackbar>

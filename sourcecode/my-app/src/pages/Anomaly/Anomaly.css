@@ -35,7 +35,13 @@
     grid-row: 2;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto;
     gap: 1rem;
+}
+
+#anomalyGraph {
+    grid-column: 1 / 4;
+    width: 100%;
 }
 
 .anomalyStats {
