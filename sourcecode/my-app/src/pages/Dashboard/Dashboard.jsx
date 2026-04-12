@@ -14,6 +14,9 @@ import AuthContext from '../../../context/AuthContext'
 import NetworkCheckIcon from '@mui/icons-material/NetworkCheck';
 import DevicesIcon from '@mui/icons-material/Devices';
 import ErrorIcon from "@mui/icons-material/Error"
+import SensorsIcon from '@mui/icons-material/Sensors';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import SpeedIcon from '@mui/icons-material/Speed';
 import { 
   Container, 
   Grid, 
@@ -26,6 +29,9 @@ import {
   AlertTitle,
   TextField,
   MenuItem,
+  Stack,
+  Card as MuiCard,
+  CardContent,
 } from '@mui/material'
 import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
@@ -92,35 +98,72 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 
   if (totalAnomalies > 10) {
     trafficStatus = 'Unhealthy'
-    trafficColour = 'red'
+    trafficColour = '#d32f2f'
   } else if (totalAnomalies > 5) {
     trafficStatus = 'Moderate'
-    trafficColour = 'orange'
+    trafficColour = '#ed6c02'
   } else {
     trafficStatus = 'Healthy'
-    trafficColour = 'green'
-  } 
+    trafficColour = '#2e7d32'
+  }
 
-  return(
-    <div id="networkOverview">
+  const StatItem = ({ value, icon, color, label }) => (
+    <Stack direction="row" spacing={2} alignItems="center" sx={{ height: '100%' }}>
+      <Box sx={{ 
+        backgroundColor: `${color}15`, 
+        borderRadius: '50%', 
+        p: 1.5, 
+        display: 'flex', 
+        color: color 
+      }}>
+        {icon}
+      </Box>
+      <Box>
+        <Typography variant="h5" sx={{ fontWeight: 'bold' }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'medium' }}>
+          {label}
+        </Typography>
+      </Box>
+    </Stack>
+  )
+
+  return (
+    <Box id="networkOverview" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', width: '100%', mb: '4px' }}>
       <Card title="Total Devices">
-        <DevicesIcon />
-        <span>Total devices: {totalDevices}</span>
+        <StatItem 
+          value={totalDevices} 
+          label="Connected Nodes"
+          icon={<DevicesIcon />} 
+          color="#1976d2" 
+        />
       </Card>
       <Card title="Active Anomalies">
-        <ErrorIcon />
-        <span>Total Anomalies in last 24 hours: {totalAnomalies}</span>
+        <StatItem 
+          value={totalAnomalies} 
+          label="Last 24 Hours"
+          icon={<ErrorIcon />} 
+          color="#d32f2f" 
+        />
       </Card>
-      <Card title="Traffic Score">
-        <span style={{ color: trafficColour, fontWeight: 'bold' }}>
-          {trafficStatus}
-        </span>
+      <Card title="Traffic Status">
+        <StatItem 
+          value={trafficStatus} 
+          label="Network Health"
+          icon={<AssessmentIcon />} 
+          color={trafficColour} 
+        />
       </Card>
-      <Card title="Average RSSI">
-        <NetworkCheckIcon />
-        <span>{averageRSSI}</span>
+      <Card title="Avg RSSI">
+        <StatItem 
+          value={`${averageRSSI} dBm`} 
+          label="Signal Strength"
+          icon={<SpeedIcon />} 
+          color="#0288d1" 
+        />
       </Card>
-    </div>
+    </Box>
   )
 }
 
