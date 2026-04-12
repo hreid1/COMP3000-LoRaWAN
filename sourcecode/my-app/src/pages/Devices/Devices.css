@@ -7,15 +7,9 @@
 }
 
 #deviceStats {
-    display: flex;
-    flex-direction: row;
     grid-column: 1 / 4;
     grid-row: 1 / 2;
-    gap: 1rem;
-}
-
-#deviceStats > div {
-    flex: 1;
+    width: 100%;
 }
 
 #mapBox {

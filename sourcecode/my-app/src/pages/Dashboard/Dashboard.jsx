@@ -33,12 +33,67 @@ import {
   Card as MuiCard,
   CardContent,
 } from '@mui/material'
-import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { LineChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area } from 'recharts';
 
 const AnomalyTimeline = ({ data }) => {
-  // For each point inside data add a +1 to index with time of detected_at
+  const chartData = useMemo(() => {
+    if (!data || data.length === 0) return [];
+
+    // Grouping by date 
+    const grouped = data.reduce((acc, anomaly) => {
+      const date = new Date(anomaly.detected_at).toLocaleDateString();
+      acc[date] = (acc[date] || 0) + 1;
+      return acc;
+    }, {});
+
+    // Sort dates and format for chart
+    return Object.entries(grouped)
+      .map(([date, count]) => ({
+        date,
+        count,
+        timestamp: new Date(date).getTime()
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp);
+  }, [data]);
+
   return (
     <Card title="Anomalies Over Time" id="anomalyTimeline">
+      <Box sx={{ width: '100%', height: 350, mt: 2 }}>
+        <ResponsiveContainer>
+          <AreaChart data={chartData}>
+            <defs>
+              <linearGradient id="colorCount" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#d32f2f" stopOpacity={0.1}/>
+                <stop offset="95%" stopColor="#d32f2f" stopOpacity={0}/>
+              </linearGradient>
+            </defs>
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#eee" />
+            <XAxis 
+              dataKey="date" 
+              tick={{ fontSize: 11 }}
+              minTickGap={30}
+            />
+            <YAxis 
+              tick={{ fontSize: 11 }} 
+              allowDecimals={false}
+              label={{ value: 'Total Anomalies', angle: -90, position: 'insideLeft', style: { fontSize: 11 } }}
+            />
+            <Tooltip 
+              contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }}
+            />
+            <Area 
+              type="monotone" 
+              dataKey="count" 
+              stroke="#d32f2f" 
+              fillOpacity={1} 
+              fill="url(#colorCount)" 
+              strokeWidth={2}
+              activeDot={{ r: 6 }}
+              name="Anomalies"
+            />
+          </AreaChart>
+        </ResponsiveContainer>
+      </Box>
     </Card>
   )
 }
@@ -96,10 +151,10 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
   let trafficStatus = ''
   let trafficColour = ''
 
-  if (totalAnomalies > 10) {
+  if (totalAnomalies > 100) {
     trafficStatus = 'Unhealthy'
     trafficColour = '#d32f2f'
-  } else if (totalAnomalies > 5) {
+  } else if (totalAnomalies > 50) {
     trafficStatus = 'Moderate'
     trafficColour = '#ed6c02'
   } else {
@@ -130,7 +185,7 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
   )
 
   return (
-    <Box id="networkOverview" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', width: '100%', mb: '4px' }}>
+    <Box id="networkOverview" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '8px', width: '100%'}}>
       <Card title="Total Devices">
         <StatItem 
           value={totalDevices} 

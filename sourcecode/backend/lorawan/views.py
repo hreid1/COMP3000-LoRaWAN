@@ -312,6 +312,18 @@ class RunModel(APIView):
                 print(f"Error creating alert record: {str(e)}") 
 
         # Create log
+        try:
+            Log.objects.create(
+                owner=request.user,
+                title=f"Model Run: {ml_model.name}",
+                description=(
+                    f"A total of {performance['anomaly_count']} anomalies were found from file '{results['file name']}'"
+                ),
+                log_type='model_run',
+                severity='info',
+            )
+        except Exception as e:
+            print(f"Error creating lot: {str(e)}")
 
 
         return Response(results)

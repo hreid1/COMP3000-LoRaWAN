@@ -6,9 +6,12 @@ import Card from '../../components/Card/Card';
 import DeviceCard from '../../components/Card/DeviceCard';
 import Example from '../../components/unusedcomponents/Charts/Graph';
 import Map from '../../components/Map/Map';
-import { Box, Alert, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem, CircularProgress, Typography } from '@mui/material';
+import { Box, Alert, Grid, TextField, FormControlLabel, Checkbox, Button, Stack, MenuItem, CircularProgress, Typography, Tooltip as MuiTooltip } from '@mui/material';
 import ErrorIcon from "@mui/icons-material/Error"
 import DevicesIcon from '@mui/icons-material/Devices';
+import SignalCellularAltIcon from '@mui/icons-material/SignalCellularAlt';
+import BugReportIcon from '@mui/icons-material/BugReport';
+import WarningIcon from '@mui/icons-material/Warning';
 import api from '../../utils/api';
 import { ResponsiveContainer, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 
@@ -147,44 +150,89 @@ const AddDevice = () => {
 
 const DeviceStatistics = ({data, anomalies}) => {
   // Filter by is_active to get number of offline/online devices
-  // Which node is showing anomalies
-  // Average SSR, SF maybe
   const onlineDevices = data?.filter(device => device.is_active).length || 0;
   const offlineDevices = data?.filter(device => !device.is_active).length || 0;
-  const totalDevices = data?.length || 0;
   const totalAnomaly = anomalies?.length || 0;
 
-  // Find node with highest anomaly count, then look at nodeID of packet, anomalies.packet.nodeID
-  const firstAnomaly = anomalies?.[0];
-  const nodeID = firstAnomaly?.packet?.nodeID || "N/A";
-  const nodesWithAnomalies = new Set(anomalies?.map(a => a.packet?.nodeID)).size;
+  // Find node with highest anomaly count
+  const anomalyCounts = anomalies?.reduce((acc, a) => {
+    const id = a.packet?.nodeID || "N/A";
+    acc[id] = (acc[id] || 0) + 1;
+    return acc;
+  }, {}) || {};
+
+  const mostAttackedNode = Object.entries(anomalyCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || "N/A";
+  const nodesWithAnomalies = Object.keys(anomalyCounts).length;
 
   const totalPackets = data?.reduce((sum, device) => sum + (device.packets_count || 0), 0) || 0;
   const anomalyRate = totalPackets > 0 ? ((totalAnomaly / totalPackets) * 100).toFixed(1) : 0;
 
+  const StatItem = ({ value, label, subtext, icon, color }) => (
+    <Stack direction="row" spacing={2} alignItems="center">
+      <Box sx={{ 
+        backgroundColor: `${color}15`, 
+        borderRadius: '50%', 
+        p: 1.5, 
+        display: 'flex', 
+        color: color 
+      }}>
+        {icon}
+      </Box>
+      <Box>
+        <Typography variant="h5" sx={{ fontWeight: 'bold', lineHeight: 1.2 }}>
+          {value}
+        </Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ fontWeight: 'medium', display: 'block' }}>
+          {label}
+        </Typography>
+        {subtext && (
+          <Typography variant="caption" sx={{ color: 'text.disabled', fontSize: '0.7rem' }}>
+            {subtext}
+          </Typography>
+        )}
+      </Box>
+    </Stack>
+  );
+
   return (
-    <div id="deviceStats">
-      <Card title="Devices">
-          <Box sx={{display: 'flex', gap: 2}}>
-            <DevicesIcon sx={{ fontSize: 40}}/>
-            <Typography variant="h5">Online: {onlineDevices}</Typography>
-            <Typography variant="body2">Offline: {offlineDevices}</Typography>
-          </Box>
+    <Box id="deviceStats" sx={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '8px', width: '100%'}}>
+      <Card title="Device Status">
+        <StatItem 
+          value={onlineDevices} 
+          label="Online Nodes"
+          subtext={`${offlineDevices} currently offline`}
+          icon={<DevicesIcon />} 
+          color="#2e7d32" 
+        />
       </Card>
-      <Card title="Total Anomalies">
-          <Box>
-            <ErrorIcon sx={{ fontSize: 40}}/>
-            <Typography variant="h5">{totalAnomaly}</Typography>
-            <Typography variant="body2">{anomalyRate}% of packets</Typography>
-          </Box>
+      <Card title="Traffic Anomalies">
+        <StatItem 
+          value={totalAnomaly} 
+          label="Total Detected"
+          subtext={`${anomalyRate}% anomaly rate`}
+          icon={<BugReportIcon />} 
+          color="#d32f2f" 
+        />
       </Card>
-      <Card title="Affected Nodes">
-        <Box>
-          <Typography>Number of nodes with anomalies: {nodesWithAnomalies}</Typography>
-          <Typography>Most attacked: Node {nodeID}</Typography>
-        </Box>
+      <Card title="Network Risk">
+        <StatItem 
+          value={nodesWithAnomalies} 
+          label="Affected Nodes"
+          subtext={`Most targeted: Node ${mostAttackedNode}`}
+          icon={<WarningIcon />} 
+          color="#ed6c02" 
+        />
       </Card>
-    </div>
+      <Card title="Data Volume">
+        <StatItem 
+          value={totalPackets.toLocaleString()} 
+          label="Total Packets"
+          subtext="Processed by backend"
+          icon={<SignalCellularAltIcon />} 
+          color="#0288d1" 
+        />
+      </Card>
+    </Box>
   )
 }
 

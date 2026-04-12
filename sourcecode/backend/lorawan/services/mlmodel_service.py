@@ -4,12 +4,13 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import StandardScaler
 from pathlib import Path
-from sklearn.metrics import silhouette_score, accuracy_score, precision_score, recall_score, f1_score
+from sklearn.metrics import silhouette_score, accuracy_score, precision_score, recall_score, f1_score, classification_report
 from sklearn.feature_selection import SelectKBest, f_classif
 import joblib
 import shap
 import os
 import joblib
+from sklearn.model_selection import train_test_split
 
 # Running each of the models
     # Runng the model on the processed input file
@@ -22,12 +23,16 @@ import joblib
         # Anomaly
 class MLModelService:
     # Removed CR, BW, TX, payloadSize, pdrPerNodePerWindow
-    anomaly_inputs = [
+    oldAnomaly_inputs = [
         'SF', 'CF', 'SNR', 'RSSI', 'PktSeqNum',
         'numReceivedPerNode[nodeNumber-1]', 'PDRPerNode', 
         'numReceivedPerNodePerWindow[nodeNumber]', 'currentSeqNum',
         'lastSeqNumAtWindowStart[nodeNumber]',
         'interArrivalTime_s', 'interArrivalTimeMin',
+    ]
+
+    anomaly_inputs = [
+        "SF", "CF", "SNR", "RSSI", "interArrivalTime_s", 
     ]
 
     @staticmethod
@@ -59,15 +64,17 @@ class MLModelService:
         scaler = StandardScaler()
         df_scaled = scaler.fit_transform(df[anomaly_inputs])
         joblib.dump(scaler, models_dir / "scaler.pkl")
-        
-        contamination = 0.05
 
-        isolationforest = IsolationForest(contamination=contamination, random_state=42, n_estimators=500, max_samples=128, max_features=0.8)
-        isolationforest.fit(df_scaled)
+        normalTrain, normalTest = train_test_split(df_scaled, test_size=0.2, random_state=42)
+        
+        contamination = 0.01
+
+        isolationforest = IsolationForest(contamination=contamination, random_state=42)
+        isolationforest.fit(normalTrain)
         joblib.dump(isolationforest, models_dir / "isolationforest.pkl")
 
-        localoutlierfactor = LocalOutlierFactor(contamination=contamination, n_neighbors=20, algorithm="auto", leaf_size=30, novelty=True)
-        localoutlierfactor.fit(df_scaled)
+        localoutlierfactor = LocalOutlierFactor(contamination=contamination, novelty=True)
+        localoutlierfactor.fit(normalTrain)
         joblib.dump(localoutlierfactor, models_dir / "localoutlierfactor.pkl")
         
     @staticmethod
@@ -130,21 +137,6 @@ class MLModelService:
                 }
         
         return performance 
-
-    @staticmethod
-    def explainModel(model, test_scaled):
-        explainer = shap.TreeExplainer(model)
-        start_index = 1
-        end_index = 2
-        shap_values = explainer.shap_values(test_scaled[start_index:end_index])
-        print(shap_values[0].shape)
-
-        return shap_values
-    
-    @staticmethod
-    def getZscores(test_scaled, aomaly_inputs, threshold=2.5):
-        return 0
-        
     
     @staticmethod
     def run(uploaded_file, model_type='IsolationForest'):
@@ -182,7 +174,7 @@ class MLModelService:
             },
             "file name": Path(uploaded_file.name).name,
             "num_packets": len(df),
-            "predictions": predictions.tolist(),  # Add predictions
-            "anomaly_indices": anomaly_indices,   # Add anomaly indices
-            "anomaly_scores": anomaly_scores,     # Add anomaly scores
+            "predictions": predictions.tolist(),  
+            "anomaly_indices": anomaly_indices,   
+            "anomaly_scores": anomaly_scores,     
         }
