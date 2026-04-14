@@ -223,10 +223,26 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
+  console.log(data)
   // Filter system announcements from data
+  const filteredData = data.filter(announcement => announcement.alert_type === 'system')
 
   return(
     <Card id="announcements" title="Announcements">
+      <Stack spacing={2}>
+        {filteredData.length > 0 ? (
+          filteredData.map(announcement => (
+            <Alert key={announcement.id} severity='info'>
+              <AlertTitle>{announcement.title}</AlertTitle>
+              {announcement.message}
+            </Alert>
+          ))
+        ) : (
+          <Typography variant="body2" color="text.secondary">
+            No system announcements
+          </Typography>
+        )}
+      </Stack>
     </Card>
   )
 }

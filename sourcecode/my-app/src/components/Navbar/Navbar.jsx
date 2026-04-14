@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './Navbar.css'
 import notificationImg from '../../assets/notification.svg'
 import helpImg from '../../assets/help.svg'
@@ -20,8 +20,12 @@ import Tooltip from '@mui/material/Tooltip';
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import { 
+  Badge
+} from "@mui/material"
+import api from '../../utils/api.js'
 
-const NavbarV2 = ({username, logout}) => {
+const NavbarV2 = ({username, logout, alertCount}) => {
   const [navOpen, setNavOpen] = useState(null)
   const [NotiOpen, setNotiOpen] = useState(null)
 
@@ -52,17 +56,16 @@ const NavbarV2 = ({username, logout}) => {
           <Typography>Hi, {username}</Typography>
         </Box>
         <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-          <Tooltip>
-            <IconButton>
-              <NotificationsIcon onClick={handleNotiOpen}/>
-            </IconButton>
+          <Tooltip sx={{marginRight: 2 }}>
+            <Badge badgeContent={alertCount}>
+              <NotificationsIcon onClick={handleNotiOpen} sx={{ cursor: 'pointer' }}/>
+            </Badge>
           </Tooltip>
           <Menu
             open={Boolean(NotiOpen)}
             onClose={handleCloseNotiMenu}
             anchorEl={NotiOpen}
           >
-            <MenuItem></MenuItem>
           </Menu>
           <Tooltip sx={{}}>
             <IconButton onClick={handleNavOpen}>
@@ -111,10 +114,11 @@ const NavbarV1 = ({name, data}) => {
 }
 
 
-const Navbar = ({username, logout}) => {
+const Navbar = ({username, logout, alerts}) => {
+  const alertCount = alerts.length
 
   return (
-    <NavbarV2 username={username} logout={logout}/>
+    <NavbarV2 username={username} logout={logout} alertCount={alertCount} />
   )
 }
 

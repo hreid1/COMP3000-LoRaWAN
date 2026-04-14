@@ -17,7 +17,11 @@ const MainLayout = () => {
   return (
     <div id="mainLayoutContainer">
       <div id="navbarWrapper">
-        <Navbar username={user.username} logout={logoutUser}/>
+        <Navbar 
+          username={user.username} 
+          logout={logoutUser} 
+          alerts={user.alerts} 
+        />
       </div>
       <div id="sidenavbarWrapper">
         <SideNavbar />

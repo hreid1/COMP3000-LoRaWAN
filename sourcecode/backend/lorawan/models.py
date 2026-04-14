@@ -182,6 +182,7 @@ class Alert(models.Model):
     node = models.ForeignKey(Node, on_delete=models.SET_NULL, null=True, blank=True)
     packet = models.ForeignKey(Packet, on_delete=models.SET_NULL, null=True, blank=True)
     anomaly = models.ForeignKey(Anomaly, on_delete=models.SET_NULL, null=True, blank=True)
+    model = models.ForeignKey(MLModel, on_delete=models.SET_NULL, null=True, blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

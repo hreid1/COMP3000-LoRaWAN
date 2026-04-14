@@ -268,15 +268,16 @@ class RunModel(APIView):
 
         # Create anomaly records for flagged packets
         created_anomalies = []  # Track created anomalies for alert creation -> used because multiple models can pick a singular packet to be anomalous so get doesnt work
+        affected_nodes = set()
         if 'anomaly_indices' in results and results['anomaly_indices']:
-            # Get packet IDs from the latest packets (assuming uploaded file packets were just created)
-            recent_packets = list(Packet.objects.filter(id__in=created_packets).order_by('created_at').values_list('id', flat=True))
+            # Get packet IDs and node IDs from the latest packets (assuming uploaded file packets were just created)
+            recent_packets_data = list(Packet.objects.filter(id__in=created_packets).order_by('created_at').values_list('id', 'nodeID__node_id'))
             
             anomaly_count = 0
             for idx, anomaly_score in zip(results['anomaly_indices'], results['anomaly_scores']):
                 try:
-                    if idx < len(recent_packets):
-                        packet_id = recent_packets[idx]
+                    if idx < len(recent_packets_data):
+                        packet_id, node_id = recent_packets_data[idx]
                         anomaly = Anomaly.objects.create(
                             packet_id=packet_id,
                             model=ml_model,
@@ -284,32 +285,30 @@ class RunModel(APIView):
                             owner=request.user
                         )
                         created_anomalies.append(anomaly)
+                        affected_nodes.add(str(node_id))
                         anomaly_count += 1
                 except Exception as e:
                     print(f"Error creating anomaly record: {str(e)}")
             
             results['anomalies_created'] = anomaly_count
+            results['affected_nodes'] = list(affected_nodes)
             # Also mark packets as anomalous in the Packet model
-            Packet.objects.filter(id__in=[recent_packets[i] for i in results['anomaly_indices'] if i < len(recent_packets)]).update(is_anomalous=True)
+            Packet.objects.filter(id__in=[recent_packets_data[i][0] for i in results['anomaly_indices'] if i < len(recent_packets_data)]).update(is_anomalous=True)
 
-        # Create alerts for each anomaly
-        for anomaly in created_anomalies:
+        # Create alert if anomalies were detected
+        if performance['anomaly_count'] > 0:
             try:
-                packet = anomaly.packet
-
+                nodes_str = ", ".join(sorted(list(affected_nodes)))
                 Alert.objects.create(
                     owner=request.user,
-                    title=f"Anomaly Detected at {packet.nodeID}",
-                    message=f"Anomaly packet {packet.id} flagged by Model: {ml_model.name}",
+                    title=f"Anomalies Detected by {ml_model.name}",
+                    message=f"Model {ml_model.name} detected {performance['anomaly_count']} anomalies. Affected Nodes: {nodes_str}",
                     alert_type='anomaly',
-                    node=packet.nodeID,
-                    packet=packet,
-                    anomaly=anomaly,
-                    severity='warning'
+                    severity='warning',
+                    model=ml_model
                 )
-                    
             except Exception as e:
-                print(f"Error creating alert record: {str(e)}") 
+                print(f"Error creating alert record: {str(e)}")
 
         # Create log
         try:
@@ -324,6 +323,5 @@ class RunModel(APIView):
             )
         except Exception as e:
             print(f"Error creating lot: {str(e)}")
-
 
         return Response(results)
