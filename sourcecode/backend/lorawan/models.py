@@ -49,6 +49,8 @@ class Node(models.Model):
     node_id = models.IntegerField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     is_active = models.BooleanField()
+    longitude = models.FloatField(blank=True, null=True)
+    latitiude = models.FloatField(blank=True, null=True)
 
     def __str__(self):
         return f"Node {self.node_id}"

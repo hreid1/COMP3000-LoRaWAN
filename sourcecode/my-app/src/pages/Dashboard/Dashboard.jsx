@@ -223,7 +223,6 @@ const NetworkOverview = ({ devices, stats, anomalies }) => {
 }
 
 const Announcements = ({data}) => {
-  console.log(data)
   // Filter system announcements from data
   const filteredData = data.filter(announcement => announcement.alert_type === 'system')
 

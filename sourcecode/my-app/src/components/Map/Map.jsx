@@ -9,7 +9,7 @@ const Map = () => {
   return (
     <div style={{ width: '100%', height: '100%' }}>
       <MapContainer 
-        center={[51.505, -0.09]} 
+        center={[50.3755, -4.1427]} 
         zoom={13} 
         scrollWheelZoom={false}
         style={{ width: '100%', height: '500px' }}
@@ -18,7 +18,7 @@ const Map = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
-        <Marker position={[51.505, -0.09]}>
+        <Marker position={[50.3755, -4.1427]}>
           <Popup>
             A pretty CSS3 popup. <br /> Easily customizable.
           </Popup>

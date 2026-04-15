@@ -6,3 +6,34 @@
     box-sizing: border-box;
 }
 
+.logContainer {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.logFilter {
+    padding: 1rem;
+}
+
+.logTable {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.logTable th {
+    font-weight: bold;
+    padding: 12px;
+    border-bottom: 2px solid #f0f0f0;
+}
+
+.logTable td {
+    padding: 0.8rem;
+    font-size: 0.9rem;
+}
+
+.logRow {
+    border-bottom: 1px solid #f0f0f0;
+}

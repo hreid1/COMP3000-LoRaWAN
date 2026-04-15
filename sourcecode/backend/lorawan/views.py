@@ -71,7 +71,15 @@ class NodeViewSet(viewsets.ModelViewSet):
         return context
 
     def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
+        node = serializer.save(owner=self.request.user)
+
+        Log.objects.create(
+            owner=self.request.user,
+            title="New node created",
+            description=f"Node {node.node_id} has been created",
+            log_type='device_added',
+            severity='info',
+        )
 
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
@@ -156,15 +164,19 @@ class RunModel(APIView):
     
     def createPacketsFromDataframe(self, df, owner):
         created_packets = []
+        new_nodes = []
         
         for idx, row in df.head(1000).iterrows():
             try:
                 node_id = int(row.iloc[1])  # NodeID column
 
-                node, _created = Node.objects.get_or_create(
+                node, created = Node.objects.get_or_create(
                     node_id=node_id,
                     defaults={"owner": owner, "is_active": True},
                 )
+
+                if created:
+                    new_nodes.append(str(node_id))
 
                 packet = Packet(
                     time=timezone.make_aware(pd.to_datetime(row.iloc[0])),
@@ -193,7 +205,17 @@ class RunModel(APIView):
                 created_packets.append(packet.id)
             except Exception as e:
                 raise Exception(f"Row {idx}: {str(e)}")
-        
+
+        # Create log
+        if new_nodes:
+            Log.objects.create(
+                owner=owner,
+                title="Nodes have been added",
+                description=f"New Nodes",
+                log_type='device_added',
+                severity='info',
+            )
+
         return created_packets
     
     def post(self, request):
