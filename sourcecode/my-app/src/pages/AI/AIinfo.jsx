@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { createPortal } from 'react-dom'
 import Card from '../../components/Card/Card'
 import axios from 'axios'
@@ -8,7 +8,6 @@ import Example from '../../components/unusedcomponents/Charts/Graph'
 import Papa from 'papaparse'
 import RefreshIcon from '@mui/icons-material/Refresh'
 import api from '../../utils/api'
-
 import { 
   Box,
   Button,
@@ -27,13 +26,170 @@ import {
   CircularProgress,
   Snackbar,
 } from "@mui/material"
+import { 
+  LineChart,
+  Line,
+  XAxis,
+  YAxis, 
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  AreaChart,
+  Area,
+  BarChart,
+} from 'recharts'
 
-const Graph = () => {
-    return(
-        <Card id="aiGraph" title="Graph">
-            <Example />
-        </Card>
-    )
+const Graph = ({data}) => {
+  const [filters, setFilters] = useState({
+    model1: "",
+    performanceMetrics1: "",
+    performanceMetrics2: "",
+  })
+
+  const modelPredictions = data.modelpredictions || [];
+
+  const chartData = useMemo(() => {
+    if (!modelPredictions || modelPredictions.length === 0) return []
+
+    return modelPredictions
+      .filter(prediction => {
+        // If no model is selected, show nothing (or remove this check to show all)
+        if (!filters.model1) return true;
+        return prediction.model_id === filters.model1;
+      })
+      .map((prediction) => ({
+        date: new Date(prediction.predicted_at).toLocaleDateString(),
+        accuracy: prediction.accuracy * 100,
+        precision: prediction.precision * 100,
+        recall: prediction.recall * 100,
+        f1Score: prediction.f1_score * 100,
+        silhouetteScore: prediction.silhouette_score,
+        timestamp: new Date(prediction.predicted_at).getTime()
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp);
+  }, [modelPredictions, filters.model1]); // Add filters.model1 to dependencies
+
+  const chartDataModel1 = useMemo(() => {
+    if (!filters.model1 || !modelPredictions.length) return [];
+
+    return modelPredictions
+      .filter(p => p.model_id === filters.model1)
+      .map((p) => ({
+        date: new Date(p.predicted_at).toLocaleDateString(),
+        [filters.performanceMetrics1]: p[filters.performanceMetrics1] * 100,
+        timestamp: new Date(p.predicted_at).getTime()
+      }))
+      .sort((a, b) => a.timestamp - b.timestamp)
+  }, [modelPredictions, filters.model1, filters.performanceMetrics1]);
+
+  // Choose which model -> isolation forest vs local outlier factor
+  // Choose which performance metrics to compare
+  // accuracy, precision, f1 score, recall, silhouette score, anomaly percentage
+
+  return (
+    <Card id="aiGraph" title="Model Evaluation">
+      <div className="aiGraphOptions">
+        <TextField
+          select
+          label="Model"
+          size="small"
+          value={filters.model1}
+          onChange={(e) => setFilters({ ...filters, model1: e.target.value })}
+          sx={{ minWidth: 120 }}
+        >
+          {data.models.map((model) => (
+            <MenuItem key={model.id} value={model.id}>{model.name}</MenuItem>
+          ))}
+        </TextField>
+        <TextField
+          select
+          label="Performance Metric 1"
+          size="small"
+          value={filters.performanceMetrics1}
+          onChange={(e) => setFilters({ ...filters, performanceMetrics1: e.target.value })}
+          sx={{ minWidth: 200 }}
+        >
+          <MenuItem value="accuracy">Accuracy</MenuItem>
+          <MenuItem value="precision">Precision</MenuItem>
+          <MenuItem value="recall">Recall</MenuItem>
+          <MenuItem value="f1Score">F1 Score</MenuItem>
+          <MenuItem value="silhouetteScore">Silhouette Score</MenuItem>
+        </TextField>
+        <TextField
+          select
+          label="Performance Metric 2"
+          size="small"
+          value={filters.performanceMetrics2}
+          onChange={(e) => setFilters({ ...filters, performanceMetrics2: e.target.value })}
+          sx={{ minWidth: 200 }}
+        >
+          <MenuItem value="">None</MenuItem>
+          <MenuItem value="accuracy">Accuracy</MenuItem>
+          <MenuItem value="precision">Precision</MenuItem>
+          <MenuItem value="recall">Recall</MenuItem>
+          <MenuItem value="f1Score">F1 Score</MenuItem>
+          <MenuItem value="silhouetteScore">Silhouette Score</MenuItem>
+        </TextField>
+      </div>
+      <div>
+        <Box sx={{ width: '100%', height: 400, paddingTop: '1rem' }}>
+          <ResponsiveContainer width="100%" height="100%">
+            <LineChart data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date" 
+                tick={{ fontSize: 11 }}
+                minTickGap={30}
+                label={{ value: 'Prediction Date', position: 'insideBottom', offset: -5, fontSize: 12 }}
+                height={50}
+              />
+              <YAxis
+                yAxisId="left"
+                tick={{ fontSize: 11 }}
+                domain={[0, 100]}
+                label={{ value: 'Score (%)', angle: -90, position: 'insideLeft', fontSize: 12 }}
+              />
+              <Tooltip />
+              <Legend />
+              
+              {filters.performanceMetrics1 && (
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey={filters.performanceMetrics1} 
+                  stroke="#8884d8"
+                  activeDot={{ r: 8 }}
+                  name={`${filters.performanceMetrics1}`}
+                />
+              )}
+              {filters.performanceMetrics2 && (
+                <Line
+                  yAxisId="left"
+                  type="monotone"
+                  dataKey={filters.performanceMetrics2}
+                  stroke="#82ca9d"
+                  name={`${filters.performanceMetrics2}`}
+                />
+              )}
+            </LineChart>
+          </ResponsiveContainer>
+        </Box>
+      </div>
+    </Card>
+  )
+}
+
+const Graph2 = ({data}) => {
+  const [filters, setFilters] = useState({
+    model1: "",
+    model2: "",
+    metric: "accuracy"
+  })
+  return (
+    <Card id="aiGraph2" title="Model Comparison">
+    </Card>
+  )
 }
 
 const Statistics = () => {
@@ -81,8 +237,8 @@ const AiModelContainer = ({data}) => {
   return(
     <Card title="AI Models" id="aiModel2">
       <Box sx={{ mb: 3 }}>
-        <Grid container spacing={2} alignItems="center">
-          <Grid item xs={12} sm={6}>
+        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               select
               fullWidth
@@ -95,7 +251,7 @@ const AiModelContainer = ({data}) => {
               <MenuItem value="created_at">Date</MenuItem>
             </TextField>
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               fullWidth
               label="Search models..."
@@ -107,9 +263,9 @@ const AiModelContainer = ({data}) => {
           </Grid>
         </Grid>
       </Box>
-      <Grid container spacing={3} sx={{paddingBottom: '2rem', marginTop: '0.5rem'}}>
+      <Grid container spacing={3} sx={{ paddingBottom: '2rem', marginTop: '0.5rem' }}>
         {filteredData && filteredData.map((model) => (
-          <Grid item xs={12} sm={6} lg={4} key={model.id}>
+          <Grid size={{ xs: 12, sm: 6, lg: 4 }} key={model.id}>
             <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column', minHeight: '280px', boxShadow: 2 }}>
               <Typography variant="h6" sx={{ mb: 1, fontWeight: 'bold' }}>
                 {model.name}
@@ -371,6 +527,8 @@ const AIinfoContentContainer = ({data, loading, error}) => {
     <div id="aiInfoContentContainer">
       <AiModelContainer data={data}/>
       <RunModel />
+      <Graph data={data}/>
+      <Graph2 data={data}/>
     </div>
   )
 }
