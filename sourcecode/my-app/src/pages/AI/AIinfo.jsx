@@ -43,7 +43,6 @@ import {
 const Graph = ({data}) => {
   const [filters, setFilters] = useState({
     model1: "",
-    model2: "",
     performanceMetrics1: "",
     performanceMetrics2: "",
   })
@@ -84,42 +83,21 @@ const Graph = ({data}) => {
       .sort((a, b) => a.timestamp - b.timestamp)
   }, [modelPredictions, filters.model1, filters.performanceMetrics1]);
 
-  const chartDataModel2 = useMemo(() => {
-    if (!filters.model2) return [];
-    return chartData.filter(d => {
-      const model = data.models.find(m => m.id === d.model_id);
-      return model && model.name === filters.model2;
-    });
-  }, [chartData, filters.model2, data.models]);
-
   // Choose which model -> isolation forest vs local outlier factor
   // Choose which performance metrics to compare
   // accuracy, precision, f1 score, recall, silhouette score, anomaly percentage
 
   return (
-    <Card id="aiGraph" title="Graph">
+    <Card id="aiGraph" title="Model Evaluation">
       <div className="aiGraphOptions">
         <TextField
           select
-          label="Model 1"
+          label="Model"
           size="small"
           value={filters.model1}
           onChange={(e) => setFilters({ ...filters, model1: e.target.value })}
           sx={{ minWidth: 120 }}
         >
-          {data.models.map((model) => (
-            <MenuItem key={model.id} value={model.id}>{model.name}</MenuItem>
-          ))}
-        </TextField>
-        <TextField
-          select
-          label="Model 2"
-          size="small"
-          value={filters.model2}
-          onChange={(e) => setFilters({...filters, model2: e.target.value })}
-          sx={{ minWidth: 120}}
-        >
-          <MenuItem value="">None</MenuItem>
           {data.models.map((model) => (
             <MenuItem key={model.id} value={model.id}>{model.name}</MenuItem>
           ))}
@@ -179,26 +157,37 @@ const Graph = ({data}) => {
                 <Line
                   yAxisId="left"
                   type="monotone"
-                  dataKey={filters.performanceMetrics1} // e.g. "accuracy", "f1Score"
+                  dataKey={filters.performanceMetrics1} 
                   stroke="#8884d8"
                   activeDot={{ r: 8 }}
-                  name={`Model 1: ${filters.performanceMetrics1}`}
+                  name={`${filters.performanceMetrics1}`}
                 />
               )}
-
               {filters.performanceMetrics2 && (
                 <Line
                   yAxisId="left"
                   type="monotone"
                   dataKey={filters.performanceMetrics2}
                   stroke="#82ca9d"
-                  name={`Model 2: ${filters.performanceMetrics2}`}
+                  name={`${filters.performanceMetrics2}`}
                 />
               )}
             </LineChart>
           </ResponsiveContainer>
         </Box>
       </div>
+    </Card>
+  )
+}
+
+const Graph2 = ({data}) => {
+  const [filters, setFilters] = useState({
+    model1: "",
+    model2: "",
+    metric: "accuracy"
+  })
+  return (
+    <Card id="aiGraph2" title="Model Comparison">
     </Card>
   )
 }
@@ -540,6 +529,7 @@ const AIinfoContentContainer = ({data, loading, error}) => {
       <AiModelContainer data={data}/>
       <RunModel />
       <Graph data={data}/>
+      <Graph2 data={data}/>
     </div>
   )
 }
