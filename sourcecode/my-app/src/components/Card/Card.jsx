@@ -20,7 +20,6 @@ const CardV2 = ({id, title, children, marker}) => {
 }
 
 const CardV1 = ({ id, title, children, marker }) => {
-
   return(
     <MuiCard 
       id={id}
