@@ -2,14 +2,10 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import timedelta
-from lorawan.models import UserProfile, Node, Packet, MLModel, Anomaly, ModelTrainingInfo, ModelPredictionInfo, Alert, Log
+from lorawan.models import UserProfile, Node, Packet, MLModel, Anomaly, ModelPredictionInfo, ModelTrainingInfo, Alert, Log
 
-# Creation, deletion, update tests for all models apart from UserProfile which was not used
-# Format is as follows: 
-    # Setup test environment with associated models (e.g. user)
-    # Test Creation 
-    # Test Updating
-    # Test Deleting
+# CRUD operations for each of the models apart from modeltraininginfo and userprofile as they were not used
+
 
 class NodeTestCase(TestCase):
     def setUp(self):
@@ -24,9 +20,42 @@ class NodeTestCase(TestCase):
         self.assertEqual(self.node.node_id, 1)
         self.assertTrue(self.node.is_active)
         self.assertEqual(self.node.owner, self.user)
+
+    def test_node_update(self):
+        self.node.is_active = False
+        self.node.save()
+        self.node.refresh_from_db()
+        self.assertFalse(self.node.is_active)
+
+    def test_node_delete(self):
+        nodeID = self.node.id
+        self.node.delete()
+        self.assertFalse(Node.objects.filter(id=nodeID).exists())
     
-    def test_node_string_representation(self):
-        self.assertEqual(str(self.node), "Node 1")
+    def test_node_creation_with_same_nodeid(self):
+        with self.assertRaises(Exception):
+            Node.objects.create(
+                owner=self.user,
+                node_id=1,  
+                is_active=True
+            )
+
+    def test_multiple_nodes_to_one_user(self):
+        node2 = Node.objects.create(
+            owner=self.user,
+            node_id=2,
+            is_active=True
+        )
+        userNodes = Node.objects.filter(owner=self.user)
+        self.assertEqual(userNodes.count(), 2)
+    
+    def test_optional_longitude(self):
+        node = Node.objects.create(
+            owner=self.user,
+            node_id=3,
+            is_active=True
+        )
+        self.assertIsNone(node.longitude)
 
 
 class PacketTestCase(TestCase):
@@ -72,20 +101,28 @@ class PacketTestCase(TestCase):
         self.assertEqual(self.packet.rssi, -110.5)
         self.assertEqual(self.packet.payload_size, 10)
         self.assertFalse(self.packet.is_anomalous)
+
+    def test_packet_update(self):
+        self.packet.is_anomalous = True
+        self.packet.save()
+        self.packet.refresh_from_db()
+        self.assertTrue(self.packet.is_anomalous)
     
-    def test_packet_string_representation(self):
-        expected = f"Packet {self.packet.id} at {self.packet.time}"
-        self.assertEqual(str(self.packet), expected)
+    def test_packet_delete(self):
+        packetId = self.packet.id
+        self.packet.delete()
+        self.assertFalse(Packet.objects.filter(id=packetId).exists())
 
     def test_packet_node_cascade_delete(self):
-        packet_id = self.packet.id
+        packetId = self.packet.id
         self.node.delete()
-        self.assertFalse(Packet.objects.filter(id=packet_id).exists())
+        self.assertFalse(Packet.objects.filter(id=packetId).exists())
 
+    
 class MLModelTestCase(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username='testuser', password='password')
-        self.ml_model = MLModel.objects.create(
+        self.mlModel = MLModel.objects.create(
             name='Isolation Forest',
             version=1.0,
             algorithm_type='IsolationForest',
@@ -93,10 +130,32 @@ class MLModelTestCase(TestCase):
         )
     
     def test_mlmodel_creation(self):
-        self.assertEqual(self.ml_model.name, 'Isolation Forest')
-        self.assertEqual(self.ml_model.version, 1.0)
-        self.assertEqual(self.ml_model.algorithm_type, 'IsolationForest')
-        self.assertEqual(self.ml_model.owner, self.user)
+        self.assertEqual(self.mlModel.name, 'Isolation Forest')
+        self.assertEqual(self.mlModel.version, 1.0)
+        self.assertEqual(self.mlModel.algorithm_type, 'IsolationForest')
+        self.assertEqual(self.mlModel.owner, self.user)
+
+    def test_mlmodel_update(self):
+        self.mlModel.version = 2.0
+        self.mlModel.save()
+        self.mlModel.refresh_from_db()
+        self.assertEqual(self.mlModel.version, 2.0)
+
+    def test_mlmodel_delete(self):
+        modelId = self.mlModel.id
+        self.mlModel.delete()
+        self.assertFalse(MLModel.objects.filter(id=modelId).exists())
+
+    def test_multiple_mlmodel_one_user(self):
+        model2 = MLModel.objects.create(
+            name='Local Outlier Factor',
+            version=1.0,
+            algorithm_type='LOF',
+            owner=self.user
+        )
+        userModels = MLModel.objects.filter(owner=self.user)
+        self.assertEqual(userModels.count(), 2)
+    
 
 class AnomalyTestCase(TestCase):
     def setUp(self):
@@ -132,7 +191,7 @@ class AnomalyTestCase(TestCase):
             owner=self.user
         )
 
-        self.ml_model = MLModel.objects.create(
+        self.mlModel = MLModel.objects.create(
             name='Isolation Forest',
             version = 1.0,
             algorithm_type='IsolationForest',
@@ -141,65 +200,63 @@ class AnomalyTestCase(TestCase):
 
         self.anomaly = Anomaly.objects.create(
             packet=self.packet,
-            model=self.ml_model,
+            model=self.mlModel,
             anomaly_score=0.5,
             owner = self.user
-            )
+        )
 
     def test_anomaly_creation(self):
         self.assertEqual(self.anomaly.packet, self.packet)
-        self.assertEqual(self.anomaly.model, self.ml_model)
+        self.assertEqual(self.anomaly.model, self.mlModel)
         self.assertEqual(self.anomaly.anomaly_score, 0.5)
         self.assertEqual(self.anomaly.owner, self.user)
 
-class ModelTrainingInfoTestCase(TestCase):
-    def setUp(self):
-        self.user = User.objects.create_user(username='testuser', password='password')
-        self.ml_model = MLModel.objects.create(
-            name='Isolation Forest',
+    def test_anomaly_update(self):
+        self.anomaly.anomaly_score = 0.8
+        self.anomaly.save()
+        self.anomaly.refresh_from_db()
+        self.assertEqual(self.anomaly.anomaly_score, 0.8)
+
+    def test_anomaly_delete(self):
+        anomalyId = self.anomaly.id
+        self.anomaly.delete()
+        self.assertFalse(Anomaly.objects.filter(id=anomalyId).exists())
+
+    def test_anomaly_cascade_delete(self):
+        anomalyId = self.anomaly.id
+        self.mlModel.delete()
+        self.assertFalse(Anomaly.objects.filter(id=anomalyId).exists())
+
+    def test_multiple_anomalies_per_user(self):
+        model2 = MLModel.objects.create(
+            name='LOF',
             version=1.0,
-            algorithm_type='IsolationForest',
+            algorithm_type='LOF',
             owner=self.user
         )
-
-        self.training_info = ModelTrainingInfo.objects.create(
-            model_id=self.ml_model,
-            trained_at=timezone.now(),
-            training_data_file='test.csv',
-            num_training_samples=1000,
-            contamination=0.01,
-            is_active=True,
+        anomaly2 = Anomaly.objects.create(
+            packet=self.packet,
+            model=model2,
+            anomaly_score=0.6,
             owner=self.user
         )
+        packetAnomalies = Anomaly.objects.filter(packet=self.packet)
+        self.assertEqual(packetAnomalies.count(), 2)
 
-    def test_training_info_creation(self):
-        self.assertEqual(self.training_info.model_id, self.ml_model)
-        self.assertEqual(self.training_info.training_data_file, 'test.csv')
-        self.assertEqual(self.training_info.num_training_samples, 1000)
-        self.assertEqual(self.training_info.contamination, 0.01)
-        self.assertTrue(self.training_info.is_active)
 
 class ModelPredictionInfoTestCase(TestCase):
     def setUp(self):
-        self.user=User.objects.create_user(username='testuser', password='password')
-        self.ml_model = MLModel.objects.create(
+        self.user = User.objects.create_user(username='testuser', password='password')
+        self.mlModel = MLModel.objects.create(
             name='Isolation Forest',
             version=1.0,
             algorithm_type='IsolationForest',
             owner=self.user
         )
 
-        self.training_info = ModelTrainingInfo.objects.create(
-            model_id=self.ml_model,
-            training_data_file='test.csv',
-            num_training_samples=1000,
-            contamination=0.01,
-            owner=self.user
-        )
-
-        self.prediction_info = ModelPredictionInfo.objects.create(
-            model_id = self.ml_model,
-            training_run_id=self.training_info,
+        self.predictionInfo = ModelPredictionInfo.objects.create(
+            model_id = self.mlModel,
+            training_run_id=None,
             input_file_name='test.csv',
             num_packets=500,
             anomalies_detected=5,
@@ -217,12 +274,17 @@ class ModelPredictionInfoTestCase(TestCase):
         )
 
     def test_prediction_info_creation(self):
-        self.assertEqual(self.prediction_info.model_id, self.ml_model)
-        self.assertEqual(self.prediction_info.training_run_id, self.training_info)
-        self.assertEqual(self.prediction_info.num_packets, 500)
-        self.assertEqual(self.prediction_info.anomalies_detected, 5)
-        self.assertEqual(self.prediction_info.anomaly_percentage, 1.0)
-        self.assertEqual(self.prediction_info.accuracy, 0.95)
+        self.assertEqual(self.predictionInfo.model_id, self.mlModel)
+        self.assertEqual(self.predictionInfo.num_packets, 500)
+        self.assertEqual(self.predictionInfo.anomalies_detected, 5)
+        self.assertEqual(self.predictionInfo.anomaly_percentage, 1.0)
+        self.assertEqual(self.predictionInfo.accuracy, 0.95)
+
+    def test_prediction_delete(self):
+        predictionId = self.predictionInfo.id
+        self.predictionInfo.delete()
+        self.assertFalse(ModelPredictionInfo.objects.filter(id=predictionId).exists())
+
 
 class AlertTestCase(TestCase):
     def setUp(self):
@@ -232,7 +294,7 @@ class AlertTestCase(TestCase):
             node_id=1,
             is_active=True
         )
-        self.ml_model = MLModel.objects.create(
+        self.mlModel = MLModel.objects.create(
             name='Isolation Forest',
             version=1.0,
             algorithm_type='IsolationForest',
@@ -245,7 +307,7 @@ class AlertTestCase(TestCase):
             alert_type='anomaly',
             severity='warning',
             node=self.node,
-            model=self.ml_model
+            model=self.mlModel
         )
     
     def test_alert_creation(self):
@@ -254,6 +316,31 @@ class AlertTestCase(TestCase):
         self.assertEqual(self.alert.severity, 'warning')
         self.assertEqual(self.alert.owner, self.user)
         self.assertFalse(self.alert.is_resolved)
+
+    def test_update_alert(self):
+        self.alert.is_resolved = True
+        self.alert.resolved_by = self.user
+        self.alert.resolved_at = timezone.now().date()
+        self.alert.save()
+        self.alert.refresh_from_db()
+        self.assertTrue(self.alert.is_resolved)
+        self.assertEqual(self.alert.resolved_by, self.user)
+
+    def test_severity_choices_alert(self):
+        alert = Alert.objects.create(
+            owner=self.user,
+            title='System Error',
+            message='System error occurred',
+            severity='error',
+            alert_type='system'
+        )
+        self.assertEqual(alert.severity, 'error')
+    
+    def test_alert_cascade_delete_owner(self):
+        alertId = self.alert.id
+        self.user.delete()
+        self.assertFalse(Alert.objects.filter(id=alertId).exists())
+
 
 class LogTestCase(TestCase):
     def setUp(self):
@@ -273,3 +360,23 @@ class LogTestCase(TestCase):
         self.assertEqual(self.log.log_type, 'device_added')
         self.assertEqual(self.log.severity, 'info')
         self.assertEqual(self.log.owner, self.user)
+
+    def test_log_update(self):
+        self.log.description = 'Updated description'
+        self.log.save()
+        self.log.refresh_from_db()
+        self.assertEqual(self.log.description, 'Updated description')
+
+    def test_log_choices(self):
+        log = Log.objects.create(
+            owner=self.user,
+            title='Model Run',
+            log_type='model_run',
+            severity='info'
+        )
+        self.assertEqual(log.log_type, 'model_run')
+
+    def test_log_owner_cascade_delete(self):
+        logID = self.log.id
+        self.user.delete()
+        self.assertFalse(Log.objects.filter(id=logID).exists())

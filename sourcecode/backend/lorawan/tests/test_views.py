@@ -6,8 +6,9 @@ from rest_framework import status
 import pandas as pd
 from io import BytesIO
 import json
-
 from lorawan.models import Node, Packet, MLModel, Anomaly, ModelPredictionInfo, Alert, Log
+
+# Contains tests for the views 
 
 class TrainModelsViewTestCase(APITestCase):
     def setUp(self):
@@ -15,11 +16,11 @@ class TrainModelsViewTestCase(APITestCase):
         self.client = APIClient()
 
     def test_train_models_post(self):
-        response = self.client.get('/api/train-models/')
+        response = self.client.get('/api/lorawan/train-models/')
         self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
 
     def test_train_model(self):
-        response = self.client.post('/api/train-models/')
+        response = self.client.post('/api/lorawan/train-models/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('success', response.data)
         self.assertIn('message', response.data)
@@ -105,7 +106,7 @@ class RunModelViewTestCase(APITestCase):
 
         return csv_file
     
-    def test_runmodel_authentication(self):
+    def test_runmodel_without_authentication(self):
         client = APIClient()
         csv_file = self.create_csv_file()
 
@@ -120,7 +121,6 @@ class RunModelViewTestCase(APITestCase):
 
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-    # Test run without authentication
     
     def test_runmodel_with_valid_csv(self):
         csv_file = self.create_csv_file()
