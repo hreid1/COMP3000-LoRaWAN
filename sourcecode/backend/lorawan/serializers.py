@@ -55,6 +55,7 @@ class NodeSerializer(serializers.ModelSerializer):
             "node_id",
             "packets_count"
         ]
+        read_only_fields = ['owner', 'created_at']
 
     def get_packets_count(self, obj):
         return obj.packet_set.count()
