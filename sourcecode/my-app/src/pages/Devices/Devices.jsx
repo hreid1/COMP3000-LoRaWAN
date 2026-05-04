@@ -331,7 +331,6 @@ const DeviceContent = ({data, loading, error}) => {
     <div className="deviceContentContainer">
       <DeviceStatistics data={data.devices} anomalies={data.anomalies}/>
       <Map2 />
-      <AddDevice />
       <Graph data={data.devices}/>
       <DeviceList data={data.devices} />
     </div>

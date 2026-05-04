@@ -17,7 +17,7 @@ const SideNavbarV2 = () => {
     { label: 'Devices', path: '/devices', icon: <DevicesIcon /> },
     { label: 'AI Info', path: '/aiinfo', icon: <SchoolIcon /> },
     { label: 'Anomaly', path: '/anomaly', icon: <WarningIcon /> },
-    { label: 'Admin', path: '/admin', icon: <AdminPanelSettingsIcon /> },
+    //{ label: 'Admin', path: '/admin', icon: <AdminPanelSettingsIcon /> },
     { label: 'Logs', path: '/logs', icon: <StorageIcon /> },
   ]
 

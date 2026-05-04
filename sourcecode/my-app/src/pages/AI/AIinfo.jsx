@@ -528,7 +528,6 @@ const AIinfoContentContainer = ({data, loading, error}) => {
       <AiModelContainer data={data}/>
       <RunModel />
       <Graph data={data}/>
-      <Graph2 data={data}/>
     </div>
   )
 }

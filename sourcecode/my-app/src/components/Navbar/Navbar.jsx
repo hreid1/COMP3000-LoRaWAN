@@ -87,8 +87,6 @@ const NavbarV2 = ({username, logout, alertCount}) => {
               horizontal: 'right',
             }}
           >
-            <MenuItem>Profile</MenuItem>
-            <MenuItem>Settings</MenuItem>
             <MenuItem onClick={logout}>Logout</MenuItem>
           </Menu>
         </Box>
