@@ -11,17 +11,14 @@ The project combines a web dashboard with a backend API so operators can monitor
 - Login-protected dashboard for monitoring the network
 - Device, packet, log, alert, and anomaly views
 - AI model information and model training endpoints
-- Map-based device locations and operational status
 - Django REST Framework API with JWT authentication
 - Machine learning service for training anomaly-detection models
 
 ## Tech Stack
 
-- 
-
-- Backend: Python, Django, Django REST Framework, SimpleJWT, django-filter
-- Frontend: React, Vite, Material UI, Leaflet, Chart.js, Recharts
-- Data and ML: SQLite, pandas, NumPy, scikit-learn, joblib, SHAP, 
+- Frontend: React, Material UI, Chart.js, Recharts
+- Frontend: React, Material UI, Chart.js, Recharts
+- ML pipeline: SQLite, pandas, NumPy, scikit-learn, joblib, SHAP, 
 
 ## Project Structure
 
