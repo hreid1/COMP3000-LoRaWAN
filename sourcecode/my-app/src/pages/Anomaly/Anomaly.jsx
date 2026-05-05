@@ -187,12 +187,6 @@ const AnomalyStatistics = ({data}) => {
           <Typography>{totalAnomalies} in last 24hrs</Typography>
         </Box>
       </Card>
-      <Card>
-        <Typography>Severity</Typography>
-      </Card>
-      <Card>
-        <Typography>Top detectors along with most affected node</Typography>
-      </Card>
     </div>
   )
 }
@@ -260,9 +254,7 @@ const AnomalyContent = ({data, loading, error}) => {
     <div className='anomalyContentContainer'>
       <AnomalyFilter anomalies={data.anomalies} filters={filters} setFilters={setFilters}/>
       <div className="anomalyContent">
-        <AnomalyStatistics data={filteredData}/>
         <AnomalyList data={filteredData} />
-        <AnomalyGraph />
       </div>
     </div>
   )
